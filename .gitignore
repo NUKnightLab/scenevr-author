@@ -1,3 +1,11 @@
+# local modifications to Github default 
+
+env.sh
+local_only.key
+local_only.crt
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
