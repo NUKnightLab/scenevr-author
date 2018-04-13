@@ -2,9 +2,9 @@
 
 Once you've done the setup below, this should be all you need to run the app.
 
-`python flaskapp.py`
+`python app/flaskapp.py`
 
-It will automatically start in HTTPS mode, so the default local URL is https://0.0.0.0:5000
+It will automatically start in HTTPS mode, so the default local URL is https://localhost:5000
 
 
 # Setting up for local development
@@ -29,6 +29,15 @@ first, execute this command in the local root of the repository:
 `openssl req -x509 -sha256 -nodes -days 10000 -newkey rsa:2048 -keyout local_only.key -out local_only.crt`
 
 Use exactly these names for the key and cert file and store them in the root of your repository (they are `.gitignore`d).
+(Note that the hardcoded paths to the files require that you start the app from the root of the repository)
+
+Also, to work with Google Authentication, you need a copy of `scenevr_client_secret.json` in the root of your repository.
+Get that from someone on staff.
+
 ## Database setup
 
-(explain the one time stuff for creating database and schemas)
+Once you have all the dependencies installed, you should be able to run
+
+    python app/flaskapp.py initdb
+
+This assumes you have `sqlite3` and that you have a `/tmp` directory  (all Macs fit both. When we have a Windows dev, we may need to tweak.) 
