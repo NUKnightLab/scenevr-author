@@ -1,0 +1,13 @@
+<title>Hello from Flask</title>
+
+<p> Project: {{project_id}}</p>
+
+{% for scene in scenes %}
+<p> <b> Scene: </b> Text: {{scene.text}} | ImageURL: {{scene.image_url}} </p>
+{% endfor %}
+
+<form action = "/home/{{project_id}}/update" method="POST">
+    <input name="image_url">
+    <input name="text">
+    <input type="submit">
+</form>

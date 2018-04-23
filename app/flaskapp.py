@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, session, jsonify, g
+from flask import Flask, request, redirect, url_for, session, jsonify, g, render_template
 import os, sys
 import requests
 from functools import wraps
@@ -81,7 +81,45 @@ def hello():
 def home(user=None):
   """Entry point to the application for an authenticated user."""
   user = g.user
-  return "the current user (iss[{}] sub[{}] has visited {} times)".format(user.oauth_issuer, user.oauth_subject, user.visits)
+  return render_template('hello.html', user=user)
+
+@app.route('/home')
+def my_form_post():
+    user = g.user
+    return render_template('hello.html', user=user)
+
+@app.route('/home/update', methods=['POST'])
+def update_form():
+    user = g.user
+    text = request.form['text']
+    project = models.Project(user_id=user.id, name=text)
+    scene = models.Scene(project_id=project.id, text="", image_url="")
+    db.session.add(project)
+    db.session.add(scene)
+    db.session.commit()
+
+    return render_template('hello.html', user=user)
+
+@app.route('/home/<project_id>')
+def getScenes(project_id):
+    #user = g.user
+    #text = request.form['text']
+    scenes = models.Scene.query.filter_by(project_id=project_id)
+
+    return render_template('scenes.html', scenes=scenes, project_id=project_id)
+
+@app.route('/home/<project_id>/update', methods=['POST'])
+def updateScenes(project_id):
+    user = g.user
+    text = request.form['text']
+    image_url = request.form['image_url']
+    scene = models.Scene(project_id=project_id, text=text, image_url=image_url)
+    db.session.add(scene)
+    db.session.commit()
+
+    scenes = models.Scene.query.filter_by(project_id=project_id)
+
+    return render_template('scenes.html', scenes=scenes, project_id=project_id)
 
 @app.route("/logout/")
 def logout():
