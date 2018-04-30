@@ -2,7 +2,7 @@
 
 Once you've done the setup below, this should be all you need to run the app.
 
-`python app/flaskapp.py`
+`python app/api.py`
 
 It will automatically start in HTTPS mode, so the default local URL is https://localhost:5000
 
@@ -38,6 +38,6 @@ Get that from someone on staff.
 
 Once you have all the dependencies installed, you should be able to run
 
-    python app/flaskapp.py initdb
+    python app/api.py initdb
 
-This assumes you have `sqlite3` and that you have a `/tmp` directory  (all Macs fit both. When we have a Windows dev, we may need to tweak.) 
+This assumes you have `sqlite3` and that you have a `/tmp` directory  (all Macs fit both. When we have a Windows dev, we may need to tweak.)

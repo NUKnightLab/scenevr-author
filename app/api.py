@@ -3,9 +3,17 @@ import os, sys
 import requests
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
+import traceback
+import base64
 import models
-
+import settings
+import re
 import google_auth_oauthlib.flow
+
+if settings.TEST_MODE:
+    import mock_storage as storage
+else:
+    import storage as storage
 
 settings_module      = os.environ.get('FLASK_CONFIG_MODULE','config.DevConfig')
 
@@ -26,6 +34,27 @@ app.logger.debug('config: {}'.format(settings_module))
 from models import db
 db.app = app
 db.init_app(app)
+
+
+
+@app.context_processor
+def inject_urls():
+    """
+    Inject urls into the templates.
+    Template variable will always have a trailing slash.
+    """
+    if settings.TEST_MODE:
+        storage_url = settings.AWS_MOCK_STORAGE_BUCKET_URL
+    else:
+        storage_url = settings.AWS_STORAGE_BUCKET_URL
+
+    if not storage_url.endswith('/'):
+        storage_url += '/'
+
+    return dict(
+        STORAGE_URL=storage_url, storage_url=storage_url)
+
+
 
 def _user_set(issuer=None, subject=None):
 
@@ -110,16 +139,44 @@ def getScenes(project_id):
 
 @app.route('/home/<project_id>/update', methods=['POST'])
 def updateScenes(project_id):
-    user = g.user
-    text = request.form['text']
-    image_url = request.form['image_url']
-    scene = models.Scene(project_id=project_id, text=text, image_url=image_url)
-    db.session.add(scene)
-    db.session.commit()
+    """
+    Save storymap image
+    @id = storymap id
+    @name = file name
+    @content = data:URL representing the file's data as base64 encoded string
+    """
+    try:
+        user = g.user
+        #print(request.files)
+        text = request.form['text']
+        file = request.files['image_url']
+        filename = file.filename
+        content_type = file.content_type
+        content = base64.b64encode(file.read())
+        # print(content)
+        # m = re.match('data:(.+);base64,(.+)', content)
+        # if m:
+        #     content_type = m.group(1)
+        #     content = m.group(2).decode('base64')
+        # else:
+        #     raise Exception('Expected content as data-url')
 
-    scenes = models.Scene.query.filter_by(project_id=project_id)
+        key_name = storage.key_name(str(user.id), str(project_id), filename)
+        storage.save_from_data(key_name, content_type, content)
 
-    return render_template('scenes.html', scenes=scenes, project_id=project_id)
+        scene = models.Scene(project_id=project_id, text=text, image_url=key_name)
+        db.session.add(scene)
+        db.session.commit()
+
+        scenes = models.Scene.query.filter_by(project_id=project_id)
+
+        return render_template('scenes.html', scenes=scenes, project_id=project_id, user_id=user.id)
+    except storage.StorageException as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'error_detail': e.detail})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e)})
 
 @app.route("/logout/")
 def logout():
