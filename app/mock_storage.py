@@ -97,9 +97,17 @@ def save_from_data(key_name, content_type, content):
     """
     Save content with content-type to key_name
     """
-    file_path = settings.AWS_MOCK_STORAGE_BUCKET_NAME + "/" + key_name
+    file_path = settings.AWS_STORAGE_BUCKET_NAME + "/" + key_name
     directory_path = file_path.rsplit('/', 1)[0]
-    content = base64.b64decode(content)
     os.makedirs(directory_path, exist_ok=True)
-    with open(file_path,'wb') as f:
-        f.write(content)
+    content_type = content_type.rsplit('/', 1)[0]
+    if content_type == 'image':
+        content = base64.b64decode(content)
+        with open(file_path,'wb') as f:
+            f.write(content)
+    elif content_type == 'application':
+        with open(file_path,'w') as f:
+            json.dump(content, f)
+    else:
+        with open(file_path,'w') as f:
+            f.write(content)

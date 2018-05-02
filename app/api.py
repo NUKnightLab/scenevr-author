@@ -9,6 +9,7 @@ import models
 import settings
 import re
 import hashlib
+import urllib
 
 import google_auth_oauthlib.flow
 import google.oauth2.credentials
@@ -47,10 +48,8 @@ def inject_urls():
     Inject urls into the templates.
     Template variable will always have a trailing slash.
     """
-    if settings.TEST_MODE:
-        storage_url = settings.AWS_MOCK_STORAGE_BUCKET_URL
-    else:
-        storage_url = settings.AWS_STORAGE_BUCKET_URL
+
+    storage_url = settings.AWS_STORAGE_BUCKET_URL
 
     if not storage_url.endswith('/'):
         storage_url += '/'
@@ -180,14 +179,14 @@ def updateScenes(project_id):
 
         key_name = storage.key_name(str(user.id), str(project_id), filename)
         storage.save_from_data(key_name, content_type, content)
-
-        scene = models.Scene(project_id=project_id, text=text, image_url=key_name)
+        image_url = settings.AWS_STORAGE_BUCKET_URL + key_name
+        scene = models.Scene(project_id=project_id, text=text, image_url=image_url)
         db.session.add(scene)
         db.session.commit()
 
         scenes = models.Scene.query.filter_by(project_id=project_id)
 
-        return render_template('scenes.html', scenes=scenes, project_id=project_id, user_id=user.id)
+        return redirect('/home/' + str(project_id))
     except storage.StorageException as e:
         traceback.print_exc()
         return jsonify({'error': str(e), 'error_detail': e.detail})
@@ -195,6 +194,66 @@ def updateScenes(project_id):
         traceback.print_exc()
         return jsonify({'error': str(e)})
 
+
+def write_json_data(project_id):
+    try:
+        user = g.user
+
+        key_name = storage.key_name(str(user.id), str(project_id), 'data.json')
+        content_type =  'application/json'
+
+        scenes = models.Scene.query.filter_by(project_id=project_id)
+        data = {}
+        sceneArray = []
+        for scene in scenes:
+            sceneDict = {'text':scene.text, 'image':scene.image_url}
+            sceneArray.append(sceneDict)
+        data['scenes'] = sceneArray
+        print(data)
+        content = data
+
+        storage.save_from_data(key_name, content_type, content)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e)})
+
+def write_embed_published(project_id):
+    try:
+        user = g.user
+
+        json_key_name = storage.key_name(str(user.id), str(project_id), 'data.json')
+        embed_key_name = storage.key_name(str(user.id), str(project_id), 'index.html')
+        content_type =  'text/html'
+
+        content = render_template('embed.html',
+            json_url=settings.AWS_STORAGE_BUCKET_URL+json_key_name
+        )
+        embed_url=settings.AWS_STORAGE_BUCKET_URL+embed_key_name
+        storage.save_from_data(embed_key_name, 'text/html', content)
+        return embed_url
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e)})
+
+@app.route('/home/<project_id>/publish', methods=['POST'])
+def storymap_publish(project_id):
+    """Save published storymap"""
+    write_json_data(project_id)
+    embed_url = write_embed_published(project_id)
+
+        # data = _request_get_required('d')
+
+        # key_prefix = storage.key_prefix(user['uid'], id)
+        # content = json.loads(data)
+        # storage.save_json(key_prefix+'published.json', content)
+        #
+        # user['storymaps'][id]['published_on'] = _utc_now()
+        # _user.save(user)
+        #
+        # _write_embed_published(key_prefix, user['storymaps'][id])
+        #
+        # return jsonify({'meta': user['storymaps'][id]})
+    return redirect(embed_url)
 @app.route("/logout/")
 def logout():
     _user_remove()

@@ -2,11 +2,15 @@
 
 <p> Project: {{project_id}}</p>
 <a href="/home">Go back</a>
+<form action="/home/{{project_id}}/publish" method="POST">
+  Publish
+  <input type="submit">
+</form>
 
 {% for scene in scenes %}
 <div>
   <b> Scene: </b>
-  <img width="200px" height = "200px" src="{{storage_url}}{{scene.image_url}}"></img>
+  <img width="200px" height = "200px" src="{{scene.image_url}}"></img>
   <p> Text: {{scene.text}} | ImageURL: {{scene.image_url}} </p>
 </div>
 {% endfor %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SceneVR Embed Page</title>
+</head>
+
+<body>
+
+<h1> My SceneVR Page </h1>
+
+</body>
+</html>
+
+<script>
+
+var body = document.querySelector('body');
+
+var requestURL = "{{json_url}}";
+var request = new XMLHttpRequest();
+request.open('GET', requestURL);
+request.responseType = 'json';
+request.send();
+
+request.onload = function() {
+  var sceneObject = request.response;
+  showScenes(sceneObject);
+}
+
+function showScenes(sceneObject) {
+  var scenes = sceneObject['scenes'];
+
+  for (var i = 0; i < scenes.length; i++) {
+
+    var myH2 = document.createElement('h2');
+    myH2.textContent = "Scene: " + i;
+    var caption = document.createElement('p');
+    caption.textContent = "Caption: " + scenes[i]['text']
+    var imageURL = document.createElement('p');
+    imageURL.textContent = "ImageURL: " + scenes[i]['image']
+
+    body.appendChild(myH2);
+    body.appendChild(caption);
+    body.appendChild(imageURL);
+  }
+}
+
+</script>
