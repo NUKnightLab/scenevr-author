@@ -8,7 +8,11 @@ import base64
 import models
 import settings
 import re
+import hashlib
+
 import google_auth_oauthlib.flow
+import google.oauth2.credentials
+import googleapiclient.discovery
 
 if settings.TEST_MODE:
     import mock_storage as storage
@@ -54,7 +58,9 @@ def inject_urls():
     return dict(
         STORAGE_URL=storage_url, storage_url=storage_url)
 
-
+def _get_uid(user_string):
+    """Generate a unique identifer for user string"""
+    return hashlib.md5(user_string).hexdigest()
 
 def _user_set(issuer=None, subject=None):
 
@@ -63,7 +69,18 @@ def _user_set(issuer=None, subject=None):
       raise Exception("Issuer and subject are required right now")
   user = models.User.query.filter_by(oauth_issuer=issuer, oauth_subject=subject).first()
   if user is None:
-      user = models.User(oauth_issuer=issuer, oauth_subject=subject)
+      credentials = google.oauth2.credentials.Credentials(
+      **session['credentials'])
+
+      oauth2 = googleapiclient.discovery.build('oauth2', 'v2', credentials=credentials)
+      userinfo = oauth2.userinfo().get().execute()
+      name = userinfo['name']
+      picture = userinfo['picture']
+      g_id = userinfo['id']
+
+      session['credentials'] = credentials_to_dict(credentials)
+
+      user = models.User(oauth_issuer=issuer, oauth_subject=subject, name=name, picture=picture, g_id=g_id)
       db.session.add(user)
       db.session.commit()
   g.user = user
@@ -228,11 +245,22 @@ def google_authorized():
   # ACTION ITEM: In a production app, you likely want to save these
   #              credentials in a persistent database instead.
   credentials = flow.credentials
+  session['credentials'] = credentials_to_dict(credentials)
+
   grequest = google.auth.transport.requests.Request()
   verified_jwt = google.oauth2.id_token.verify_oauth2_token(credentials.id_token,grequest)
   _user_set(issuer=verified_jwt['iss'], subject=verified_jwt['sub'])
   # For now, we will always redirect a freshly authenticated user to 'home' no matter where they were trying to go in the first place.
   return redirect(url_for('home'))
+
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == 'initdb':

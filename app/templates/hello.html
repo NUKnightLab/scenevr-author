@@ -1,9 +1,11 @@
 <title>Hello from Flask</title>
 
 
-<p> Current User: {{ user.oauth_issuer }} </p>
-<p> Current Subject: {{ user.oauth_subject }} </p>
-<p> Visits: {{ user.visits }} </p>
+<p> Current User: {{ user.name }} </p>
+<img width="100px" src="{{user.picture}}"></img>
+<br>
+<a href="/logout">Logout</a>
+
 <p> Projects: </p>
 
 {% for project in user.projects %}

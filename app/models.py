@@ -9,6 +9,9 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    picture = db.Column(db.String(200))
+    g_id = db.Column(db.String(200))
     # for Google OAuth, we can get an issuer/subject which
     # together constitute an alternate primary key
     oauth_issuer = db.Column(db.String(200))
