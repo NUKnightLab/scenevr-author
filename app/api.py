@@ -206,7 +206,7 @@ def write_json_data(project_id):
         data = {}
         sceneArray = []
         for scene in scenes:
-            sceneDict = {'text':scene.text, 'image':scene.image_url}
+            sceneDict = {'text':scene.text, 'path':scene.image_url, 'thumbnailPath':scene.image_url}
             sceneArray.append(sceneDict)
         data['scenes'] = sceneArray
         print(data)
