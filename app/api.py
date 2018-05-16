@@ -37,6 +37,8 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 app.config.from_object(settings_module)
 app.logger.debug('config: {}'.format(settings_module))
 from models import db
+if 'DATABASE_URI' in os.environ:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
 db.app = app
 db.init_app(app)
 
