@@ -1,10 +1,12 @@
-# local modifications to Github default 
+# local modifications to Github default
 
 env.sh
 local_only.key
 local_only.crt
 scenevr_client_secret.json
-static/
+app/static/dist/
+app/static/uploads.knilab.com
+node_modules/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

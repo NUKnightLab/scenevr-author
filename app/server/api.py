@@ -32,7 +32,7 @@ CLIENT_SECRETS_FILE = "scenevr_client_secret.json"
 SCOPES = ['profile']
 
 # Initialize Flask app. Some say we should use a factory, but then I don't know how to do the decorators.
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 app.config.from_object(settings_module)
 app.logger.debug('config: {}'.format(settings_module))

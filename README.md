@@ -2,7 +2,7 @@
 
 Once you've done the setup below, this should be all you need to run the app.
 
-`python app/api.py`
+`python app/server/api.py`
 
 It will automatically start in HTTPS mode, so the default local URL is https://localhost:5000
 
@@ -21,6 +21,11 @@ Copy `env.sh.example` to `env.sh`. If you use `virtualenvwrapper`, you will prob
 
 First, create a python virtual environment (using Python 3.6) and install the requirements as listed in `requirements.txt`
 
+## Node environment setup
+
+To set up the Javascript packages, run `npm install`
+and then `npm run start` to set up live reloading of Javascript files.
+
 ## Local SSL setup
 Second, Google Authentication requires using SSL. So, even for local development, you must run your test server under SSL.
 
@@ -38,6 +43,6 @@ Get that from someone on staff.
 
 Once you have all the dependencies installed, you should be able to run
 
-    python app/api.py initdb
+    python app/server/api.py initdb
 
 This assumes you have `sqlite3` and that you have a `/tmp` directory  (all Macs fit both. When we have a Windows dev, we may need to tweak.)
