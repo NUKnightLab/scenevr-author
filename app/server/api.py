@@ -118,8 +118,20 @@ def establish_user():
         g.user = None
 
 @app.route("/")
-def hello():
-  return "Eventually this should show the SceneVR home page. <a href='/home'>Click here</a> to try the login"
+def index():
+  return render_template('index.html')
+
+@app.route("/projects")
+def projects():
+  return None
+
+@app.route("/project-details")
+def project_details():
+  return None
+
+@app.route("/upload")
+def upload():
+  return None
 
 @app.route('/home')
 @require_user
