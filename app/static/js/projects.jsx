@@ -26,30 +26,51 @@ export default class Projects extends React.Component {
         }
       ],
     };
+
+    this.newProject = this.newProject.bind(this);
+  }
+
+  newProject(){
+    console.log("new project!");
   }
 
   render() {
     return (
       <div id="projects">
-        <div id="header"> HEADER </div>
-        <div id="title"> TITLE </div>
+        <div id="header"> 
+          <div> HEADER </div>
+        </div>
+        <div id="title"> 
+          <div> PROJECTS </div>
+        </div>
         <div id="project-container"> 
           {this.state.projectData.map(proj => (
             <IndividualProject title={proj.title} desc={proj.desc} date={proj.date} />
           ))}
         </div>
-        <div id="new-project" onClick={this.newProject}> NEW PROJECT </div>
+        <div id="new-project" onClick={this.newProject}> 
+          <div> NEW PROJECT </div>
+        </div>
 
         <style jsx> {` 
           #projects {
             display: grid;
             height: 100vh;
             grid-template-columns: 100%;
-            grid-template-rows: 75px 100px auto 75px;
+            grid-template-rows: 60px 90px auto 60px;
             font-family: "Avenir Next";
             font-weight: bold;
             text-align: center;
             overflow: hidden;
+          }
+
+          #header, #title, #new-project {
+            display: table;
+          }
+
+          #header div, #title div, #new-project div {
+            display: table-cell;
+            vertical-align: middle;
           }
 
           #header {
@@ -68,6 +89,7 @@ export default class Projects extends React.Component {
           #new-project {
             background-color: #54cf86;
             z-index: 2;
+            color: white;
           }
 
         `}</style>
