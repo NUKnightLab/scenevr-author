@@ -24,16 +24,19 @@ export default class ProjectPreview extends React.Component {
           }
 
           .project-preview {
-            width: 80%;
+            display: grid;
+            grid-template-columns: 4fr 1fr;
+            width: 90%;
             height: 150px;
             display: block;
-            margin: 25px auto;
+            margin: 15px auto;
             background-color: #D8D8D8;
             border-radius: 5px;
           }
 
           .individual-project h5 {
             font-size: .8rem;
+            color: #646464;
           }
         `}</style>
       </div>

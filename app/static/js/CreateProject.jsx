@@ -36,7 +36,11 @@ export default class CreateProject extends React.Component {
   render() {
     return (
       <div id="CreateProject">
-        <div id="create-header"> </div>
+        <div id="create-header"> 
+          <h6 id="nav-title"> &lt; Your Projects </h6>
+          <h6 id="publish"> Publish </h6>
+        </div>
+        
         <div id="create-project-content"> 
           <input id="title-input" type="text" placeholder="New Project Title..." />
           <input id="project-description" type="text" placeholder="Write a description" />
@@ -57,6 +61,27 @@ export default class CreateProject extends React.Component {
           #create-header {
             background-color: #555555;
             z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            color: white;
+            font-weight: 100;
+            font-size: .8rem;
+          }
+
+          #nav-title, #publish {
+            position: absolute;
+            top: 20px;
+          }
+
+          #nav-title {
+            grid-column: 1;
+            left: 20px;
+          }
+
+          #publish {
+            grid-column: 2;
+            color: #7ACCFF;
+            right: 20px;
           }
 
           #CreateProject {
