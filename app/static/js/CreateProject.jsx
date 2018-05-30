@@ -22,18 +22,6 @@ export default class CreateProject extends React.Component {
           "src": "", 
           "desc": "a really beautiful place i went to lolz", 
         },
-
-        {
-          "index": 0,
-          "src": "", 
-          "desc": "a really beautiful place i went to lolz", 
-        },
-
-        {
-          "index": 0,
-          "src": "", 
-          "desc": "a really beautiful place i went to lolz", 
-        },
       ],
     };
 
@@ -56,6 +44,10 @@ export default class CreateProject extends React.Component {
             {this.state.scenes.map(scene => 
               <ProjectPreview desc={scene.desc} />
             )}
+
+            <div id="add-scene-button"> 
+              <div> + </div>
+            </div>
           </div>
         </div>
         <div id="create-footer"> <div> {this.state.numScenes} scenes uploaded </div> </div>
@@ -99,15 +91,29 @@ export default class CreateProject extends React.Component {
             border: none;
           }
 
-          #create-footer {
+          #add-scene-button {
+            width: 80%;
+            height: 150px;
+            display: block;
+            margin: 25px auto;
+            background-color: #D8D8D8;
+            border-radius: 5px;
+            font-size: 3rem;
+          }
+
+          #create-footer, #add-scene-button {
             display: table;
           }
 
-          #create-footer div {
+          #create-footer div, #add-scene-button div {
             display: table-cell;
             vertical-align: middle;
             font-weight: 100;
             color: #3e3e3e;
+          }
+
+          #add-scene-button div {
+            font-weight: bold;
           }
 
         `}</style>
