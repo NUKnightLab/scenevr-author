@@ -14,9 +14,9 @@ export default class App extends React.Component {
   render () {
     return (
       <div id="login">
-        <h1> SceneVR </h1>;
-        <h3> Greeting or some other introductory copy? </h3>
-        <div id="login-button" onClick={this.signin}> </div>
+        <h1> SceneVR </h1>
+        <h3> Greeting or some <br /> other introductory copy? </h3>
+        <div id="login-button" onClick={this.signin}> <p> Sign in with Google </p> </div>
 
         <style jsx> {` 
           #login {
@@ -24,23 +24,43 @@ export default class App extends React.Component {
             width: 100%;
             text-align: center;
             font-family: "Avenir Next";
+            overflow-y: hidden;
+          }
+
+          #login * {
+            position: relative;
           }
 
           #login h1 {
             font-weight: bold;
             color: #999;
+            margin-top: 100px;
+            margin-bottom: 80px;
           }
+
 
           #login h3 {
             font-style: italic;
             color: #999;
+            font-size: 1.3rem;
+            margin-bottom: 50px;
           }
 
           #login-button {
+            position: absolute;
+            border-radius: 5px;
+            bottom: 40%;
+            left: 10%;
             width: 80%;
             height: 60px;
             margin: 0 auto;
             background-color: #ff675e;
+          }
+
+          #login-button p {
+            color: white;
+            position: relative;
+            top: 30%;
           }
         `}</style>
       </div>
