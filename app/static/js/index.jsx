@@ -1,5 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import CreateProject from "./CreateProject.jsx";
+import SceneUpload from "./SceneUpload.jsx";
 
-ReactDOM.render(<CreateProject />, document.getElementById("content"));
+ReactDOM.render(<SceneUpload />, document.getElementById("content"));
