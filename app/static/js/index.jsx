@@ -1,4 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./app";
-ReactDOM.render(<App />, document.getElementById("content"));
+import Projects from "./projects.jsx";
+
+ReactDOM.render(<Projects />, document.getElementById("content"));

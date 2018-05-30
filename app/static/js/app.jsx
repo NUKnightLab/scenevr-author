@@ -11,7 +11,7 @@ export default class App extends React.Component {
     console.log("Google sign in activated");
   }
 
-  render () {
+  render() {
     return (
       <div id="login">
         <h1> SceneVR </h1>
@@ -49,11 +49,9 @@ export default class App extends React.Component {
           #login-button {
             position: absolute;
             border-radius: 5px;
-            bottom: 40%;
-            left: 10%;
             width: 80%;
             height: 60px;
-            margin: 0 auto;
+            margin: 90px auto;
             background-color: #ff675e;
           }
 
