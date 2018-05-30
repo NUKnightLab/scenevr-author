@@ -1,0 +1,38 @@
+#projects {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 100%;
+  grid-template-rows: 60px 90px auto 60px;
+  font-family: "Avenir Next";
+  font-weight: bold;
+  text-align: center;
+  overflow: hidden;
+}
+
+#header, #title, #new-project {
+  display: table;
+}
+
+#header div, #title div, #new-project div {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#header {
+  background-color: #b8d4ff;
+  z-index: 2;
+}
+
+#title {
+  background-color: #F2F2F2
+}
+
+#project-container {
+  overflow-y: scroll;
+}
+
+#new-project {
+  background-color: #54cf86;
+  z-index: 2;
+  color: white;
+}

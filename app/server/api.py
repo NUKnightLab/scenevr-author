@@ -117,28 +117,35 @@ def establish_user():
     else:
         g.user = None
 
-@app.route("/")
-def index():
-  return render_template('index.html')
 
-@app.route("/projects")
+@app.route("/projects", methods=['GET'])
 def projects():
-  return None
+    user = g.user
+    print(user)
+    print(session)
+    projects = models.Project.query.filter_by(user_id=user.id)
+    projectArray = []
+    for project in projects:
+        projectDict = {'text':project.id, 'name':project.name}
+        projectArray.append(projectDict)
+    return jsonify(projectArray)
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+@require_user
+def index(path, user=None):
+    return render_template('index.html')
 
 @app.route("/project-details")
 def project_details():
-  return None
-
-@app.route("/upload")
-def upload():
-  return None
+    return None
 
 @app.route('/home')
 @require_user
 def home(user=None):
-  """Entry point to the application for an authenticated user."""
-  user = g.user
-  return render_template('hello.html', user=user)
+    """Entry point to the application for an authenticated user."""
+    user = g.user
+    return render_template('hello.html', user=user)
 
 @app.route('/home')
 def my_form_post():
@@ -322,7 +329,7 @@ def google_authorized():
   verified_jwt = google.oauth2.id_token.verify_oauth2_token(credentials.id_token,grequest)
   _user_set(issuer=verified_jwt['iss'], subject=verified_jwt['sub'])
   # For now, we will always redirect a freshly authenticated user to 'home' no matter where they were trying to go in the first place.
-  return redirect(url_for('home'))
+  return redirect(url_for('index'))
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,

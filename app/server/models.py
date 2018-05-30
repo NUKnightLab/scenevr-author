@@ -32,6 +32,7 @@ class Project(db.Model):
     user = relationship("User", back_populates="projects")
     scenes = relationship("Scene", back_populates="project")
 
+
 class Scene(db.Model):
     __tablename__ = 'scenes'
 
