@@ -1,5 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Projects from "./projects.jsx";
+import CreateProject from "./CreateProject.jsx";
 
-ReactDOM.render(<Projects />, document.getElementById("content"));
+ReactDOM.render(<CreateProject />, document.getElementById("content"));
