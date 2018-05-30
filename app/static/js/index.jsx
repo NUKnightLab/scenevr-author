@@ -12,6 +12,8 @@ require('./../stylesheets/login.css');
 require('./../stylesheets/upload.css');
 require('./../stylesheets/projects.css');
 require('./../stylesheets/create_projects.css');
+require('./../stylesheets/individualProject.css');
+require('./../stylesheets/projectPreview.css');
 
 ReactDOM.render((
   <BrowserRouter>
