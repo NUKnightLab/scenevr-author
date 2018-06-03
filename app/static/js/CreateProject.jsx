@@ -10,10 +10,13 @@ import {
 
 import ProjectPreview from './components/ProjectPreview.jsx';
 
-const DragHandle = SortableHandle(() => <span>::</span>);
+const DragHandle = SortableHandle(() => <span id="drag-handle">&#9776;</span>);
 
 const SortableItem = SortableElement(({scene}) =>
-  <ProjectPreview key={scene.index} desc={scene.desc} />
+  <div>
+    <DragHandle />
+    <ProjectPreview key={scene.index} desc={scene.desc} />
+  </div>
 );
 
 const SortableList = SortableContainer(({scenes}) => {
@@ -31,27 +34,16 @@ export default class CreateProject extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      projectId: this.props.location.state.project_id,
+      projectId: this.props.location.state.projectId,
       redirectProjects: false,
-      numScenes: 4,
-      scenes: [
-        {
-          "order": 0,
-          "src": "",
-          "desc": "a really beautiful place i went to lolz",
-        },
-
-        {
-          "order": 1,
-          "src": "",
-          "desc": "a really",
-        },
-      ],
+      redirectUpload: false,
+      scenes: [],
+      numScenes: null,
     };
 
-    this.addProject = this.addProject.bind(this);
     this.goToProjects = this.goToProjects.bind(this);
     this.updateTitles = this.updateTitles.bind(this);
+    this.createScene = this.createScene.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +52,11 @@ export default class CreateProject extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
+          this.setState({
+            scenes: result.scenesData,
+            numScenes: result.scenesData.length
+          });
+
           if (result.title){
             document.getElementById('title-input').value=result.title;
           } else{
@@ -79,12 +76,39 @@ export default class CreateProject extends React.Component {
       )
   }
 
-  addProject(){
-    const oldState = this.state.projects;
-  }
-
   goToProjects(){
     this.setState({ redirectProjects: true });
+  }
+
+  // createScene(){
+  //   const url = "/create-scene/" + this.state.projectId;
+  //
+  //   var data = {
+  //     order: this.state.scenes.length
+  //   };
+  //   fetch(url, {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers:{
+  //       'Content-Type': 'application/json'
+  //     },
+  //     credentials: 'include'
+  //   })
+  //   .then(res => res.json())
+  //   .then(
+  //     (result) => {
+  //       console.log(result);
+  //     },
+  //     (error) => {
+  //       this.setState({error});
+  //     }
+  //   )
+  // }
+
+  createScene(){
+    this.setState({
+        redirectUpload: true
+    });
   }
 
   updateTitles(){
@@ -127,11 +151,22 @@ export default class CreateProject extends React.Component {
 
 
   render() {
-    const { redirectProjects, scenes } = this.state;
+    const { redirectProjects, redirectUpload, scenes } = this.state;
 
     if (redirectProjects){
       return (
         <Redirect to={{pathname: '/'}}/>
+      );
+    }
+
+    if (redirectUpload){
+      return (
+        <Redirect to={{
+          pathname: '/upload',
+          state: {
+              projectId: this.state.projectId,
+            }
+          }}/>
       );
     }
 
@@ -146,8 +181,8 @@ export default class CreateProject extends React.Component {
           <input id="title-input" type="text" onBlur={this.updateTitles}/>
           <input id="project-description" type="text" onBlur={this.updateTitles} />
           <div id="scenes-container">
-            <SortableList scenes={scenes} onSortEnd={this.onSortEnd.bind(this)}/>
-            <div id="add-scene-button">
+            <SortableList scenes={scenes} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
+            <div id="add-scene-button" onClick={this.createScene}>
               <div> + </div>
             </div>
           </div>

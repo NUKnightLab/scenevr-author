@@ -22,9 +22,7 @@ export default class IndividualProject extends React.Component {
 					<Redirect to={{
 	          pathname: '/create',
 	          state: {
-								project_id: this.props.id,
-								project_title: this.props.title,
-								project_desc: this.props.desc
+								projectId: this.props.id,
 							}
 	      		}}/>
 				);

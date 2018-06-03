@@ -157,8 +157,21 @@ def project_details(project_id):
         return jsonify(data)
     if request.method == 'GET':
         project = models.Project.query.get(project_id)
-        data = {'title': project.title, 'desc': project.desc}
+        scenesData = []
+        scenes = models.Scene.query.filter_by(project_id=project_id).order_by(models.Scene.order)
+        for scene in scenes:
+            sceneData = {'order': scene.order, 'src': scene.image_url, 'desc': scene.caption}
+            scenesData.append(sceneData)
+        data = {'title': project.title, 'desc': project.desc, 'scenesData': scenesData}
         return jsonify(data)
+
+@app.route("/create-scene/<project_id>", methods=['POST'])
+def create_scene(project_id):
+    data = request.get_json()
+    scene = models.Scene(project_id=project_id, order=data['order'])
+    db.session.add(scene)
+    db.session.commit()
+    return jsonify(data)
 
 @app.route('/home')
 @require_user

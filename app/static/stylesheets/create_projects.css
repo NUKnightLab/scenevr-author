@@ -64,6 +64,7 @@
   background-color: #D8D8D8;
   border-radius: 5px;
   font-size: 3rem;
+  cursor: pointer;
 }
 
 #create-footer, #add-scene-button {
@@ -79,4 +80,12 @@
 
 #add-scene-button div {
   font-weight: bold;
+}
+
+#drag-handle{
+  float:left;
+  margin-left: 5px;
+  font-size: 1.5rem;
+  color: #D8D8D8;
+  cursor: move;
 }
