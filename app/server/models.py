@@ -26,7 +26,9 @@ class Project(db.Model):
     __tablename__ = 'projects'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
+    title = db.Column(db.String(200))
+    desc = db.Column(db.String(200))
+    date = db.Column(db.String(200))
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = relationship("User", back_populates="projects")

@@ -1,27 +1,46 @@
 import React from "react";
+import { Redirect } from 'react-router';
 
 export default class IndividualProject extends React.Component {
 
 	constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+			redirect: false
+		};
+		this.editProject = this.editProject.bind(this);
   }
 
-  newProject() {
-  	console.log("next project upload screen appears");
+  editProject() {
+  	this.setState({ redirect: true });
   }
 
   render() {
-    return (
-      <div id="individual-project">
-      	<div id="project-info">
-	      	<h4 id="name"> {this.props.title} </h4>
-	        <h5 id="desc"> {this.props.desc} </h5>
-	        <p id="date"> {this.props.date} </p>
-      	</div>
-        <div id="project-thumbnail"> 
-        </div>
-      </div>
-    );
+		const { redirect } = this.state;
+		if (redirect){
+	      return (
+					<Redirect to={{
+	          pathname: '/create',
+	          state: {
+								project_id: this.props.id,
+								project_title: this.props.title,
+								project_desc: this.props.desc
+							}
+	      		}}/>
+				);
+		}
+		else {
+	    return (
+	      <div id="individual-project" className="link" onClick={this.editProject}>
+	      	<div id="project-info">
+		      	<h4 id="name"> {this.props.title} </h4>
+		        <h5 id="desc"> {this.props.desc} </h5>
+		        <p id="date"> {this.props.date} </p>
+	      	</div>
+	        <div id="project-thumbnail">
+	        </div>
+	      </div>
+	    );
+		}
   }
 }

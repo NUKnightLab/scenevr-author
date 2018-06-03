@@ -1,4 +1,8 @@
 import React from "react";
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { Redirect } from 'react-router';
+
 import IndividualProject from './components/IndividualProject.jsx';
 
 export default class Projects extends React.Component {
@@ -6,26 +10,12 @@ export default class Projects extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      projectData: [
-        {
-          "title": "Test",
-          "desc": "Shortened description and such will fo here, but will also get cut if there's too much text",
-          "date": "March 14th",
-        },
-
-        {
-          "title": "Test",
-          "desc": "Shortened description and such will fo here, but will also get cut if there's too much text",
-          "date": "March 14th",
-        },
-
-        {
-          "title": "Test",
-          "desc": "Shortened description and such will fo here, but will also get cut if there's too much text",
-          "date": "March 14th",
-        }
-      ],
+      projectData: null,
       error: null,
+      redirect: false,
+      newProjectId: null,
+      newProjectTitle: null,
+      newProjectDesc: null
     };
 
     this.newProject = this.newProject.bind(this);
@@ -36,45 +26,86 @@ export default class Projects extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
-            items: result.items
+            projectData: result
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
-          this.setState({
-            error
-          });
+          this.setState({error});
         }
       )
   }
 
   newProject(){
     console.log("new project!");
+    var url = '/create-project';
+
+    fetch(url, {
+      method: 'POST',
+      body: null,
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        this.setState({
+          redirect: true,
+          newProjectId: result.project_id,
+          newProjectTitle: result.title,
+          newProjectDesc: result.desc
+        });
+      },
+      (error) => {
+        this.setState({error});
+      }
+    )
   }
 
   render() {
-    const { error, items } = this.state;
-    return (
-      <div id="projects">
-        <div id="header">
-          <div> HEADER </div>
+    const { error, projectData, redirect } = this.state;
+    if (redirect){
+      return (
+        <Redirect to={{
+          pathname: '/create',
+          state: {
+              project_id: this.state.newProjectId,
+              project_title: this.state.newProjectTitle,
+              project_desc: this.props.newProjectDesc
+            }
+          }}/>
+      );
+    }
+
+    const projects = projectData ? (
+      projectData.map(proj => (
+        <IndividualProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} />
+      ))
+    ) : (null);
+
+    if (error){
+      return <div>Error: {error.message}</div>;
+    }
+    else{
+      return (
+        <div id="projects">
+          <div id="header">
+            <div> HEADER </div>
+          </div>
+          <div id="title">
+            <div> PROJECTS </div>
+          </div>
+          <div id="project-container">
+            {projects}
+          </div>
+          <div id="new-project" className="link" onClick={this.newProject}>
+            <div> NEW PROJECT </div>
+          </div>
         </div>
-        <div id="title">
-          <div> PROJECTS </div>
-        </div>
-        <div id="project-container">
-          {this.state.projectData.map(proj => (
-            <IndividualProject title={proj.title} desc={proj.desc} date={proj.date} />
-          ))}
-        </div>
-        <div id="new-project" onClick={this.newProject}>
-          <div> NEW PROJECT </div>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }

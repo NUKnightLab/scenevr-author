@@ -1,3 +1,7 @@
+.link{
+  cursor: pointer;
+}
+
 #projects {
   display: grid;
   height: 100vh;

@@ -118,17 +118,6 @@ def establish_user():
         g.user = None
 
 
-@app.route("/projects", methods=['GET'])
-def projects():
-    user = g.user
-    print(user)
-    print(session)
-    projects = models.Project.query.filter_by(user_id=user.id)
-    projectArray = []
-    for project in projects:
-        projectDict = {'text':project.id, 'name':project.name}
-        projectArray.append(projectDict)
-    return jsonify(projectArray)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -136,9 +125,40 @@ def projects():
 def index(path, user=None):
     return render_template('index.html')
 
-@app.route("/project-details")
-def project_details():
-    return None
+@app.route("/projects", methods=['GET'])
+def projects():
+    user = g.user
+    projects = models.Project.query.filter_by(user_id=user.id)
+    projectArray = []
+    for project in projects:
+        projectDict = {'id':project.id, 'title':project.title, 'desc':project.desc, 'date': project.date}
+        projectArray.append(projectDict)
+    return jsonify(projectArray)
+
+@app.route('/create-project', methods=['POST'])
+def create_project():
+    user = g.user
+    project = models.Project(user_id=user.id)
+    db.session.add(project)
+    db.session.commit()
+    data = {'project_id': project.id, 'title': project.title, 'desc': project.desc}
+    return jsonify(data)
+
+
+@app.route("/project-details/<project_id>", methods=['GET', 'POST'])
+def project_details(project_id):
+    if request.method == 'POST':
+        data = request.get_json()
+        project = models.Project.query.get(project_id)
+        project.title = data['titleData']
+        project.desc = data['descData']
+        db.session.add(project)
+        db.session.commit()
+        return jsonify(data)
+    if request.method == 'GET':
+        project = models.Project.query.get(project_id)
+        data = {'title': project.title, 'desc': project.desc}
+        return jsonify(data)
 
 @app.route('/home')
 @require_user
