@@ -1,8 +1,30 @@
 import React from "react";
 import { Redirect } from 'react-router';
 
-import IndividualProject from './components/IndividualProject.jsx';
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+  arrayMove,
+} from 'react-sortable-hoc';
+
 import ProjectPreview from './components/ProjectPreview.jsx';
+
+const DragHandle = SortableHandle(() => <span>::</span>);
+
+const SortableItem = SortableElement(({scene}) =>
+  <ProjectPreview key={scene.index} desc={scene.desc} />
+);
+
+const SortableList = SortableContainer(({scenes}) => {
+  return (
+    <div>
+      {scenes.map((scene, index) => (
+        <SortableItem key={`item-${index}`} index={index} scene={scene} />
+      ))}
+    </div>
+  );
+});
 
 export default class CreateProject extends React.Component {
 
@@ -10,21 +32,19 @@ export default class CreateProject extends React.Component {
     super(props);
     this.state = {
       projectId: this.props.location.state.project_id,
-      projectTitle: this.props.location.state.project_title,
-      projectDesc: this.props.location.state.project_desc,
       redirectProjects: false,
       numScenes: 4,
       scenes: [
         {
-          "index": 0,
+          "order": 0,
           "src": "",
           "desc": "a really beautiful place i went to lolz",
         },
 
         {
-          "index": 1,
+          "order": 1,
           "src": "",
-          "desc": "a really beautiful place i went to lolz",
+          "desc": "a really",
         },
       ],
     };
@@ -40,11 +60,6 @@ export default class CreateProject extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          this.setState({
-            projectTitle: result.title,
-            projectDesc: result.desc
-          });
-
           if (result.title){
             document.getElementById('title-input').value=result.title;
           } else{
@@ -56,7 +71,7 @@ export default class CreateProject extends React.Component {
           } else{
             document.getElementById('title-input').placeholder="Write a description";
           };
-          
+
         },
         (error) => {
           this.setState({error});
@@ -99,8 +114,20 @@ export default class CreateProject extends React.Component {
     )
   }
 
+  onSortEnd({oldIndex, newIndex}) {
+    const {scenes} = this.state;
+    var tempScenes = arrayMove(scenes, oldIndex, newIndex);
+    for (let i = 0; i < scenes.length; i++){
+      tempScenes[i].order = i;
+    }
+    this.setState({
+        scenes: tempScenes
+    });
+	}
+
+
   render() {
-    const { redirectProjects } = this.state;
+    const { redirectProjects, scenes } = this.state;
 
     if (redirectProjects){
       return (
@@ -119,10 +146,7 @@ export default class CreateProject extends React.Component {
           <input id="title-input" type="text" onBlur={this.updateTitles}/>
           <input id="project-description" type="text" onBlur={this.updateTitles} />
           <div id="scenes-container">
-            {this.state.scenes.map(scene =>
-              <ProjectPreview key={scene.index} desc={scene.desc} />
-            )}
-
+            <SortableList scenes={scenes} onSortEnd={this.onSortEnd.bind(this)}/>
             <div id="add-scene-button">
               <div> + </div>
             </div>

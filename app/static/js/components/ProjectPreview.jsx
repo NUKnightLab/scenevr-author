@@ -17,7 +17,7 @@ export default class ProjectPreview extends React.Component {
       <div className="individual-project" onClick={this.next}>
         {/* <img src={this.props.src} alt="project preview" /> */}
         <div className="project-preview" />
-        <h5> {this.props.desc} </h5>
+        <h5 id="scene-description"> {this.props.desc} </h5>
       </div>
     );
   }

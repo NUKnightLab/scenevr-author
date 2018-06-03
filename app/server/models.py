@@ -40,7 +40,8 @@ class Scene(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     image_url = db.Column(db.String(200))
-    text = db.Column(db.String(200))
+    caption = db.Column(db.String(200))
+    order = db.Column(db.Integer)
 
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = relationship("Project", back_populates="scenes")
