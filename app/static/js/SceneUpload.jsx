@@ -23,6 +23,27 @@ export default class SceneUpload extends React.Component {
 
   }
 
+    componentDidMount() {
+      const url = "/upload-image/" + this.state.projectId + "/" + this.state.order;
+      fetch(url, {'credentials': 'include'})
+        .then(res => res.json())
+        .then(
+          (result) => {
+            if (result.scene_exists == 'True'){
+              this.setState({
+                imagePreviewUrl: result.src,
+                sceneId: result.scene_id
+              });
+              document.getElementById('description-input').value = result.desc;
+            }
+          },
+          (error) => {
+            this.setState({error});
+          }
+        )
+    }
+
+
   fileChangedHandler(event){
     let reader = new FileReader();
     let file = event.target.files[0];
@@ -38,7 +59,7 @@ export default class SceneUpload extends React.Component {
 
   upload(){
 
-    const url = "/upload-image/" + this.state.projectId;
+    const url = "/upload-image/" + this.state.projectId + "/" + this.state.order;
 
     var caption = document.getElementById('description-input').value;
     var fileField = document.getElementById('file-object');

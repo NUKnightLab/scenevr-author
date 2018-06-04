@@ -19,6 +19,7 @@
 }
 
 #publish {
+  cursor: pointer;
   grid-column: 2;
   color: #7ACCFF;
   right: 20px;
