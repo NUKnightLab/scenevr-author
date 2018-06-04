@@ -6,7 +6,8 @@ export default class IndividualProject extends React.Component {
 	constructor(props) {
     super(props);
     this.state = {
-			redirect: false
+			redirect: false,
+			thumbnail: this.props.thumbnail
 		};
 		this.editProject = this.editProject.bind(this);
   }
@@ -17,6 +18,14 @@ export default class IndividualProject extends React.Component {
 
   render() {
 		const { redirect } = this.state;
+		let imageThumbnail = null;
+
+		if (this.state.thumbnail) {
+			imageThumbnail = (<img src={this.state.thumbnail} />);
+		} else {
+			imageThumbnail = (<div />);
+		}
+
 		if (redirect){
 	      return (
 					<Redirect to={{
@@ -36,6 +45,7 @@ export default class IndividualProject extends React.Component {
 		        <p id="date"> {this.props.date} </p>
 	      	</div>
 	        <div id="project-thumbnail">
+						{imageThumbnail}
 	        </div>
 	      </div>
 	    );

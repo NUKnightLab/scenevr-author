@@ -2,7 +2,7 @@
   height: 200px;
 }
 
-.project-preview {
+.project-preview img{
   display: grid;
   grid-template-columns: 4fr 1fr;
   width: 90%;

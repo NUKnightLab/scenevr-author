@@ -131,7 +131,7 @@ def projects():
     projects = models.Project.query.filter_by(user_id=user.id)
     projectArray = []
     for project in projects:
-        projectDict = {'id':project.id, 'title':project.title, 'desc':project.desc, 'date': project.date}
+        projectDict = {'id':project.id, 'title':project.title, 'desc':project.desc, 'date': project.date, 'thumbnail':project.thumbnail}
         projectArray.append(projectDict)
     return jsonify(projectArray)
 
@@ -153,11 +153,19 @@ def project_details(project_id):
         project.title = data['titleData']
         project.desc = data['descData']
         db.session.add(project)
+        db.session.commit()
         scenesData = data['sceneData']
         scenes = models.Scene.query.filter_by(project_id=project_id).order_by(models.Scene.order)
         for index, scene in enumerate(scenes):
-            scene.order = scenesData[index]['order']
+            scene.caption = scenesData[index]['desc']
+            scene.image_url = scenesData[index]['src']
             db.session.add(scene)
+        # update thumbnail of project to be first scene
+        if scenesData:
+            project = models.Project.query.get(project_id)
+            project.thumbnail = scenesData[0]['src']
+            db.session.add(project)
+
         db.session.commit()
         return jsonify(data)
     if request.method == 'GET':
@@ -174,16 +182,11 @@ def project_details(project_id):
 def create_scene(project_id):
     try:
         user = g.user
-        #print(request.files)
-        print(request.files)
 
         caption = request.form.get('caption', None)
         file = request.files.get('file', None)
         order = request.form.get('order', None)
         scene_id = request.form.get('sceneId', None)
-
-        print(file)
-        print(caption)
 
         filename = file.filename
         content_type = file.content_type
@@ -199,83 +202,10 @@ def create_scene(project_id):
             scene = models.Scene(project_id=project_id, caption=caption, image_url=image_url, order=order)
 
         db.session.add(scene)
+
         db.session.commit()
 
         return jsonify({'image_url': image_url, 'caption':caption, 'sceneId':scene.id})
-    except storage.StorageException as e:
-        traceback.print_exc()
-        return jsonify({'error': str(e), 'error_detail': e.detail})
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({'error': str(e)})
-
-
-@app.route('/home')
-@require_user
-def home(user=None):
-    """Entry point to the application for an authenticated user."""
-    user = g.user
-    return render_template('hello.html', user=user)
-
-@app.route('/home')
-def my_form_post():
-    user = g.user
-    return render_template('hello.html', user=user)
-
-@app.route('/home/update', methods=['POST'])
-def update_form():
-    user = g.user
-    text = request.form['text']
-    project = models.Project(user_id=user.id, name=text)
-    scene = models.Scene(project_id=project.id, text="", image_url="")
-    db.session.add(project)
-    db.session.add(scene)
-    db.session.commit()
-
-    return render_template('hello.html', user=user)
-
-@app.route('/home/<project_id>')
-def getScenes(project_id):
-    #user = g.user
-    #text = request.form['text']
-    scenes = models.Scene.query.filter_by(project_id=project_id)
-
-    return render_template('scenes.html', scenes=scenes, project_id=project_id)
-
-@app.route('/home/<project_id>/update', methods=['POST'])
-def updateScenes(project_id):
-    """
-    Save storymap image
-    @id = storymap id
-    @name = file name
-    @content = data:URL representing the file's data as base64 encoded string
-    """
-    try:
-        user = g.user
-        #print(request.files)
-        text = request.form['text']
-        file = request.files['image_url']
-        filename = file.filename
-        content_type = file.content_type
-        content = base64.b64encode(file.read())
-        # print(content)
-        # m = re.match('data:(.+);base64,(.+)', content)
-        # if m:
-        #     content_type = m.group(1)
-        #     content = m.group(2).decode('base64')
-        # else:
-        #     raise Exception('Expected content as data-url')
-
-        key_name = storage.key_name(str(user.id), str(project_id), filename)
-        storage.save_from_data(key_name, content_type, content)
-        image_url = settings.AWS_STORAGE_BUCKET_URL + key_name
-        scene = models.Scene(project_id=project_id, text=text, image_url=image_url)
-        db.session.add(scene)
-        db.session.commit()
-
-        scenes = models.Scene.query.filter_by(project_id=project_id)
-
-        return redirect('/home/' + str(project_id))
     except storage.StorageException as e:
         traceback.print_exc()
         return jsonify({'error': str(e), 'error_detail': e.detail})

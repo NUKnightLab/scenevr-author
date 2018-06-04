@@ -15,7 +15,7 @@ const DragHandle = SortableHandle(() => <span id="drag-handle">&#9776;</span>);
 const SortableItem = SortableElement(({scene}) =>
   <div>
     <DragHandle />
-    <ProjectPreview key={scene.index} desc={scene.desc} order={scene.order}/>
+    <ProjectPreview key={scene.index} desc={scene.desc} src={scene.src} order={scene.order}/>
   </div>
 );
 
@@ -52,7 +52,6 @@ export default class CreateProject extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
             scenes: result.scenesData,
             numScenes: result.scenesData.length
@@ -107,7 +106,7 @@ export default class CreateProject extends React.Component {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result);
+
       },
       (error) => {
         this.setState({error});

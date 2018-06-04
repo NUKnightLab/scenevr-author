@@ -35,7 +35,6 @@ export default class Projects extends React.Component {
   }
 
   newProject(){
-    console.log("new project!");
     var url = '/create-project';
 
     fetch(url, {
@@ -76,7 +75,7 @@ export default class Projects extends React.Component {
 
     const projects = projectData ? (
       projectData.map(proj => (
-        <IndividualProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} />
+        <IndividualProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} thumbnail={proj.thumbnail} />
       ))
     ) : (null);
 
