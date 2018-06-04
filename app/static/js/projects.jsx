@@ -13,9 +13,7 @@ export default class Projects extends React.Component {
       projectData: null,
       error: null,
       redirect: false,
-      newProjectId: null,
-      newProjectTitle: null,
-      newProjectDesc: null
+      newProjectId: null
     };
 
     this.newProject = this.newProject.bind(this);
@@ -54,9 +52,7 @@ export default class Projects extends React.Component {
         console.log(result);
         this.setState({
           redirect: true,
-          newProjectId: result.project_id,
-          newProjectTitle: result.title,
-          newProjectDesc: result.desc
+          newProjectId: result.project_id
         });
       },
       (error) => {
@@ -72,9 +68,7 @@ export default class Projects extends React.Component {
         <Redirect to={{
           pathname: '/create',
           state: {
-              project_id: this.state.newProjectId,
-              project_title: this.state.newProjectTitle,
-              project_desc: this.props.newProjectDesc
+              projectId: this.state.newProjectId
             }
           }}/>
       );

@@ -153,6 +153,11 @@ def project_details(project_id):
         project.title = data['titleData']
         project.desc = data['descData']
         db.session.add(project)
+        scenesData = data['sceneData']
+        scenes = models.Scene.query.filter_by(project_id=project_id).order_by(models.Scene.order)
+        for index, scene in enumerate(scenes):
+            scene.order = scenesData[index]['order']
+            db.session.add(scene)
         db.session.commit()
         return jsonify(data)
     if request.method == 'GET':
@@ -165,13 +170,45 @@ def project_details(project_id):
         data = {'title': project.title, 'desc': project.desc, 'scenesData': scenesData}
         return jsonify(data)
 
-@app.route("/create-scene/<project_id>", methods=['POST'])
+@app.route("/upload-image/<project_id>", methods=['POST'])
 def create_scene(project_id):
-    data = request.get_json()
-    scene = models.Scene(project_id=project_id, order=data['order'])
-    db.session.add(scene)
-    db.session.commit()
-    return jsonify(data)
+    try:
+        user = g.user
+        #print(request.files)
+        print(request.files)
+
+        caption = request.form.get('caption', None)
+        file = request.files.get('file', None)
+        order = request.form.get('order', None)
+        scene_id = request.form.get('sceneId', None)
+
+        print(file)
+        print(caption)
+
+        filename = file.filename
+        content_type = file.content_type
+        content = base64.b64encode(file.read())
+        key_name = storage.key_name(str(user.id), str(project_id), filename)
+        storage.save_from_data(key_name, content_type, content)
+        image_url = settings.AWS_STORAGE_BUCKET_URL + key_name
+        if scene_id:
+            scene = models.Scene.query.get(scene_id)
+            scene.image_url = image_url
+            scene.caption = caption
+        else:
+            scene = models.Scene(project_id=project_id, caption=caption, image_url=image_url, order=order)
+
+        db.session.add(scene)
+        db.session.commit()
+
+        return jsonify({'image_url': image_url, 'caption':caption, 'sceneId':scene.id})
+    except storage.StorageException as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'error_detail': e.detail})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e)})
+
 
 @app.route('/home')
 @require_user

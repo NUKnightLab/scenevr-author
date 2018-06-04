@@ -15,7 +15,7 @@ const DragHandle = SortableHandle(() => <span id="drag-handle">&#9776;</span>);
 const SortableItem = SortableElement(({scene}) =>
   <div>
     <DragHandle />
-    <ProjectPreview key={scene.index} desc={scene.desc} />
+    <ProjectPreview key={scene.index} desc={scene.desc} order={scene.order}/>
   </div>
 );
 
@@ -38,7 +38,7 @@ export default class CreateProject extends React.Component {
       redirectProjects: false,
       redirectUpload: false,
       scenes: [],
-      numScenes: null,
+      numScenes: 0,
     };
 
     this.goToProjects = this.goToProjects.bind(this);
@@ -52,6 +52,7 @@ export default class CreateProject extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result);
           this.setState({
             scenes: result.scenesData,
             numScenes: result.scenesData.length
@@ -66,7 +67,7 @@ export default class CreateProject extends React.Component {
           if (result.desc){
             document.getElementById('project-description').value=result.desc;
           } else{
-            document.getElementById('title-input').placeholder="Write a description";
+            document.getElementById('project-description').placeholder="Write a description";
           };
 
         },
@@ -80,31 +81,6 @@ export default class CreateProject extends React.Component {
     this.setState({ redirectProjects: true });
   }
 
-  // createScene(){
-  //   const url = "/create-scene/" + this.state.projectId;
-  //
-  //   var data = {
-  //     order: this.state.scenes.length
-  //   };
-  //   fetch(url, {
-  //     method: 'POST',
-  //     body: JSON.stringify(data),
-  //     headers:{
-  //       'Content-Type': 'application/json'
-  //     },
-  //     credentials: 'include'
-  //   })
-  //   .then(res => res.json())
-  //   .then(
-  //     (result) => {
-  //       console.log(result);
-  //     },
-  //     (error) => {
-  //       this.setState({error});
-  //     }
-  //   )
-  // }
-
   createScene(){
     this.setState({
         redirectUpload: true
@@ -117,7 +93,8 @@ export default class CreateProject extends React.Component {
     var descData = document.getElementById('project-description').value;
     var data = {
       titleData: titleData,
-      descData: descData
+      descData: descData,
+      sceneData: this.state.scenes
     };
     fetch(url, {
       method: 'POST',
@@ -147,6 +124,7 @@ export default class CreateProject extends React.Component {
     this.setState({
         scenes: tempScenes
     });
+    this.updateTitles();
 	}
 
 
@@ -165,6 +143,7 @@ export default class CreateProject extends React.Component {
           pathname: '/upload',
           state: {
               projectId: this.state.projectId,
+              order: this.state.numScenes
             }
           }}/>
       );

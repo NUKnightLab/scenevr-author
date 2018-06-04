@@ -11,7 +11,9 @@ export default class SceneUpload extends React.Component {
     this.state = {
       file: '',
       imagePreviewUrl: '',
+      sceneId: '',
       projectId: this.props.location.state.projectId,
+      order: this.props.location.state.order,
       redirect: false,
     };
 
@@ -35,6 +37,33 @@ export default class SceneUpload extends React.Component {
   }
 
   upload(){
+
+    const url = "/upload-image/" + this.state.projectId;
+
+    var caption = document.getElementById('description-input').value;
+    var fileField = document.getElementById('file-object');
+    var formData = new FormData();
+
+    formData.append('order', this.state.order);
+    formData.append('file', fileField.files[0]);
+    formData.append('caption', caption);
+    formData.append('sceneId', this.state.sceneId);
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({redirect: true});
+      },
+      (error) => {
+        this.setState({error});
+      }
+    )
+
 
   }
 
@@ -82,10 +111,10 @@ export default class SceneUpload extends React.Component {
           </div>
 
           <div id="upload-description">
-            <input type="text" placeholder="Write a description" />
+            <input id="description-input" type="text" placeholder="Write a description" />
           </div>
 
-          <input type="file" onChange={this.fileChangedHandler} />
+          <input id="file-object" type="file" onChange={this.fileChangedHandler} />
 
 
         </div>
