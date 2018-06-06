@@ -13,7 +13,9 @@ export default class Projects extends React.Component {
       projectData: null,
       error: null,
       redirect: false,
-      newProjectId: null
+      newProjectId: null,
+      userName: null,
+      userPicture: null
     };
 
     this.newProject = this.newProject.bind(this);
@@ -25,7 +27,9 @@ export default class Projects extends React.Component {
       .then(
         (result) => {
           this.setState({
-            projectData: result
+            projectData: result['projectArray'],
+            userName: result['userName'],
+            userPicture: result['userPicture']
           });
         },
         (error) => {
@@ -86,10 +90,11 @@ export default class Projects extends React.Component {
       return (
         <div id="projects">
           <div id="header">
-            <div> HEADER </div>
+            <img id="user-picture" src={this.state.userPicture} />
+            <div id="user-name"> {this.state.userName} </div>
           </div>
           <div id="title">
-            <div> PROJECTS </div>
+            <div> Your Projects </div>
           </div>
           <div id="project-container">
             {projects}

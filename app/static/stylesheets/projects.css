@@ -6,7 +6,7 @@
   display: grid;
   height: 100vh;
   grid-template-columns: 100%;
-  grid-template-rows: 60px 90px auto 60px;
+  grid-template-rows: 70px 70px auto 70px;
   font-family: "Avenir Next";
   font-weight: bold;
   text-align: center;
@@ -14,21 +14,39 @@
 }
 
 #header, #title, #new-project {
-  display: table;
+  display: grid;
+  height: 100%;
 }
 
 #header div, #title div, #new-project div {
-  display: table-cell;
-  vertical-align: middle;
+  /* display: table-cell;
+  vertical-align: middle; */
+  place-self: center;
 }
 
 #header {
-  background-color: #b8d4ff;
+  background-color: #555555;
   z-index: 2;
+  padding: 6px;
+}
+
+#user-picture{
+  place-self: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+}
+
+#user-name{
+  font-size: 14px;
+  color: white;
+  font-weight: normal;
 }
 
 #title {
-  background-color: #F2F2F2
+  background-color: #F2F2F2;
+  color: #555555;
+  font-size: 1.2rem;
 }
 
 #project-container {

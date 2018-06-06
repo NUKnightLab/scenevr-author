@@ -128,12 +128,14 @@ def index(path, user=None):
 @app.route("/projects", methods=['GET'])
 def projects():
     user = g.user
+    user_name = user.name
+    user_picture = user.picture
     projects = models.Project.query.filter_by(user_id=user.id)
     projectArray = []
     for project in projects:
         projectDict = {'id':project.id, 'title':project.title, 'desc':project.desc, 'date': project.date, 'thumbnail':project.thumbnail}
         projectArray.append(projectDict)
-    return jsonify(projectArray)
+    return jsonify({'projectArray': projectArray, 'userName':user_name, 'userPicture':user_picture})
 
 @app.route('/create-project', methods=['POST'])
 def create_project():

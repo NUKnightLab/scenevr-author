@@ -38,13 +38,13 @@ export default class IndividualProject extends React.Component {
 		}
 		else {
 	    return (
-	      <div id="individual-project" className="link" onClick={this.editProject}>
+	      <div id="individual-project">
 	      	<div id="project-info">
 		      	<h4 id="name"> {this.props.title} </h4>
 		        <h5 id="desc"> {this.props.desc} </h5>
 		        <p id="date"> {this.props.date} </p>
 	      	</div>
-	        <div id="project-thumbnail">
+	        <div id="project-thumbnail" onClick={this.editProject}>
 						{imageThumbnail}
 	        </div>
 	      </div>
