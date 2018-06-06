@@ -77,14 +77,8 @@ export default class CreateProject extends React.Component {
             document.getElementById('project-description').placeholder="Write a description";
           };
 
-<<<<<<< HEAD
-        {
-          "index": 0,
-          "src": "", 
-          "desc": "second, here's a scene that illlustrates how awesome my family is", 
-=======
->>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
         },
+        
         (error) => {
           this.setState({error});
         }
@@ -239,34 +233,18 @@ export default class CreateProject extends React.Component {
           <h6 id="nav-title" className="link" onClick={this.goToProjects}> &lt; Your Projects </h6>
           <h6 id="publish" onClick={this.publish}> Share </h6>
         </div>
-<<<<<<< HEAD
-        
-        <div id="create-project-content"> 
-          <input id="title-input" type="text" placeholder="Untitled" />
-          <input id="project-description" type="text" placeholder="Write a description" />
-          <div id="scenes-container">
-            {this.state.scenes.map(scene => 
-              <ProjectPreview desc={scene.desc} />
-            )}
-
-            <div id="add-scene-button"> 
-              <div> + <h6> ADD NEW PHOTO </h6> </div>
-=======
-
         <div id="create-project-content">
           <input id="title-input" type="text" onBlur={this.updateTitles}/>
           <input id="project-description" type="text" onBlur={this.updateTitles} />
           <div id="scenes-container">
             <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
             <div id="add-scene-button" onClick={this.createScene}>
-              <div> + </div>
->>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
+              <div> + <h6> ADD NEW PHOTO </h6> </div>
             </div>
           </div>
         </div>
         <div id="create-footer"> <div> {this.state.numScenes} photos uploaded </div> </div>
 
-<<<<<<< HEAD
         <style jsx> {` 
 
           #create-header {
@@ -375,8 +353,6 @@ export default class CreateProject extends React.Component {
           }
 
         `}</style>
-=======
->>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
       </div>
     );
   }

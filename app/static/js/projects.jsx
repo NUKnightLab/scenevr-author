@@ -18,8 +18,6 @@ export default class Projects extends React.Component {
       userName: null,
       userPicture: null
     };
-<<<<<<< HEAD
-=======
 
     this.newProject = this.newProject.bind(this);
   }
@@ -39,7 +37,6 @@ export default class Projects extends React.Component {
           this.setState({error});
         }
       )
->>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
   }
 
   newProject(){

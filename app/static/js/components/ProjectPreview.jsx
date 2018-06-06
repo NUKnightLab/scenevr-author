@@ -63,11 +63,19 @@ export default class ProjectPreview extends React.Component {
 		}
 
     return (
-<<<<<<< HEAD
-      <div className="individual-project" onClick={this.next}>
-        {/* <img src={this.props.src} alt="project preview" /> */}
-        <div className="project-preview" />
-        <h5> {this.props.desc} </h5>
+      <div className="individual-project" >
+
+        <DragHandle />
+
+        <div className="project-preview" onClick={this.next}>
+          <img src={this.props.src} alt="project preview" />
+          <h5 id="scene-description"> {this.props.desc} </h5>
+        </div>
+
+        <div id="delete-scene" onClick={this.deleteScene}>
+          <img src="/static/images/trash.svg"/>
+        </div>
+
         <style jsx> {`
           .individual-project {
             height: 200px;
@@ -93,21 +101,7 @@ export default class ProjectPreview extends React.Component {
             width: 90%;
           }
         `}</style>
-=======
-      <div className="individual-project" >
-
-				<DragHandle />
-
-        <div className="project-preview" onClick={this.next}>
-					<img src={this.props.src} alt="project preview" />
-					<h5 id="scene-description"> {this.props.desc} </h5>
-				</div>
-
-				<div id="delete-scene" onClick={this.deleteScene}>
-					<img src="/static/images/trash.svg"/>
-				</div>
-
->>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
+      
       </div>
     );
   }
