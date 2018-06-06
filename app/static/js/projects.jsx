@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import styles from '../stylesheets/projects.css';
 
 import IndividualProject from './components/IndividualProject.jsx';
 
