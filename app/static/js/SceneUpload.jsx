@@ -124,7 +124,7 @@ export default class SceneUpload extends React.Component {
           <div id="upload-header2">
             <h6 id="upload-cancel" onClick={this.cancel}> Cancel </h6>
             <h6 id="upload-text"> Upload New Scene </h6>
-            <h6 id="upload-done" onClick={this.upload}> Publish </h6>
+            <h6 id="upload-done" onClick={this.upload}> Upload </h6>
           </div>
 
           <div id="upload-thumbnail">

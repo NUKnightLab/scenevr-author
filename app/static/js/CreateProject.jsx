@@ -10,20 +10,18 @@ import {
 
 import ProjectPreview from './components/ProjectPreview.jsx';
 
-const DragHandle = SortableHandle(() => <span id="drag-handle">&#9776;</span>);
 
-const SortableItem = SortableElement(({scene, projectId}) =>
+const SortableItem = SortableElement(({scene, projectId, updateOrder}) =>
   <div>
-    <DragHandle />
-    <ProjectPreview key={scene.index} desc={scene.desc} src={scene.src} order={scene.order} projectId={projectId}/>
+    <ProjectPreview key={scene.index} desc={scene.desc} src={scene.src} order={scene.order} projectId={projectId} updateOrder={updateOrder}/>
   </div>
 );
 
-const SortableList = SortableContainer(({scenes, projectId}) => {
+const SortableList = SortableContainer(({scenes, projectId, updateOrder}) => {
   return (
     <div>
       {scenes.map((scene, index) => (
-        <SortableItem key={`item-${index}`} index={index} scene={scene} projectId={projectId} />
+        <SortableItem key={`item-${index}`} index={index} scene={scene} projectId={projectId} updateOrder={updateOrder} />
       ))}
     </div>
   );
@@ -43,11 +41,17 @@ export default class CreateProject extends React.Component {
 
     this.goToProjects = this.goToProjects.bind(this);
     this.updateTitles = this.updateTitles.bind(this);
+    this.updateOrder = this.updateOrder.bind(this);
     this.createScene = this.createScene.bind(this);
     this.publish = this.publish.bind(this);
+    this.fetchScenes = this.fetchScenes.bind(this);
   }
 
   componentDidMount() {
+    this.fetchScenes()
+  }
+
+  fetchScenes(){
     const url = "/project-details/" + this.state.projectId;
     fetch(url, {'credentials': 'include'})
       .then(res => res.json())
@@ -107,7 +111,7 @@ export default class CreateProject extends React.Component {
     .then(res => res.json())
     .then(
       (result) => {
-
+        this.fetchScenes();
       },
       (error) => {
         this.setState({error});
@@ -152,14 +156,24 @@ export default class CreateProject extends React.Component {
   onSortEnd({oldIndex, newIndex}) {
     const {scenes} = this.state;
     var tempScenes = arrayMove(scenes, oldIndex, newIndex);
+    this.setState({
+        scenes: tempScenes
+    });
+    this.updateOrder();
+	}
+
+  updateOrder(){
+    const {scenes} = this.state;
+    var tempScenes = this.state.scenes;
     for (let i = 0; i < scenes.length; i++){
       tempScenes[i].order = i;
     }
     this.setState({
         scenes: tempScenes
     });
+    console.log('order updated');
     this.updateTitles();
-	}
+  }
 
 
   render() {
@@ -187,14 +201,14 @@ export default class CreateProject extends React.Component {
       <div id="CreateProject">
         <div id="create-header">
           <h6 id="nav-title" className="link" onClick={this.goToProjects}> &lt; Your Projects </h6>
-          <h6 id="publish" onClick={this.publish}> Publish </h6>
+          <h6 id="publish" onClick={this.publish}> Share </h6>
         </div>
 
         <div id="create-project-content">
           <input id="title-input" type="text" onBlur={this.updateTitles}/>
           <input id="project-description" type="text" onBlur={this.updateTitles} />
           <div id="scenes-container">
-            <SortableList scenes={scenes} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
+            <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
             <div id="add-scene-button" onClick={this.createScene}>
               <div> + </div>
             </div>

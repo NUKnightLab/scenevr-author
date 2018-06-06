@@ -1,0 +1,121 @@
+body { font-size: 16px; font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 1.618; }
+
+body.desktop #scene-vr #thumbnails-container #thumbnails { display: none; }
+
+body.desktop #scene-vr #thumbnails-container .thumbnail { max-width: 20vw; margin: 0 1vw 3vh 0; }
+
+body.mobile #scene-vr #ui #fullscreen { bottom: 17vh; height: 55px; width: 55px; }
+
+body.mobile #scene-vr #ui #thumbnail-icons-close { right: 10px; width: 30px; height: 30px; }
+
+body.mobile #scene-vr #ui #thumbnail-icons { top: 37.5vh; right: 40px; }
+
+body.mobile #scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon { width: 30px; height: 30px; border: 2px solid #fff; }
+
+body.mobile #scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon:nth-of-type(1) { top: 10px; left: -10px; }
+
+body.mobile #scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon:nth-of-type(2) { top: 5px; left: -5px; }
+
+body.mobile #scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon:nth-of-type(3) { top: 0; left: 0; }
+
+body.mobile #scene-vr #ui #thumbnails-container { top: 3vh; }
+
+body.mobile #scene-vr #ui #thumbnails-container #thumbnails { display: none; }
+
+body.mobile #scene-vr #ui #thumbnails-container .thumbnail { max-width: 60vw; margin: 0 3vw 5vh 0; }
+
+body.mobile #scene-vr #ui #compass-container { top: 2vh; }
+
+body.mobile #scene-vr #ui #compass-container #compass { height: 40px; width: 40px; }
+
+body.mobile #scene-vr #ui #footer { height: 14vh; }
+
+body.mobile #scene-vr #ui #footer #footer-content { padding-left: 3%; width: 95%; }
+
+body.modal #scene-vr a-scene { opacity: 0.25; }
+
+body.modal #scene-vr #ui #fullscreen, body.modal #scene-vr #ui #compass { pointer-events: none; opacity: 0; }
+
+body.modal #scene-vr #ui #thumbnail-icons-close { display: block; }
+
+body.modal #scene-vr #ui #thumbnail-icons #thumbnail-icons-stack { display: none; }
+
+body.modal #scene-vr #ui #thumbnails-container { pointer-events: none; }
+
+body.modal #scene-vr #ui #thumbnails-container #thumbnails { position: static; opacity: 1; pointer-events: auto; display: block; }
+
+#scene-vr { opacity: 0; }
+
+#scene-vr a-scene { transition: opacity 0.5s; }
+
+#scene-vr #ui { opacity: 1; width: 100vw; height: 100vh; }
+
+#scene-vr #ui #black-background { width: 100%; height: 100%; background-color: #1d1f21; }
+
+#scene-vr #ui #fullscreen { position: fixed; bottom: 11vh; right: 2vw; cursor: pointer; height: 75px; width: 75px; -webkit-filter: drop-shadow(2px 1px 2px rgba(0, 0, 0, 0.4)); filter: drop-shadow(2px 1px 2px rgba(0, 0, 0, 0.4)); }
+
+#scene-vr #ui #thumbnails-container { position: fixed; top: 5vh; left: 3vw; width: 80vw; }
+
+#scene-vr #ui #thumbnail-icons-close { display: none; position: fixed; top: 40vh; right: 30px; height: 50px; width: 50px; cursor: pointer; }
+
+#scene-vr #ui #thumbnail-icons { display: inline-block; position: fixed; top: 40vh; right: 70px; cursor: pointer; transition: opacity 0.5s; }
+
+#scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon { position: absolute; border: 4px solid #fff; height: 50px; width: 50px; object-fit: cover; max-width: initial; }
+
+#scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon:nth-of-type(1) { top: 20px; left: -20px; }
+
+#scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon:nth-of-type(2) { top: 10px; left: -10px; }
+
+#scene-vr #ui #thumbnail-icons #thumbnail-icons-stack .thumbnail-icon:nth-of-type(3) { top: 0; left: 0; }
+
+#scene-vr #ui #thumbnails { height: 74vh; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow-y: auto; }
+
+#scene-vr #ui .thumbnail { cursor: pointer; display: inline-block; }
+
+#scene-vr #ui .selected-thumbnail { border: 1px solid #f0f0f0; }
+
+#scene-vr #ui #compass-container { position: fixed; top: 3vh; right: 3vw; }
+
+#scene-vr #ui #compass { width: 50px; height: 50px; position: fixed; right: 3vw; -webkit-filter: drop-shadow(2px 1px 2px rgba(0, 0, 0, 0.4)); filter: drop-shadow(2px 1px 2px rgba(0, 0, 0, 0.4)); }
+
+#scene-vr #ui #compass .a { fill: none; stroke: #f0f0f0; stroke-miterlimit: 10; stroke-width: 24px; }
+
+#scene-vr #ui #compass .b { fill: #f0f0f0; }
+
+#scene-vr #ui #compass #pointer { fill: #f0f0f0; transform-origin: 50% 130%; -webkit-filter: drop-shadow(2px 1px 2px rgba(0, 0, 0, 0.4)); filter: drop-shadow(2px 1px 2px rgba(0, 0, 0, 0.4)); }
+
+#scene-vr #ui #footer { height: 9vh; width: 100%; padding-top: 1vh; position: fixed; left: 0; bottom: 0; background-color: #1d1f21; background-color: #FFFFFF; display: flex; }
+
+#scene-vr #ui #footer-content { color: #f0f0f0; color: #222222; width: 100%; overflow-y: auto; font-size: 14px; line-height: 18px; }
+
+#scene-vr #ui #footer-content .footer-text { margin: 0; display: none; }
+
+#scene-vr #ui #footer-content .footer-text.current-footer-text { display: block; }
+
+#loading { width: 100vw; height: 100vh; position: fixed; left: 0; top: 0; display: flex; justify-content: center; align-items: center; }
+
+#loading .icon-loading { width: 30px; height: 30px; background-color: #666; vertical-align: middle; margin-left: auto; margin-right: auto; text-align: center; animation: rotateplane 1.2s infinite ease-in-out; -webkit-animation: rotateplane 1.2s infinite ease-in-out; }
+
+@keyframes rotateplane { 0% { transform: perspective(120px) rotateX(0deg) rotateY(0deg); }
+  50% { transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); }
+  100% { transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); } }
+
+@-webkit-keyframes rotateplane { 0% { -webkit-transform: perspective(120px); }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg); }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg); } }
+
+.fade-in { animation: 0.5s 1 forwards fadeIn; -webkit-animation: 0.5s 1 forwards fadeIn; }
+
+.fade-out { animation: 0.5s 1 forwards fadeOut; -webkit-animation: 0.5s 1 forwards fadeOut; }
+
+@keyframes fadeIn { from { opacity: 0; }
+  to { opacity: 1; } }
+
+@-webkit-keyframes fadeIn { from { opacity: 0; }
+  to { opacity: 1; } }
+
+@keyframes fadeOut { from { opacity: 1; }
+  to { opacity: 0; } }
+
+@-webkit-keyframes fadeOut { from { opacity: 1; }
+  to { opacity: 0; } }

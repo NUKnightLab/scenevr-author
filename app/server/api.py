@@ -180,6 +180,17 @@ def project_details(project_id):
         data = {'title': project.title, 'desc': project.desc, 'scenesData': scenesData}
         return jsonify(data)
 
+@app.route('/delete-scene/<project_id>', methods=['POST'])
+def delete_scene(project_id):
+    data = request.get_json()
+    order = data['sceneOrder']
+    scene = models.Scene.query.filter_by(project_id=project_id, order=order).first()
+    db.session.delete(scene)
+    db.session.commit()
+    data = {'order': order}
+    return jsonify(data)
+
+
 @app.route("/upload-image/<project_id>/<order>", methods=['GET'])
 def get_scene(project_id, order):
     scene = models.Scene.query.filter_by(project_id=project_id, order=order).first()
