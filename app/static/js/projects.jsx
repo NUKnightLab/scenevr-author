@@ -1,4 +1,5 @@
 import React from "react";
+import Sortable from "sortablejs";
 import IndividualProject from './components/IndividualProject.jsx';
 
 export default class Projects extends React.Component {
@@ -6,6 +7,7 @@ export default class Projects extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      elements: [],
       projectData: [
         {
           "title": "Test", 
@@ -26,6 +28,20 @@ export default class Projects extends React.Component {
         }
       ],
     };
+  }
+
+  componentDidMount() {
+    const element = document.getElementById("project-container");
+    var sortable = Sortable.create(element);
+
+
+    const elements = this.state.projectData.map(proj => (
+            <IndividualProject title={proj.title} desc={proj.desc} date={proj.date} />
+          ))
+
+    this.setState(elements: elements)
+    console.log(elements);
+    console.log("yerrrr");
   }
 
   render() {

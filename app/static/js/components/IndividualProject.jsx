@@ -22,16 +22,19 @@ export default class IndividualProject extends React.Component {
         <div id="project-thumbnail"> 
 
         </div>
+        <div id="icon-column">
+        </div>
 
         <style jsx> {` 
           #individual-project {
           	margin: 0 8px;
           	display: grid;
-          	grid-template-columns: 5fr 4fr;
+          	grid-template-columns: 4fr 3fr 1fr;
           	grid-gap: 10px;
           	font-family: "Avenir Next";
           	width: 97%;
-           	border-bottom: 1px solid #999;
+            border-bottom: 1px solid #999;
+            border-top: 1px solid #999;
           }
 
           #name {
@@ -44,17 +47,22 @@ export default class IndividualProject extends React.Component {
 
           #project-info {
           	grid-column: 1;
-          	padding: 10px;
+          	padding: 5px;
           	padding-top: 20px;
+          }
+
+          #icon-column {
+            grid-column: 3;
+            height: 100%;
+            background: url("static/img/drag.png") center center no-repeat;
           }
 
           #project-thumbnail {
           	background-color: #B0B0B0;
           	border-radius: 5px;
-          	height: 80%;
-          	margin-top: 10%;
+            height: 80%;
+          	margin-top: 15%;
           	grid-column: 2;
-          	margin-right: 10px;
           }
         `}</style>
       </div>

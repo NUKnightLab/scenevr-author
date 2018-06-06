@@ -10,6 +10,7 @@ export default class CreateProject extends React.Component {
       projectTitle: "",
       projectDesc: "",
       numScenes: 4,
+      shareModal: false,
       scenes: [
         {
           "index": 0,
@@ -26,11 +27,26 @@ export default class CreateProject extends React.Component {
     };
 
     this.addProject = this.addProject.bind(this);
+    this.share = this.share.bind(this);
+    this.hideShare = this.hideShare.bind(this);
+  }
+
+  componentDidMount() {
+    this.hideShare();
   }
 
   addProject(){
     const oldState = this.state.projects;
+  }
 
+  hideShare(){
+    document.getElementById("shareModal-bkg").style.display = "none";
+    document.getElementById("shareModal").style.display = "none";
+  }
+
+  share() {
+    document.getElementById("shareModal-bkg").style.display = "block";
+    document.getElementById("shareModal").style.display = "block";
   }
 
   render() {
@@ -38,10 +54,18 @@ export default class CreateProject extends React.Component {
       <div id="CreateProject">
         <div id="create-header"> 
           <h6 id="nav-title"> &lt; Your Projects </h6>
-          <h6 id="publish"> Publish </h6>
+          <h6 id="publish" onClick={this.share}> Share </h6>
         </div>
         
         <div id="create-project-content"> 
+          <div id="shareModal-bkg" onClick={this.hideShare}> </div>
+          <div id="shareModal">
+              <h4> Share Project </h4>
+              <input type="text" placeholder="https://www.blahblah.com/jimmytwoshoes" />
+              <h6 id="copyLink1"> Copy link </h6>
+              <input type="text" placeholder="https://www.omg.com/thisisgosha" />
+              <h6> Copy link </h6>
+          </div>
           <input id="title-input" type="text" placeholder="Untitled" />
           <input id="project-description" type="text" placeholder="Write a description" />
           <div id="scenes-container">
@@ -68,6 +92,52 @@ export default class CreateProject extends React.Component {
             font-size: .8rem;
           }
 
+          #shareModal-bkg {
+            background-color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            opacity: .8;
+            z-index: 3;
+          }
+
+          #shareModal {
+            margin: 0 auto;
+            height: 50%;
+            position: fixed;
+            top: 25%;
+            left: 5%;
+            width: 90%;
+            border-radius: 6px;
+            background-color: #eee;
+            opacity: 1;
+            z-index: 4;
+          }
+
+          #shareModal input {
+            display: block;
+            margin: 0 auto;
+            width: 90%;
+            margin: 20px;
+          }
+
+          #shareModal h4 {
+            margin-top: 25px;
+            margin-bottom: 50px;
+          }
+
+          #shareModal h6 {
+            text-align: left;
+            padding-left: 6%;
+            color: #3db4ff;
+          }
+
+          #copyLink1 {
+            margin-bottom: 40px;
+          }
+
           #nav-title, #publish {
             position: absolute;
             top: 20px;
@@ -80,7 +150,7 @@ export default class CreateProject extends React.Component {
 
           #publish {
             grid-column: 2;
-            color: #7ACCFF;
+            color: #7accff;
             right: 20px;
           }
 

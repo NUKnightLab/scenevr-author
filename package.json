@@ -39,6 +39,7 @@
 		]
 	},
 	"dependencies": {
+		"sortablejs": "^1.7.0",
 		"styled-jsx": "^2.2.6"
 	}
 }
