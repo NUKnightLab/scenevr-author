@@ -12,7 +12,8 @@ export default class Projects extends React.Component {
     this.state = {
       projectData: null,
       error: null,
-      redirect: false,
+      redirectCreate: false,
+      redirectLogout: false,
       newProjectId: null,
       userName: null,
       userPicture: null
@@ -54,7 +55,7 @@ export default class Projects extends React.Component {
       (result) => {
         console.log(result);
         this.setState({
-          redirect: true,
+          redirectCreate: true,
           newProjectId: result.project_id
         });
       },
@@ -65,8 +66,8 @@ export default class Projects extends React.Component {
   }
 
   render() {
-    const { error, projectData, redirect } = this.state;
-    if (redirect){
+    const { error, projectData, redirectCreate} = this.state;
+    if (redirectCreate){
       return (
         <Redirect to={{
           pathname: '/create',
@@ -76,6 +77,7 @@ export default class Projects extends React.Component {
           }}/>
       );
     }
+
 
     const projects = projectData ? (
       projectData.map(proj => (
@@ -90,7 +92,9 @@ export default class Projects extends React.Component {
       return (
         <div id="projects">
           <div id="header">
-            <img id="user-picture" src={this.state.userPicture} />
+            <a href="/logout">
+              <img id="user-picture" src={this.state.userPicture}/>
+            </a>
             <div id="user-name"> {this.state.userName} </div>
           </div>
           <div id="title">

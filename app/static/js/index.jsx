@@ -14,6 +14,7 @@ require('./../stylesheets/projects.css');
 require('./../stylesheets/create_projects.css');
 require('./../stylesheets/individualProject.css');
 require('./../stylesheets/projectPreview.css');
+require('./../stylesheets/modal.css');
 
 ReactDOM.render((
   <BrowserRouter>

@@ -245,6 +245,8 @@ def publish_project(project_id):
     """Save published project"""
     write_json_data(project_id)
     embed_url = write_embed_published(project_id)
+    if settings.TEST_MODE:
+        embed_url = "https://localhost:5000" + embed_url
 
     return jsonify({'embed_url': embed_url})
 

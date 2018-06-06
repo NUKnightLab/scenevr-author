@@ -2,7 +2,7 @@
   font-family: "Avenir Next";
 }
 
-#CreateProject input {
+#CreateProject {
   outline: none;
   border: none;
 }
@@ -77,4 +77,9 @@
   height: 100px;
   color: #444;
   word-break: break-all;
+}
+
+#upload-description input {
+  border: none;
+  outline: none;
 }

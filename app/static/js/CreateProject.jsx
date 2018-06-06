@@ -37,6 +37,8 @@ export default class CreateProject extends React.Component {
       redirectUpload: false,
       scenes: [],
       numScenes: 0,
+      embedUrl: null,
+      showModal: false
     };
 
     this.goToProjects = this.goToProjects.bind(this);
@@ -45,6 +47,7 @@ export default class CreateProject extends React.Component {
     this.createScene = this.createScene.bind(this);
     this.publish = this.publish.bind(this);
     this.fetchScenes = this.fetchScenes.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +148,7 @@ export default class CreateProject extends React.Component {
     .then(res => res.json())
     .then(
       (result) => {
+        this.setState({embedUrl: result['embed_url'], showModal: true})
         console.log(result);
       },
       (error) => {
@@ -171,13 +175,16 @@ export default class CreateProject extends React.Component {
     this.setState({
         scenes: tempScenes
     });
-    console.log('order updated');
     this.updateTitles();
+  }
+
+  closeModal(){
+    this.setState({showModal: false})
   }
 
 
   render() {
-    const { redirectProjects, redirectUpload, scenes } = this.state;
+    const { redirectProjects, redirectUpload, showModal, scenes } = this.state;
 
     if (redirectProjects){
       return (
@@ -197,8 +204,30 @@ export default class CreateProject extends React.Component {
       );
     }
 
+    let modal = null;
+
+    if (showModal) {
+      console.log(this.state.embedUrl['embed_url']);
+      modal = (
+        <div>
+          <div className="modal-overlay" id="modal-overlay"></div>
+          <div className="modal" id="modal">
+            <button className="close-button" id="close-button" onClick={this.closeModal}>X</button>
+            <div className="modal-guts">
+              <h1>Share</h1>
+              <input type="text" value={this.state.embedUrl} readOnly/>
+              <a href={this.state.embedUrl} target="_blank">
+                <div id="preview-button"> Preview </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div id="CreateProject">
+        {modal}
         <div id="create-header">
           <h6 id="nav-title" className="link" onClick={this.goToProjects}> &lt; Your Projects </h6>
           <h6 id="publish" onClick={this.publish}> Share </h6>

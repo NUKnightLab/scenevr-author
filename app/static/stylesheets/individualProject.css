@@ -10,16 +10,20 @@
 
 #name {
   font-weight: bold;
+  color: #333;
 }
 
 #desc {
   font-size: 1.1rem;
+  color: #666;
 }
 
 #project-info {
   grid-column: 1;
   padding: 10px;
   padding-top: 20px;
+  text-align: left;
+  padding-left: 20px;
 }
 
 #project-thumbnail {
