@@ -10,16 +10,29 @@
 
 #name {
   font-weight: bold;
+<<<<<<< HEAD
+=======
+  color: #333;
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
 }
 
 #desc {
   font-size: 1.1rem;
+<<<<<<< HEAD
+=======
+  color: #666;
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
 }
 
 #project-info {
   grid-column: 1;
   padding: 10px;
   padding-top: 20px;
+<<<<<<< HEAD
+=======
+  text-align: left;
+  padding-left: 20px;
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
 }
 
 #project-thumbnail {
@@ -29,9 +42,17 @@
   margin-top: 10%;
   grid-column: 2;
   margin-right: 10px;
+<<<<<<< HEAD
+=======
+
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
 }
 
 #project-thumbnail img {
   width: 100%;
   height: 100%;
+<<<<<<< HEAD
+=======
+  cursor: pointer;
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
 }

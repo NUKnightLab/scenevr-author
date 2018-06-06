@@ -1,63 +1,54 @@
 import React from "react";
+import { Redirect } from 'react-router';
 
 export default class IndividualProject extends React.Component {
 
 	constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+			redirect: false,
+			thumbnail: this.props.thumbnail
+		};
+		this.editProject = this.editProject.bind(this);
   }
 
-  newProject() {
-  	console.log("next project upload screen appears");
+  editProject() {
+  	this.setState({ redirect: true });
   }
 
   render() {
-    return (
-      <div id="individual-project">
-      	<div id="project-info">
-	      	<h4 id="name"> {this.props.title} </h4>
-	        <h5 id="desc"> {this.props.desc} </h5>
-	        <p id="date"> {this.props.date} </p>
-      	</div>
-        <div id="project-thumbnail"> 
+		const { redirect } = this.state;
+		let imageThumbnail = null;
 
-        </div>
+		if (this.state.thumbnail) {
+			imageThumbnail = (<img src={this.state.thumbnail} />);
+		} else {
+			imageThumbnail = (<div />);
+		}
 
-        <style jsx> {` 
-          #individual-project {
-          	margin: 0 8px;
-          	display: grid;
-          	grid-template-columns: 5fr 4fr;
-          	grid-gap: 10px;
-          	font-family: "Avenir Next";
-          	width: 97%;
-           	border-bottom: 1px solid #999;
-          }
-
-          #name {
-          	font-weight: bold;
-          }
-
-          #desc {
-          	font-size: 1.1rem;
-          }
-
-          #project-info {
-          	grid-column: 1;
-          	padding: 10px;
-          	padding-top: 20px;
-          }
-
-          #project-thumbnail {
-          	background-color: #B0B0B0;
-          	border-radius: 5px;
-          	height: 80%;
-          	margin-top: 10%;
-          	grid-column: 2;
-          	margin-right: 10px;
-          }
-        `}</style>
-      </div>
-    ); 
+		if (redirect){
+	      return (
+					<Redirect to={{
+	          pathname: '/create',
+	          state: {
+								projectId: this.props.id,
+							}
+	      		}}/>
+				);
+		}
+		else {
+	    return (
+	      <div id="individual-project">
+	      	<div id="project-info">
+		      	<h4 id="name"> {this.props.title} </h4>
+		        <h5 id="desc"> {this.props.desc} </h5>
+		        <p id="date"> {this.props.date} </p>
+	      	</div>
+	        <div id="project-thumbnail" onClick={this.editProject}>
+						{imageThumbnail}
+	        </div>
+	      </div>
+	    );
+		}
   }
 }

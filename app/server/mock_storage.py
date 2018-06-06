@@ -13,6 +13,9 @@ import json
 from functools import wraps
 import requests
 import settings
+import re
+from io import BytesIO
+from PIL import Image
 
 _bucket = settings.AWS_STORAGE_BUCKET_NAME
 
@@ -102,9 +105,11 @@ def save_from_data(key_name, content_type, content):
     os.makedirs(directory_path, exist_ok=True)
     content_type = content_type.rsplit('/', 1)[0]
     if content_type == 'image':
-        content = base64.b64decode(content)
-        with open(file_path,'wb') as f:
-            f.write(content)
+        im = Image.open(BytesIO(base64.b64decode(content)))
+        im = im.resize((int(im.width/2),int(im.height/2)),Image.ANTIALIAS)
+        im.save(file_path,optimize=True, quality=65)
+        # with open(file_path,'wb') as f:
+        #     f.write(content)
     elif content_type == 'application':
         with open(file_path,'w') as f:
             json.dump(content, f)

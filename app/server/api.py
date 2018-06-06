@@ -117,94 +117,138 @@ def establish_user():
     else:
         g.user = None
 
-@app.route("/")
-def index():
-  return render_template('index.html')
 
-@app.route("/projects")
-def projects():
-  return None
 
-@app.route("/project-details")
-def project_details():
-  return None
-
-@app.route("/upload")
-def upload():
-  return None
-
-@app.route('/home')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
 @require_user
-def home(user=None):
-  """Entry point to the application for an authenticated user."""
-  user = g.user
-  return render_template('hello.html', user=user)
+def index(path, user=None):
+    return render_template('index.html')
 
-@app.route('/home')
-def my_form_post():
+@app.route("/projects", methods=['GET'])
+def projects():
     user = g.user
-    return render_template('hello.html', user=user)
+    user_name = user.name
+    user_picture = user.picture
+    projects = models.Project.query.filter_by(user_id=user.id)
+    projectArray = []
+    for project in projects:
+        projectDict = {'id':project.id, 'title':project.title, 'desc':project.desc, 'date': project.date, 'thumbnail':project.thumbnail}
+        projectArray.append(projectDict)
+    return jsonify({'projectArray': projectArray, 'userName':user_name, 'userPicture':user_picture})
 
-@app.route('/home/update', methods=['POST'])
-def update_form():
+@app.route('/create-project', methods=['POST'])
+def create_project():
     user = g.user
-    text = request.form['text']
-    project = models.Project(user_id=user.id, name=text)
-    scene = models.Scene(project_id=project.id, text="", image_url="")
+    project = models.Project(user_id=user.id)
     db.session.add(project)
-    db.session.add(scene)
     db.session.commit()
+    data = {'project_id': project.id, 'title': project.title, 'desc': project.desc}
+    return jsonify(data)
 
-    return render_template('hello.html', user=user)
 
-@app.route('/home/<project_id>')
-def getScenes(project_id):
-    #user = g.user
-    #text = request.form['text']
-    scenes = models.Scene.query.filter_by(project_id=project_id)
+@app.route("/project-details/<project_id>", methods=['GET', 'POST'])
+def project_details(project_id):
+    if request.method == 'POST':
+        data = request.get_json()
+        project = models.Project.query.get(project_id)
+        project.title = data['titleData']
+        project.desc = data['descData']
+        db.session.add(project)
+        db.session.commit()
+        scenesData = data['sceneData']
+        scenes = models.Scene.query.filter_by(project_id=project_id).order_by(models.Scene.order)
+        for index, scene in enumerate(scenes):
+            scene.caption = scenesData[index]['desc']
+            scene.image_url = scenesData[index]['src']
+            db.session.add(scene)
+        # update thumbnail of project to be first scene
+        if scenesData:
+            project = models.Project.query.get(project_id)
+            project.thumbnail = scenesData[0]['src']
+            db.session.add(project)
 
-    return render_template('scenes.html', scenes=scenes, project_id=project_id)
+        write_json_data(project_id)
 
-@app.route('/home/<project_id>/update', methods=['POST'])
-def updateScenes(project_id):
-    """
-    Save storymap image
-    @id = storymap id
-    @name = file name
-    @content = data:URL representing the file's data as base64 encoded string
-    """
+        db.session.commit()
+        return jsonify(data)
+    if request.method == 'GET':
+        project = models.Project.query.get(project_id)
+        scenesData = []
+        scenes = models.Scene.query.filter_by(project_id=project_id).order_by(models.Scene.order)
+        for scene in scenes:
+            sceneData = {'order': scene.order, 'src': scene.image_url, 'desc': scene.caption}
+            scenesData.append(sceneData)
+        data = {'title': project.title, 'desc': project.desc, 'scenesData': scenesData}
+        return jsonify(data)
+
+@app.route('/delete-scene/<project_id>', methods=['POST'])
+def delete_scene(project_id):
+    data = request.get_json()
+    order = data['sceneOrder']
+    scene = models.Scene.query.filter_by(project_id=project_id, order=order).first()
+    db.session.delete(scene)
+    db.session.commit()
+    data = {'order': order}
+    return jsonify(data)
+
+
+@app.route("/upload-image/<project_id>/<order>", methods=['GET'])
+def get_scene(project_id, order):
+    scene = models.Scene.query.filter_by(project_id=project_id, order=order).first()
+    if not scene:
+        data = {'scene_exists': 'False'}
+    else:
+        data = {'scene_exists': 'True', 'scene_id':scene.id, 'src': scene.image_url, 'desc':scene.caption}
+    return jsonify(data)
+
+@app.route("/upload-image/<project_id>/<order>", methods=['POST'])
+def create_scene(project_id, order):
     try:
         user = g.user
-        #print(request.files)
-        text = request.form['text']
-        file = request.files['image_url']
+
+        caption = request.form.get('caption', None)
+        file = request.files.get('file', None)
+        order = request.form.get('order', None)
+        scene_id = request.form.get('sceneId', None)
+
         filename = file.filename
         content_type = file.content_type
         content = base64.b64encode(file.read())
-        # print(content)
-        # m = re.match('data:(.+);base64,(.+)', content)
-        # if m:
-        #     content_type = m.group(1)
-        #     content = m.group(2).decode('base64')
-        # else:
-        #     raise Exception('Expected content as data-url')
-
         key_name = storage.key_name(str(user.id), str(project_id), filename)
         storage.save_from_data(key_name, content_type, content)
         image_url = settings.AWS_STORAGE_BUCKET_URL + key_name
-        scene = models.Scene(project_id=project_id, text=text, image_url=image_url)
+
+        scene = models.Scene.query.filter_by(project_id=project_id, order=order).first()
+        if scene:
+            scene.image_url = image_url
+            scene.caption = caption
+        else:
+            scene = models.Scene(project_id=project_id, caption=caption, image_url=image_url, order=order)
+
         db.session.add(scene)
         db.session.commit()
 
-        scenes = models.Scene.query.filter_by(project_id=project_id)
+        write_json_data(project_id)
 
-        return redirect('/home/' + str(project_id))
+
+        return jsonify({'image_url': image_url, 'caption':caption, 'sceneId':scene.id})
     except storage.StorageException as e:
         traceback.print_exc()
         return jsonify({'error': str(e), 'error_detail': e.detail})
     except Exception as e:
         traceback.print_exc()
         return jsonify({'error': str(e)})
+
+@app.route('/publish/<project_id>', methods=['POST'])
+def publish_project(project_id):
+    """Save published project"""
+    write_json_data(project_id)
+    embed_url = write_embed_published(project_id)
+    if settings.TEST_MODE:
+        embed_url = "https://localhost:5000" + embed_url
+
+    return jsonify({'embed_url': embed_url})
 
 
 def write_json_data(project_id):
@@ -218,10 +262,9 @@ def write_json_data(project_id):
         data = {}
         sceneArray = []
         for scene in scenes:
-            sceneDict = {'text':scene.text, 'path':scene.image_url, 'thumbnailPath':scene.image_url}
+            sceneDict = {'text':scene.caption, 'path':scene.image_url, 'thumbnailPath':scene.image_url}
             sceneArray.append(sceneDict)
         data['scenes'] = sceneArray
-        print(data)
         content = data
 
         storage.save_from_data(key_name, content_type, content)
@@ -247,30 +290,12 @@ def write_embed_published(project_id):
         traceback.print_exc()
         return jsonify({'error': str(e)})
 
-@app.route('/home/<project_id>/publish', methods=['POST'])
-def storymap_publish(project_id):
-    """Save published storymap"""
-    write_json_data(project_id)
-    embed_url = write_embed_published(project_id)
 
-        # data = _request_get_required('d')
 
-        # key_prefix = storage.key_prefix(user['uid'], id)
-        # content = json.loads(data)
-        # storage.save_json(key_prefix+'published.json', content)
-        #
-        # user['storymaps'][id]['published_on'] = _utc_now()
-        # _user.save(user)
-        #
-        # _write_embed_published(key_prefix, user['storymaps'][id])
-        #
-        # return jsonify({'meta': user['storymaps'][id]})
-    return redirect(embed_url)
 @app.route("/logout/")
 def logout():
     _user_remove()
     return redirect('https://www.google.com/accounts/Logout')
-
 
 @app.route('/google/authorize')
 def google_authorize():
@@ -322,7 +347,7 @@ def google_authorized():
   verified_jwt = google.oauth2.id_token.verify_oauth2_token(credentials.id_token,grequest)
   _user_set(issuer=verified_jwt['iss'], subject=verified_jwt['sub'])
   # For now, we will always redirect a freshly authenticated user to 'home' no matter where they were trying to go in the first place.
-  return redirect(url_for('home'))
+  return redirect(url_for('index'))
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,

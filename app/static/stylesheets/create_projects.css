@@ -82,6 +82,7 @@
 #add-scene-button div {
   font-weight: bold;
 }
+<<<<<<< HEAD
 
 #drag-handle{
   float:left;
@@ -90,3 +91,5 @@
   color: #D8D8D8;
   cursor: move;
 }
+=======
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b

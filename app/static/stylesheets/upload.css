@@ -2,7 +2,11 @@
   font-family: "Avenir Next";
 }
 
+<<<<<<< HEAD
 #CreateProject input {
+=======
+#CreateProject {
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
   outline: none;
   border: none;
 }
@@ -78,3 +82,11 @@
   color: #444;
   word-break: break-all;
 }
+<<<<<<< HEAD
+=======
+
+#upload-description input {
+  border: none;
+  outline: none;
+}
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b

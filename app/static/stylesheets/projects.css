@@ -6,7 +6,11 @@
   display: grid;
   height: 100vh;
   grid-template-columns: 100%;
+<<<<<<< HEAD
   grid-template-rows: 60px 90px auto 60px;
+=======
+  grid-template-rows: 70px 70px auto 70px;
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
   font-family: "Avenir Next";
   font-weight: bold;
   text-align: center;
@@ -14,6 +18,7 @@
 }
 
 #header, #title, #new-project {
+<<<<<<< HEAD
   display: table;
 }
 
@@ -29,6 +34,42 @@
 
 #title {
   background-color: #F2F2F2
+=======
+  display: grid;
+  height: 100%;
+}
+
+#header div, #title div, #new-project div {
+  /* display: table-cell;
+  vertical-align: middle; */
+  place-self: center;
+}
+
+#header {
+  background-color: #555555;
+  z-index: 2;
+  padding: 6px;
+}
+
+#user-picture{
+  place-self: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+#user-name{
+  font-size: 14px;
+  color: white;
+  font-weight: normal;
+}
+
+#title {
+  background-color: #F2F2F2;
+  color: #555555;
+  font-size: 1.2rem;
+>>>>>>> fedb8f06033b7844cf8de0937f3d9071d8bfe31b
 }
 
 #project-container {

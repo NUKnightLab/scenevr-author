@@ -1,4 +1,6 @@
 import React from "react";
+import { Redirect } from 'react-router';
+
 import IndividualProject from './components/IndividualProject.jsx';
 import ProjectPreview from './components/ProjectPreview.jsx';
 
@@ -7,109 +9,138 @@ export default class SceneUpload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      src: "",
+      file: '',
+      imagePreviewUrl: '',
+      sceneId: '',
+      projectId: this.props.location.state.projectId,
+      order: this.props.location.state.order,
+      redirect: false,
     };
 
-    this.addProject = this.addProject.bind(this);
+    this.fileChangedHandler = this.fileChangedHandler.bind(this);
+    this.upload = this.upload.bind(this);
+    this.cancel = this.cancel.bind(this);
+
   }
 
-  addProject(){
-   console.log("trigger upload element");
+    componentDidMount() {
+      const url = "/upload-image/" + this.state.projectId + "/" + this.state.order;
+      fetch(url, {'credentials': 'include'})
+        .then(res => res.json())
+        .then(
+          (result) => {
+            if (result.scene_exists == 'True'){
+              this.setState({
+                imagePreviewUrl: result.src,
+                sceneId: result.scene_id
+              });
+              document.getElementById('description-input').value = result.desc;
+            }
+          },
+          (error) => {
+            this.setState({error});
+          }
+        )
+    }
+
+
+  fileChangedHandler(event){
+    let reader = new FileReader();
+    let file = event.target.files[0];
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file)
   }
+
+  upload(){
+
+    const url = "/upload-image/" + this.state.projectId + "/" + this.state.order;
+
+    var caption = document.getElementById('description-input').value;
+    var fileField = document.getElementById('file-object');
+    var formData = new FormData();
+
+    formData.append('order', this.state.order);
+    formData.append('file', fileField.files[0]);
+    formData.append('caption', caption);
+    formData.append('sceneId', this.state.sceneId);
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({redirect: true});
+      },
+      (error) => {
+        this.setState({error});
+      }
+    )
+
+
+  }
+
+  cancel(){
+    this.setState({redirect: true});
+  }
+
 
   render() {
+    let {imagePreviewUrl, redirect} = this.state;
+    let imagePreview = null;
+
+    if (imagePreviewUrl) {
+      imagePreview = (<img src={imagePreviewUrl} />);
+    } else {
+      imagePreview = (<div id="upload-placeholder"></div>);
+    }
+
+    if(redirect){
+      return (
+        <Redirect to={{
+          pathname: '/create',
+          state: {
+              projectId: this.state.projectId,
+            }
+          }}/>
+      );
+    }
+
+
     return (
       <div id="CreateProject">
-        <div id="upload-header1"> 
+        <div id="upload-header1">
         </div>
 
-        <div id="upload-content"> 
+        <div id="upload-content">
           <div id="upload-header2">
-            <h6 id="upload-cancel"> Cancel </h6>
+            <h6 id="upload-cancel" onClick={this.cancel}> Cancel </h6>
             <h6 id="upload-text"> Upload New Scene </h6>
-            <h6 id="upload-done"> Publish </h6>
+            <h6 id="upload-done" onClick={this.upload}> Upload </h6>
           </div>
 
-          <div id="upload-thumbnail"> </div>
-          <div id="upload-description">
-            <input type="text" placeholder="Write a description" />
+          <div id="upload-thumbnail">
+            {imagePreview}
           </div>
+
+          <div id="upload-description">
+            <input id="description-input" type="text" placeholder="Write a description" />
+          </div>
+
+          <input id="file-object" type="file" onChange={this.fileChangedHandler} />
+
 
         </div>
-        
-        <style jsx> {` 
 
-          #CreateProject {
-            font-family: "Avenir Next";
-          }
-
-          #CreateProject input {
-            outline: none;
-            border: none;
-          }
-
-          #upload-header1 {
-            background-color: #333;
-            height: 60px;
-            z-index: 2;
-          }
-
-          #upload-content {
-            display: grid;
-            grid-template-rows: 50px auto;
-            grid-template-columns: 1fr 2fr;
-            height: calc(100vh - 60px);
-            position: relative;
-          }
-
-          #upload-cancel, #upload-done {
-            position: absolute;
-            top: 15px;
-            color: #7ACCFF;
-          }
-
-          #upload-cancel {
-            grid-column: 1;
-            left: 15px;
-          }
-
-          #upload-done {
-            grid-column: 2;
-            right: 20px;
-          }
-
-          #upload-text {
-            text-align: center;
-            position: relative;
-            top: 13px;
-            font-weight: bold;
-            font-size: 1.2rem;
-          }
-
-          #upload-header2 {
-            grid-column: 1 / 3;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #ddd;
-          }
-
-          #upload-thumbnail {
-            background-color: #B0B0B0;
-            margin: 17px;
-            height: 100px;
-            width: 140px;
-            border-radius: 6px;
-            display: inline-block;
-          }
-
-          #upload-description {
-            margin: 17px;
-            height: 100px;
-            color: #444;
-            word-break: break-all;
-          }
-
-        `}</style>
       </div>
-    ); 
+    );
   }
 }

@@ -26,18 +26,23 @@ class Project(db.Model):
     __tablename__ = 'projects'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
+    title = db.Column(db.String(200))
+    desc = db.Column(db.String(200))
+    date = db.Column(db.String(200))
+    thumbnail = db.Column(db.String(200))
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = relationship("User", back_populates="projects")
     scenes = relationship("Scene", back_populates="project")
+
 
 class Scene(db.Model):
     __tablename__ = 'scenes'
 
     id = db.Column(db.Integer, primary_key=True)
     image_url = db.Column(db.String(200))
-    text = db.Column(db.String(200))
+    caption = db.Column(db.String(200))
+    order = db.Column(db.Integer)
 
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = relationship("Project", back_populates="scenes")
