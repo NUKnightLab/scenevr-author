@@ -1,12 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-
 import SceneUpload from "./SceneUpload.jsx";
 import CreateProject from "./CreateProject.jsx";
-
-ReactDOM.render(<CreateProject />, document.getElementById("content"));
 import Login from "./Login.jsx";
 import Projects from "./Projects.jsx"
 
