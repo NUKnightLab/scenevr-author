@@ -26,12 +26,6 @@ export default class Projects extends React.Component {
         }
       ],
     };
-
-    this.newProject = this.newProject.bind(this);
-  }
-
-  newProject(){
-    console.log("new project!");
   }
 
   render() {

@@ -37,6 +37,10 @@ export default class ProjectPreview extends React.Component {
           .individual-project h5 {
             font-size: .8rem;
             color: #646464;
+            text-align: left;
+            padding-left: 25px;
+            padding-top: 10px;
+            width: 90%;
           }
         `}</style>
       </div>

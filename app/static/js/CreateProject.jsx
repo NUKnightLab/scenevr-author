@@ -20,7 +20,7 @@ export default class CreateProject extends React.Component {
         {
           "index": 0,
           "src": "", 
-          "desc": "a really beautiful place i went to lolz", 
+          "desc": "second, here's a scene that illlustrates how awesome my family is", 
         },
       ],
     };
@@ -42,7 +42,7 @@ export default class CreateProject extends React.Component {
         </div>
         
         <div id="create-project-content"> 
-          <input id="title-input" type="text" placeholder="New Project Title..." />
+          <input id="title-input" type="text" placeholder="Untitled" />
           <input id="project-description" type="text" placeholder="Write a description" />
           <div id="scenes-container">
             {this.state.scenes.map(scene => 
@@ -50,11 +50,11 @@ export default class CreateProject extends React.Component {
             )}
 
             <div id="add-scene-button"> 
-              <div> + </div>
+              <div> + <h6> ADD NEW PHOTO </h6> </div>
             </div>
           </div>
         </div>
-        <div id="create-footer"> <div> {this.state.numScenes} scenes uploaded </div> </div>
+        <div id="create-footer"> <div> {this.state.numScenes} photos uploaded </div> </div>
 
         <style jsx> {` 
 
@@ -109,21 +109,27 @@ export default class CreateProject extends React.Component {
           #project-description {
             font-weight: 200;
             color: #979797;
+
           }
 
           #title-input, #project-description {
-            margin-left: 10%;
             border: none;
+            text-align: center;
           }
 
           #add-scene-button {
             width: 80%;
             height: 150px;
             display: block;
-            margin: 25px auto;
+            margin: 50px auto;
             background-color: #D8D8D8;
             border-radius: 5px;
             font-size: 3rem;
+          }
+
+          #add-scene-button h6 {
+            font-weight: bold;
+            color: #808080;
           }
 
           #create-footer, #add-scene-button {
@@ -139,6 +145,22 @@ export default class CreateProject extends React.Component {
 
           #add-scene-button div {
             font-weight: bold;
+          }
+
+          ::-webkit-input-placeholder {
+             text-align: center;
+          }
+
+          :-moz-placeholder { /* Firefox 18- */
+             text-align: center;  
+          }
+
+          ::-moz-placeholder {  /* Firefox 19+ */
+             text-align: center;  
+          }
+
+          :-ms-input-placeholder {  
+             text-align: center; 
           }
 
         `}</style>
