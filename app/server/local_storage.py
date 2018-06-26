@@ -1,10 +1,6 @@
 """
-S3-based storage backend
-
-Object Keys
-http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html
 """
-import os
+import os, os.path
 import sys
 import time
 import traceback
@@ -17,7 +13,7 @@ import re
 from io import BytesIO
 from PIL import Image
 
-_bucket = settings.AWS_STORAGE_BUCKET_NAME
+FILE_SYSTEM_ROOT="_local_storage"
 
 class StorageException(Exception):
     """
@@ -58,50 +54,17 @@ def key_id():
     """
     return repr(time.time())
 
-def key_prefix(*args):
-    return '%s/%s/' % (settings.AWS_STORAGE_BUCKET_KEY, '/'.join(args))
-
 def key_name(*args):
-    return '%s/%s' % (settings.AWS_STORAGE_BUCKET_KEY, '/'.join(args))
-
-
-@_reraise_s3response
-@_mock_in_test_mode
-def list_keys(key_prefix, n, marker=''):
-    """
-    List keys that start with key_prefix (<> key_prefix itself)
-    @n = number of items to return
-    @marker = name of last item
-    """
-    key_list = []
-    i = 0
-
-    for i, item in enumerate(_bucket.list(prefix=key_prefix, marker=marker)):
-        if i == n:
-            break
-        if item.name == key_prefix:
-            continue
-        key_list.append(item)
-    return key_list, (i == n)
-
-@_mock_in_test_mode
-def get_contents_as_string(src_key):
-    return src_key.get_contents_as_string()
-
-@_mock_in_test_mode
-def all_keys():
-    for item in _bucket.list(prefix=settings.AWS_STORAGE_BUCKET_KEY):
-        if item.name == key_prefix:
-            continue
-        yield item.key
-
+    return '/'.join(args)
 
 def save_from_data(key_name, content_type, content):
     """
     Save content with content-type to key_name
+    TODO: some important things happening here but not in regular storage.
+    Is this factored correctly? That version doesn't handle images correctly...
     """
-    file_path = settings.AWS_STORAGE_BUCKET_NAME + "/" + key_name
-    directory_path = file_path.rsplit('/', 1)[0]
+    file_path = os.path.join(FILE_SYSTEM_ROOT,key_name)
+    directory_path = os.path.split(file_path)[0]
     os.makedirs(directory_path, exist_ok=True)
     content_type = content_type.rsplit('/', 1)[0]
     if content_type == 'image':

@@ -72,42 +72,8 @@ def key_id():
     """
     return repr(time.time())
 
-def key_prefix(*args):
-    return '%s/%s/' % (settings.AWS_STORAGE_BUCKET_KEY, '/'.join(args))
-
 def key_name(*args):
     return '%s/%s' % (settings.AWS_STORAGE_BUCKET_KEY, '/'.join(args))
-
-
-@_reraise_s3response
-@_mock_in_test_mode
-def list_keys(key_prefix, n, marker=''):
-    """
-    List keys that start with key_prefix (<> key_prefix itself)
-    @n = number of items to return
-    @marker = name of last item
-    """
-    key_list = []
-    i = 0
-
-    for i, item in enumerate(_bucket.list(prefix=key_prefix, marker=marker)):
-        if i == n:
-            break
-        if item.name == key_prefix:
-            continue
-        key_list.append(item)
-    return key_list, (i == n)
-
-@_mock_in_test_mode
-def get_contents_as_string(src_key):
-    return src_key.get_contents_as_string()
-
-@_mock_in_test_mode
-def all_keys():
-    for item in _bucket.list(prefix=settings.AWS_STORAGE_BUCKET_KEY):
-        if item.name == key_prefix:
-            continue
-        yield item.key
 
 
 @_reraise_s3response

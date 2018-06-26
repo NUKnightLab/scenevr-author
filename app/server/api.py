@@ -16,7 +16,7 @@ import google.oauth2.credentials
 import googleapiclient.discovery
 
 if settings.TEST_MODE:
-    import mock_storage as storage
+    import local_storage as storage
 else:
     import storage as storage
 
