@@ -39,3 +39,7 @@
   margin-bottom: 20px;
   fill: #D8D8D8;
 }
+
+#delete-scene img {
+  height: 24px;
+}
