@@ -299,8 +299,6 @@ def publish_project(project_id):
     """Save published project"""
     write_json_data(project_id)
     embed_url = write_embed_published(project_id)
-    if settings.TEST_MODE:
-        embed_url = "https://localhost:5000" + embed_url
 
     return {'embed_url': embed_url}
 
@@ -325,26 +323,27 @@ def write_json_data(project_id):
 
 
 def write_embed_published(project_id):
-    try:
-        user = g.user
+    """Create or update the embed HTML page which hosts the given project ID. Assumes that 
+       the project data has already been written and its representation can be found at a
+       predictable place. As this is though, why not just leave it relative in the template?
+       TODO: Consider doing just that.
+    """
+    user = g.user
 
-        json_key_name = storage_obj.key_name(
-            str(user.id), str(project_id), 'data.json')
-        embed_key_name = storage_obj.key_name(
-            str(user.id), str(project_id), 'index.html')
-        content_type = 'text/html'
+    json_key_name = storage_obj.key_name(
+        str(user.id), str(project_id), 'data.json')
+    embed_key_name = storage_obj.key_name(
+        str(user.id), str(project_id), 'index.html')
+    content_type = 'text/html'
 
-        content = render_template('embed.html',
-                                  json_url=urljoin(
-                                      settings.AWS_STORAGE_BUCKET_URL,
-                                      json_key_name
-                                  ))
-        embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
-        storage_obj.save(embed_key_name, 'text/html', content)
-        return embed_url
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({'error': str(e)})
+    content = render_template('embed.html',
+                                json_url=urljoin(
+                                    settings.AWS_STORAGE_BUCKET_URL,
+                                    json_key_name
+                                ))
+    embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
+    storage_obj.save(embed_key_name, 'text/html', content)
+    return embed_url
 
 
 @app.route("/logout/")
