@@ -43,7 +43,7 @@ class StorageBase(object):
         raise NotImplementedError
 
     def save_as_json(self, name, d):
-        self.save(name, "application/json", json.dumps(d).encode('utf-8'))
+        self.save(name, "application/json", json.dumps(d, indent=2).encode('utf-8'))
 
     def key_id(self):
         "Get id for key"
