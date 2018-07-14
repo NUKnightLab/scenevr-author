@@ -89,4 +89,6 @@ class LocalStorage(StorageBase):
     def save(self, name, content_type, content):
         fq_path = self.storage_root.joinpath(name)
         fq_path.parent.mkdir(parents=True, exist_ok=True)
+        if type(content) == str:
+            content = content.encode('utf-8')
         fq_path.open('wb').write(content)
