@@ -13,7 +13,7 @@ import re
 from io import BytesIO
 from PIL import Image
 
-FILE_SYSTEM_ROOT="_local_storage"
+LOCAL_STORAGE_FS_ROOT=".data"
 
 class StorageException(Exception):
     """
@@ -22,18 +22,6 @@ class StorageException(Exception):
     def __init__(self, message, detail):
         super(Exception, self).__init__(message)
         self.detail = detail
-
-def _mock_in_test_mode(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if settings.TEST_MODE:
-            _mock.start(reset=False)
-            result = f(*args, **kwargs)
-            _mock.stop()
-            return result
-        else:
-            return f(*args, **kwargs)
-    return decorated_function
 
 
 def _reraise_s3response(f):
@@ -63,7 +51,7 @@ def save_from_data(key_name, content_type, content):
     TODO: some important things happening here but not in regular storage.
     Is this factored correctly? That version doesn't handle images correctly...
     """
-    file_path = os.path.join(FILE_SYSTEM_ROOT,key_name)
+    file_path = os.path.join(LOCAL_STORAGE_FS_ROOT,key_name)
     directory_path = os.path.split(file_path)[0]
     os.makedirs(directory_path, exist_ok=True)
     content_type = content_type.rsplit('/', 1)[0]

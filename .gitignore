@@ -5,8 +5,12 @@ local_only.key
 local_only.crt
 scenevr_client_secret.json
 app/static/dist/
+app/static/local
 app/static/uploads.knilab.com
 node_modules/
+.data
+
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
