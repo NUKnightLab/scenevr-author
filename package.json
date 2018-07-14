@@ -8,7 +8,10 @@
 		"dev-build": "webpack --progress -d --config webpack.config.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"watch": "webpack --progress -d --config webpack.config.js --watch",
-		"server": "python app/server/api.py"
+		"server": "python app/server/api.py",
+		"makecert": "openssl req -x509 -nodes -days 10000 -newkey rsa:2048 -out local_only.crt -config self_signed.cfg",
+		"initdb": "python app/server/api.py initdb",
+		"devinit": "npm run makecert && npm run initdb && npm run dist"
 	},
 	"repository": {
 		"type": "git",

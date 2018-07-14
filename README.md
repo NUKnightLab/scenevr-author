@@ -11,6 +11,26 @@ It will automatically start in HTTPS mode, so the default local URL is https://l
 
 All of this should be one-time setup. If you make changes that impact other developers setting up to work on this code, be sure to update this!
 
+These are the key steps. Some of these things are explained below in more detail.
+
+* Check out the repository
+* copy `env.sh.example` to `env.sh`
+  * Look through the file to see if you need to edit anything. (read the comments)
+  * run `source env.sh`
+* get a copy of `scenevr_client_secret.json` from another developer and put it in the root of your local repo. This should never be * Make a python virtual environment
+stored in Git.
+* run `pip install -r requirements.txt`
+* run `npm install`
+* run `npm run devinit`
+
+The above should all be something you only have to do once.
+
+* run `npm run server`
+* open `https://localhost:5000/` in your browser. The first time, you'll have to confirm a security exception for your self-signed certificate.
+
+If you're working on HTML/CSS/JS as well as server side stuff:
+* run `npm run watch`
+
 ## Server development
 ### Shell environment
 
@@ -23,14 +43,16 @@ First, create a python virtual environment (using Python 3.6) and install the re
 ### Node environment setup
 
 To set up the Javascript packages, run `npm install`
-and then `npm run start` to set up live reloading of Javascript files.
+If you're developing HTML and CSS, run `npm run watch` to set up live reloading of Javascript files.
+If nothing else, you'll need to run `npm run build` the first time you check out the repository (this command is included in `npm run devinit`)
 
 ### Local SSL setup
-Second, Google Authentication requires using SSL. So, even for local development, you must run your test server under SSL.
+Google Authentication requires using SSL. So, even for local development, you must run your test server under SSL.
+The easy way to do this is with `npm run makecert` which handles the details below
 
 first, execute this command in the local root of the repository:
 
-`openssl req -x509 -sha256 -nodes -days 10000 -newkey rsa:2048 -keyout local_only.key -out local_only.crt`
+`openssl req -x509 -nodes -days 10000 -newkey rsa:2048 -out local_only.crt -config self_signed.cfg`
 
 Use exactly these names for the key and cert file and store them in the root of your repository (they are `.gitignore`d).
 (Note that the hardcoded paths to the files require that you start the app from the root of the repository)
@@ -48,7 +70,7 @@ This assumes you have `sqlite3`. It should create the DB file in the local repos
 
 ## Client development
 
-Run `npm run watch` to have JS and CSS changes automatically updated. 
+Run `npm run watch` to have JS and CSS changes automatically updated.
 Of course, you'll also have to be running the server. You can do that with `npm run server`  
 You'll probably want to do this in separate terminal windows so that you can see console output from each separately although we could make an npm script which runs both in parallel.
 
