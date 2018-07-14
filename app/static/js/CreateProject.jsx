@@ -149,8 +149,12 @@ export default class CreateProject extends React.Component {
     .then(res => res.json())
     .then(
       (result) => {
-        this.setState({embedUrl: result['embed_url'], showModal: true})
-        console.log(result);
+        if (result.embed_url) {
+          this.setState({ embedUrl: result['embed_url'], showModal: true })
+        } else {
+          console.log("No embed_url so skipping modal; result:");
+          console.log(result)
+        }
       },
       (error) => {
         this.setState({error});
@@ -208,22 +212,25 @@ export default class CreateProject extends React.Component {
     let modal = null;
 
     if (showModal) {
-      console.log(this.state.embedUrl['embed_url']);
-      modal = (
-        <div>
-          <div className="modal-overlay" id="modal-overlay"></div>
-          <div className="modal" id="modal">
-            <button className="close-button" id="close-button" onClick={this.closeModal}>X</button>
-            <div className="modal-guts">
-              <h1>Share</h1>
-              <input type="text" value={this.state.embedUrl} readOnly/>
-              <a href={this.state.embedUrl} target="_blank">
-                <div id="preview-button"> Preview </div>
-              </a>
+      if (this.state.embedUrl) {
+        modal = (
+          <div>
+            <div className="modal-overlay" id="modal-overlay"></div>
+            <div className="modal" id="modal">
+              <button className="close-button" id="close-button" onClick={this.closeModal}>X</button>
+              <div className="modal-guts">
+                <h1>Share</h1>
+                <input type="text" value={this.state.embedUrl} readOnly />
+                <a href={this.state.embedUrl} target="_blank">
+                  <div id="preview-button"> Preview </div>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      } else {
+        console.warn('showModal is true but this.state.embedUrl is null. This should not be.')
+      }
     }
 
     return (
