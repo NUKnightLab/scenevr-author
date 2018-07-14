@@ -29,7 +29,6 @@
 		"babel-preset-es2015": "^6.24.1",
 		"babel-preset-react": "^6.24.1",
 		"extract-text-webpack-plugin": "^4.0.0-beta.0",
-		"node-sass": "^4.9.2",
 		"react": "^16.4.0",
 		"react-dom": "^16.4.0",
 		"webpack": "^4.8.3",
