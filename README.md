@@ -2,10 +2,11 @@
 
 Once you've done the setup below, this should be all you need to run the app.
 
-`python app/server/api.py`
+`npm run server`
 
 It will automatically start in HTTPS mode, so the default local URL is https://localhost:5000
 
+If you're working on HTML/CSS/JS as well as server side stuff, also run `npm run watch` (you need to do both)
 
 # Setting up for local development
 
