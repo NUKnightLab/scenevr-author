@@ -63,11 +63,40 @@ Get that from someone on staff.
 
 ### Database setup
 
+This is setup is for SQLite3. For Postgresql setup, see *Using Postgres* below. 
+
 Once you have all the dependencies installed, you should be able to run
 
     python app/server/api.py initdb
 
 This assumes you have `sqlite3`. It should create the DB file in the local repository folder, in the `gitignore`'d `.data` directory, unless you changed `DATABASE_URI` in `env.sh`
+
+#### Using Postgres
+
+Postgresql is used for deployment and may optionally be used for local development. It is assumed that you've already installed Postgres on your system.
+
+Install psycopg2:
+
+```
+ $ pip install psycopg2-binary
+```
+
+Create the database:
+
+```
+ $ createdb scenevr
+```
+
+Set the DATABASE_URI environment variable. Note: you will want to add this to your env.sh file:
+
+```
+ $ export DATABASE_URI=postgresql://username:password@localhost/scenevr
+```
+
+Init the database as usual:
+
+```
+ $ python app/api.py initdb
 
 ## Client development
 
