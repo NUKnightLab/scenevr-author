@@ -121,9 +121,13 @@ def ajax(f):
     """Use this decorator to keep clear which endpoints are for AJAX use"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # AJAX endpoints probably need a different approach to 'require user'
-        response = f(*args, **kwargs)
-        return jsonify(response)
+        try:
+            # AJAX endpoints probably need a different approach to 'require user'
+            response = f(*args, **kwargs)
+            return jsonify(response)
+        except Exception as e:
+            app.logger.warn("Ajax Error: {} {}".format(type(e), e))
+            return jsonify({"error": "Ajax Error: {} {}".format(type(e), e)})
     return decorated_function
 
 
