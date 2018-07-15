@@ -122,7 +122,7 @@ def ajax(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         try:
-            # AJAX endpoints probably need a different approach to 'require user'
+            # AJAX endpoints probably need a different way to 'require user'
             response = f(*args, **kwargs)
             return jsonify(response)
         except Exception as e:
@@ -255,7 +255,6 @@ def create_scene(project_id, order):
         caption = request.form.get('caption', None)
         file = request.files.get('file', None)
         order = request.form.get('order', None)
-        scene_id = request.form.get('sceneId', None)
 
         filename = file.filename
         content_type = file.content_type
@@ -305,13 +304,15 @@ def publish_project(project_id):
 
 def write_json_data(project_id):
     user = g.user
-
-    scenes = models.Scene.query.filter_by(project_id=project_id)
-    data = {}
+    project = models.Project.query.get(project_id)
+    data = {
+        'title': project.title,
+        'desc': project.desc
+    }
     sceneArray = []
-    for scene in scenes:
-        sceneDict = {'text': scene.caption,
-                     'path': scene.image_url,
+    for scene in project.scenes:
+        sceneDict = {'caption': scene.caption,
+                     'image_url': scene.image_url,
                      'thumbnailPath': scene.image_url}
         sceneArray.append(sceneDict)
     data['scenes'] = sceneArray
@@ -323,9 +324,10 @@ def write_json_data(project_id):
 
 
 def write_embed_published(project_id):
-    """Create or update the embed HTML page which hosts the given project ID. Assumes that 
-       the project data has already been written and its representation can be found at a
-       predictable place. As this is though, why not just leave it relative in the template?
+    """Create or update the embed HTML page which hosts the given project ID.
+       Assumes that the project data has already been written and its
+       representation can be found at a predictable place. As this is though,
+       why not just leave it relative in the template?
        TODO: Consider doing just that.
     """
     user = g.user
@@ -334,13 +336,13 @@ def write_embed_published(project_id):
         str(user.id), str(project_id), 'data.json')
     embed_key_name = storage_obj.key_name(
         str(user.id), str(project_id), 'index.html')
-    content_type = 'text/html'
 
     content = render_template('embed.html',
-                                json_url=urljoin(
+                              json_url=urljoin(
                                     settings.AWS_STORAGE_BUCKET_URL,
                                     json_key_name
-                                ))
+                              ),
+                              scenevr_dist_root_url=settings.SCENEVR_DIST_ROOT_URL)
     embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
     storage_obj.save(embed_key_name, 'text/html', content)
     return embed_url

@@ -13,6 +13,7 @@ PROJECT_ROOT = dirname(CORE_ROOT)
 SECRET_KEY = env['FLASK_SECRET_KEY']
 
 AWS_STORAGE_BUCKET_URL = env['AWS_STORAGE_BUCKET_URL']
+SCENEVR_DIST_ROOT_URL = env['SCENEVR_DIST_ROOT_URL']
 
 try:
     # these aren't required for local as they're set with defaults.

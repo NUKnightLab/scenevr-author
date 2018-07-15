@@ -2,21 +2,40 @@
 <html lang="en">
   <head>
     <title>SceneVR Embed Page</title>
-    <link rel = "stylesheet" type = "text/css" href = "/static/scenevr/scene.css" />
+    <link rel = "stylesheet" type = "text/css" href = "{{ scenevr_dist_root_url }}/css/scene.css" />
   </head>
 
   <body>
-
-    <section id="loading">
-      <div class="icon-loading"></div>
+    <section id="svr-loading">
+      <div class="svr-loading-cube">
+        <div class="svr-loading-face svr-loading-face-side"></div>
+        <div class="svr-loading-face svr-loading-face-side"></div>
+        <div class="svr-loading-face svr-loading-face-side"></div>
+        <div class="svr-loading-face svr-loading-face-side"></div>
+        <div class="svr-loading-face svr-loading-face-top"></div>
+        <div class="svr-loading-face svr-loading-face-bottom">44</div>
+      </div>
+      <p id="svr-loading-message">loading
+        <span class="svr-loading-message-dots">...</span>
+      </p>
     </section>
+    <script src="{{ scenevr_dist_root_url }}/js/sceneloader.js"></script>
+    <script>
+      function ready(fn) {
+        if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+          fn();
+        } else { document.addEventListener('DOMContentLoaded', fn); }
+      }
 
+      var config = {
+        source: '{{ json_url }}',
+        speed: "m"
+      }
+
+      ready(function () {
+        var loader = new SceneLoader('{{ scenevr_dist_root_url }}/js/scenevr.js', config);
+        loader.load_scenevr();
+      })
+    </script>  
   </body>
-
 </html>
-
-<script>
-  window.jsonURL = '{{json_url}}';
-</script>
-
-<script src = "/static/scenevr/scene.js"></script>
