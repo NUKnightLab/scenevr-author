@@ -2,7 +2,6 @@ import React from "react";
 import { Redirect } from 'react-router';
 
 import IndividualProject from './components/IndividualProject.jsx';
-import ProjectPreview from './components/ProjectPreview.jsx';
 
 export default class SceneUpload extends React.Component {
 
@@ -10,7 +9,7 @@ export default class SceneUpload extends React.Component {
     super(props);
     this.state = {
       file: '',
-      imagePreviewUrl: '',
+      scene_thumbnail: '',
       sceneId: '',
       projectId: this.props.location.state.projectId,
       order: this.props.location.state.order,
@@ -31,7 +30,7 @@ export default class SceneUpload extends React.Component {
           (result) => {
             if (result.scene_exists == 'True'){
               this.setState({
-                imagePreviewUrl: result.src,
+                scene_thumbnail: result.scene_thumbnail,
                 sceneId: result.scene_id
               });
               document.getElementById('description-input').value = result.desc;
@@ -50,7 +49,7 @@ export default class SceneUpload extends React.Component {
     reader.onloadend = () => {
       this.setState({
         file: file,
-        imagePreviewUrl: reader.result
+        scene_thumbnail: reader.result
       });
     }
 
@@ -94,11 +93,11 @@ export default class SceneUpload extends React.Component {
 
 
   render() {
-    let {imagePreviewUrl, redirect} = this.state;
+    let { scene_thumbnail, redirect} = this.state;
     let imagePreview = null;
 
-    if (imagePreviewUrl) {
-      imagePreview = (<img src={imagePreviewUrl} />);
+    if (scene_thumbnail) {
+      imagePreview = (<img src={scene_thumbnail} />);
     } else {
       imagePreview = (<div id="upload-placeholder"></div>);
     }

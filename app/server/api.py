@@ -194,12 +194,12 @@ def project_details(project_id):
             project_id=project_id).order_by(models.Scene.order)
         for index, scene in enumerate(scenes):
             scene.caption = scenesData[index]['desc']
-            scene.image_url = scenesData[index]['src']
+            scene.image_dir = scenesData[index]['image_dir']
             db.session.add(scene)
         # update thumbnail of project to be first scene
         if scenesData:
             project = models.Project.query.get(project_id)
-            project.thumbnail = scenesData[0]['src']
+            project.thumbnail = scenes[0].thumbnail
             db.session.add(project)
 
         write_json_data(project_id)
@@ -214,7 +214,9 @@ def project_details(project_id):
             project_id=project_id).order_by(models.Scene.order)
         for scene in scenes:
             sceneData = {'order': scene.order,
-                         'src': scene.image_url, 'desc': scene.caption}
+                         'image_dir': scene.image_dir,
+                         'thumbnail': scene.thumbnail,
+                         'desc': scene.caption}
             scenesData.append(sceneData)
         return {'title': project.title,
                 'desc': project.desc,
@@ -242,7 +244,7 @@ def get_scene(project_id, order):
         data = {'scene_exists': 'False'}
     else:
         data = {'scene_exists': 'True', 'scene_id': scene.id,
-                'src': scene.image_url, 'desc': scene.caption}
+                'scene_thumbnail': scene.thumbnail, 'desc': scene.caption}
     return data
 
 
@@ -252,36 +254,46 @@ def create_scene(project_id, order):
     try:
         user = g.user
 
+        project = models.Project.query.get(project_id)
+        if project.user != user:
+            raise Exception("You don't have permission to change that project")
         caption = request.form.get('caption', None)
         file = request.files.get('file', None)
-        order = request.form.get('order', None)
+        order = int(request.form['order'])
 
         filename = file.filename
         content_type = file.content_type
         content = file.read()
         key_name = storage_obj.key_name(
             str(user.id), str(project_id), filename)
-        storage_obj.save(key_name, content_type, content)
-        image_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, key_name)
+        storage_obj.save_scene_images(key_name, content_type, content)
+        image_dir = urljoin(settings.AWS_STORAGE_BUCKET_URL, key_name)
+        if not image_dir.endswith('/'):
+            image_dir = "{}/".format(image_dir)
 
         scene = models.Scene.query.filter_by(
             project_id=project_id, order=order).first()
         if scene:
-            scene.image_url = image_url
+            scene.image_dir = image_dir
             scene.caption = caption
         else:
             scene = models.Scene(
-                project_id=project_id,
+                project=project,
                 caption=caption,
-                image_url=image_url,
+                image_dir=image_dir,
                 order=order)
 
         db.session.add(scene)
+
+        if scene.order == 0:
+            project.thumbnail = scene.thumbnail
+            db.session.add(project)
+
         db.session.commit()
 
         write_json_data(project_id)
 
-        return {'image_url': image_url,
+        return {'image_dir': image_dir,
                 'caption': caption,
                 'sceneId': scene.id}
     except storage.StorageException as e:
@@ -312,8 +324,8 @@ def write_json_data(project_id):
     sceneArray = []
     for scene in project.scenes:
         sceneDict = {'caption': scene.caption,
-                     'image_url': scene.image_url,
-                     'thumbnailPath': scene.image_url}
+                     'image_dir': scene.image_dir,
+                     'thumbnailPath': scene.thumbnail}
         sceneArray.append(sceneDict)
     data['scenes'] = sceneArray
 

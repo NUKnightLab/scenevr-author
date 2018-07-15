@@ -68,39 +68,13 @@ export default class ProjectPreview extends React.Component {
         <DragHandle />
 
         <div className="project-preview" onClick={this.next}>
-          <img src={this.props.src} alt="project preview" />
+          <img src={this.props.thumbnail} alt={this.props.desc} />
           <h5 id="scene-description"> {this.props.desc} </h5>
         </div>
 
         <div id="delete-scene" onClick={this.deleteScene}>
           <img src="/static/images/trash.svg"/>
         </div>
-
-        <style jsx> {`
-          .individual-project {
-            height: 200px;
-          }
-
-          .project-preview {
-            display: grid;
-            grid-template-columns: 4fr 1fr;
-            width: 90%;
-            height: 150px;
-            display: block;
-            margin: 15px auto;
-            background-color: #D8D8D8;
-            border-radius: 5px;
-          }
-
-          .individual-project h5 {
-            font-size: .8rem;
-            color: #646464;
-            text-align: left;
-            padding-left: 25px;
-            padding-top: 10px;
-            width: 90%;
-          }
-        `}</style>
       
       </div>
     );

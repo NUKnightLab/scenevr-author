@@ -13,7 +13,7 @@ import ProjectPreview from './components/ProjectPreview.jsx';
 
 const SortableItem = SortableElement(({scene, projectId, updateOrder}) =>
   <div>
-    <ProjectPreview key={scene.index} desc={scene.desc} src={scene.src} order={scene.order} projectId={projectId} updateOrder={updateOrder}/>
+    <ProjectPreview key={scene.index} desc={scene.desc} thumbnail={scene.thumbnail} order={scene.order} projectId={projectId} updateOrder={updateOrder}/>
   </div>
 );
 
@@ -252,114 +252,6 @@ export default class CreateProject extends React.Component {
         </div>
         <div id="create-footer"> <div> {this.state.numScenes} photos uploaded </div> </div>
 
-        <style jsx> {` 
-
-          #create-header {
-            background-color: #555555;
-            z-index: 2;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            color: white;
-            font-weight: 100;
-            font-size: .8rem;
-          }
-
-          #nav-title, #publish {
-            position: absolute;
-            top: 20px;
-          }
-
-          #nav-title {
-            grid-column: 1;
-            left: 20px;
-          }
-
-          #publish {
-            grid-column: 2;
-            color: #7ACCFF;
-            right: 20px;
-          }
-
-          #CreateProject {
-            display: grid;
-            height: 100vh;
-            grid-template-columns: 100%;
-            grid-template-rows: 60px auto 60px;
-            font-family: "Avenir Next";
-            font-weight: bold;
-            text-align: center;
-            overflow: hidden;
-          }
-
-          #create-project-content {
-            overflow-y: scroll;
-          }
-          
-          #title-input {
-            color: #8F8F8F;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-top: 30px;
-          }
-
-          #project-description {
-            font-weight: 200;
-            color: #979797;
-
-          }
-
-          #title-input, #project-description {
-            border: none;
-            text-align: center;
-          }
-
-          #add-scene-button {
-            width: 80%;
-            height: 150px;
-            display: block;
-            margin: 50px auto;
-            background-color: #D8D8D8;
-            border-radius: 5px;
-            font-size: 3rem;
-          }
-
-          #add-scene-button h6 {
-            font-weight: bold;
-            color: #808080;
-          }
-
-          #create-footer, #add-scene-button {
-            display: table;
-          }
-
-          #create-footer div, #add-scene-button div {
-            display: table-cell;
-            vertical-align: middle;
-            font-weight: 100;
-            color: #3e3e3e;
-          }
-
-          #add-scene-button div {
-            font-weight: bold;
-          }
-
-          ::-webkit-input-placeholder {
-             text-align: center;
-          }
-
-          :-moz-placeholder { /* Firefox 18- */
-             text-align: center;  
-          }
-
-          ::-moz-placeholder {  /* Firefox 19+ */
-             text-align: center;  
-          }
-
-          :-ms-input-placeholder {  
-             text-align: center; 
-          }
-
-        `}</style>
       </div>
     );
   }

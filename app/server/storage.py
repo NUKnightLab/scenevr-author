@@ -43,7 +43,17 @@ class StorageBase(object):
         raise NotImplementedError
 
     def save_as_json(self, name, d):
-        self.save(name, "application/json", json.dumps(d, indent=2).encode('utf-8'))
+        self.save(name, "application/json",
+                  json.dumps(d, indent=2).encode('utf-8'))
+
+    def save_scene_images(self, name, content_type, content):
+        """Given an image for a scene, save it correctly,
+           ensuring that variations are also created.
+           (At this time, we'll probably do that all sequentially but in AWS
+            we may want to offload most of the work to lambda or some other
+            async process.)
+        """
+        raise NotImplementedError
 
     def key_id(self):
         "Get id for key"
@@ -92,3 +102,11 @@ class LocalStorage(StorageBase):
         if type(content) == str:
             content = content.encode('utf-8')
         fq_path.open('wb').write(content)
+
+    def save_scene_images(self, name, content_type, content):
+        scene_image_dir = self.storage_root.joinpath(name)
+        scene_image_dir.mkdir(parents=True, exist_ok=True)
+        # TODO: actually change the images
+        for tag in ['s', 'm', 'l', 'thumbnail']:
+            var_path = scene_image_dir.joinpath('image-{}.jpg'.format(tag))
+            var_path.open('wb').write(content)

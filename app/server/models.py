@@ -1,8 +1,10 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from urllib.parse import urljoin
 
 db = SQLAlchemy()
+
 
 class User(db.Model):
     """Represent a user of the system."""
@@ -40,9 +42,13 @@ class Scene(db.Model):
     __tablename__ = 'scenes'
 
     id = db.Column(db.Integer, primary_key=True)
-    image_url = db.Column(db.String(200))
+    image_dir = db.Column(db.String(200))
     caption = db.Column(db.String(200))
     order = db.Column(db.Integer)
 
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = relationship("Project", back_populates="scenes")
+
+    @property
+    def thumbnail(self):
+        return urljoin(self.image_dir, 'image-thumbnail.jpg')
