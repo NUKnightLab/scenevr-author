@@ -10,7 +10,7 @@ require('./../stylesheets/login.css');
 require('./../stylesheets/upload.css');
 require('./../stylesheets/projects.css');
 require('./../stylesheets/create_projects.css');
-require('./../stylesheets/individualProject.css');
+require('./../stylesheets/listedProject.css');
 require('./../stylesheets/projectPreview.css');
 require('./../stylesheets/modal.css');
 

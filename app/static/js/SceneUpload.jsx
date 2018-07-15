@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from 'react-router';
 
-import IndividualProject from './components/IndividualProject.jsx';
+import ListedProject from './components/ListedProject.jsx';
 
 export default class SceneUpload extends React.Component {
 

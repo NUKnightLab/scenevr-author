@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
 
-import IndividualProject from './components/IndividualProject.jsx';
+import ListedProject from './components/ListedProject.jsx';
 
 export default class Projects extends React.Component {
 
@@ -81,7 +81,7 @@ export default class Projects extends React.Component {
 
     const projects = projectData ? (
       projectData.map(proj => (
-        <IndividualProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} thumbnail={proj.thumbnail} />
+        <ListedProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} thumbnail={proj.thumbnail} />
       ))
     ) : (null);
 

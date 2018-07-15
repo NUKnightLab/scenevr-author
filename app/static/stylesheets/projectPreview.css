@@ -1,4 +1,4 @@
-.individual-project {
+.listed-project {
   height: 200px;
 }
 
@@ -24,7 +24,7 @@
   border-radius: 5px;
 }
 
-.individual-project h5 {
+.listed-project h5 {
   font-size: .8rem;
   color: #646464;
   text-align: left;

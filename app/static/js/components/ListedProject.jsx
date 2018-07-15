@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from 'react-router';
 
-export default class IndividualProject extends React.Component {
+export default class ListedProject extends React.Component {
 
 	constructor(props) {
     super(props);
@@ -38,7 +38,7 @@ export default class IndividualProject extends React.Component {
 		}
 		else {
 	    return (
-	      <div id="individual-project">
+	      <div id="listed-project">
 	      	<div id="project-info">
 		      	<h4 id="name"> {this.props.title} </h4>
 		        <h5 id="desc"> {this.props.desc} </h5>

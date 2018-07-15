@@ -63,7 +63,7 @@ export default class ProjectPreview extends React.Component {
 		}
 
     return (
-      <div className="individual-project" >
+      <div className="listed-project" >
 
         <DragHandle />
 
