@@ -24,7 +24,7 @@ init_env_common:
 
 # Flask specific configs
 static_dir: "{{ deploy_dir }}/app/static"
-static_prep: "npm build"
+static_prep: "npm install && npm build"
 
 application_dir: "{{ deploy_dir }}" # application dir could be a subdirectory
 service_name: "apps/scenevr"
