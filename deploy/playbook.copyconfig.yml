@@ -2,6 +2,7 @@
   vars_files:
     - "{{ config_dir }}/config.common.yml"
     - "{{ config_dir }}/config.{{ env }}.yml"
+    - "{{ vault_dir }}/{{ project_name }}/vault.{{ env }}.yml"
   gather_facts: false
   become: yes
   become_user: "{{ application_user }}"
