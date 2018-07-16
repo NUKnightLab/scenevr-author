@@ -1,60 +1,60 @@
 .listed-project {
-  height: 200px;
+    height: 200px;
 }
 
 .project-preview {
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  width: 90%;
-  height: 150px;
-  display: block;
-  margin: 15px auto;
-  background-color: #D8D8D8;
-  border-radius: 5px;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    width: 90%;
+    height: 150px;
+    display: block;
+    margin: 15px auto;
+    background-color: #D8D8D8;
+    border-radius: 5px;
 }
 
-.project-preview img{
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  width: 90%;
-  height: 150px;
-  display: block;
-  margin: 15px auto;
-  background-color: #D8D8D8;
-  border-radius: 5px;
+.project-preview img {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    width: 90%;
+    height: 150px;
+    display: block;
+    margin: 15px auto;
+    background-color: #D8D8D8;
+    border-radius: 5px;
 }
 
 .listed-project h5 {
-  font-size: .8rem;
-  color: #646464;
-  text-align: left;
-  padding-left: 25px;
-  padding-top: 10px;
-  width: 90%;
+    font-size: .8rem;
+    color: #646464;
+    text-align: left;
+    padding-left: 25px;
+    padding-top: 10px;
+    width: 90%;
 }
 
-#scene-description{
-  text-align: center;
+#scene-description {
+    text-align: center;
 }
 
-#drag-handle{
-  margin-bottom: 20px;
-  font-size: 2rem;
-  color: #D8D8D8;
-  cursor: move;
-  justify-self: center;
-  align-self: center;
+#drag-handle {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #D8D8D8;
+    cursor: move;
+    justify-self: center;
+    align-self: center;
 }
 
-#delete-scene{
-  cursor: pointer;
-  justify-self: center;
-  align-self: center;
-  width: 60%;
-  margin-bottom: 20px;
-  fill: #D8D8D8;
+#delete-scene {
+    cursor: pointer;
+    justify-self: center;
+    align-self: center;
+    width: 60%;
+    margin-bottom: 20px;
+    fill: #D8D8D8;
 }
 
 #delete-scene img {
-  height: 24px;
+    height: 24px;
 }
