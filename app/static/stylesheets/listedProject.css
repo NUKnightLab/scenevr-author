@@ -1,43 +1,53 @@
 #listed-project {
-  margin: 0 8px;
-  display: grid;
-  grid-template-columns: 5fr 4fr;
-  grid-gap: 10px;
-  font-family: "Avenir Next";
-  width: 97%;
-  border-bottom: 1px solid #999;
+    display: flex;
+    flex-direction: column;
+    font-family: "Salvo Serif Cond", Georgia, "Times New Roman", Times, serif;
+    text-rendering: optimizeLegibility;
+    border: 1px solid #e6e6e6;
+    margin: 10px;
+    background-color: #FFF;
+    border-radius: 5px;
+    margin-bottom:20px;
 }
 
 #name {
-  font-weight: bold;
-
-  color: #333;
+    font-weight: 700;
+    color: #666;
+    font-size: 24px;
+    margin:0;
 }
 
 #desc {
-  font-size: 1.1rem;
-  color: #666;
+    font-family: "Turnip RE", Georgia, "Times New Roman", Times, serif;
+    font-weight: normal;
+    font-size: 14px;
+    color: #666;
+    margin:0;
 }
 
 #project-info {
-  grid-column: 1;
-  padding: 10px;
-  padding-top: 20px;
-  text-align: left;
-  padding-left: 20px;
+    /* grid-column: 1;
+    padding: 10px;
+    padding-top: 20px;
+    text-align: left;
+    padding-left: 20px; */
 }
 
 #project-thumbnail {
-  background-color: #B0B0B0;
-  border-radius: 5px;
-  height: 80%;
-  margin-top: 10%;
-  grid-column: 2;
-  margin-right: 10px;
+    background-color: #FFF;
+    min-height:100px;
+    margin: 10px;
+
+    /* border-radius: 5px;
+    height: 80%;
+    margin-top: 10%;
+    grid-column: 2;
+    margin-right: 10px; */
 }
 
 #project-thumbnail img {
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #e6e6e6;
 }

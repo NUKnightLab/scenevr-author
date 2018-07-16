@@ -38,16 +38,17 @@ export default class ListedProject extends React.Component {
 		}
 		else {
 	    return (
-	      <div id="listed-project">
-	      	<div id="project-info">
-		      	<h4 id="name"> {this.props.title} </h4>
-		        <h5 id="desc"> {this.props.desc} </h5>
-		        <p id="date"> {this.props.date} </p>
-	      	</div>
-	        <div id="project-thumbnail" onClick={this.editProject}>
-						{imageThumbnail}
-	        </div>
-	      </div>
+            <div id="listed-project">
+                <div id="project-thumbnail" onClick={this.editProject}>
+                    {imageThumbnail}
+                </div>
+                <div id="project-info">
+                    <h4 id="name"> {this.props.title} </h4>
+                    <h5 id="desc"> {this.props.desc} </h5>
+                    <p id="date"> {this.props.date} </p>
+                </div>
+
+            </div>
 	    );
 		}
   }

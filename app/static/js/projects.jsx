@@ -90,23 +90,33 @@ export default class Projects extends React.Component {
     }
     else{
       return (
-        <div id="projects">
-          <div id="header">
-            <a href="/logout">
-              <img id="user-picture" src={this.state.userPicture}/>
-            </a>
-            <div id="user-name"> {this.state.userName} </div>
-          </div>
-          <div id="title">
-            <div> Your Projects </div>
-          </div>
-          <div id="project-container">
-            {projects}
-          </div>
-          <div id="new-project" className="link" onClick={this.newProject}>
-            <div> NEW PROJECT </div>
-          </div>
-        </div>
+            <div id="projects">
+
+                <div id="header">
+                    <div id="logout">
+                        <a href="/logout">Log out</a>
+                    </div>
+                    <div id="user">
+                        <div id="user-name"> {this.state.userName} </div>
+                        <img id="user-picture" src={this.state.userPicture}/>
+                    </div>
+
+
+                </div>
+
+                <div id="title">
+                    <div> Your Projects </div>
+                </div>
+
+                <div id="project-container">
+                    {projects}
+                </div>
+
+                <div id="new-project" className="link" onClick={this.newProject}>
+                    <div> New Project </div>
+                </div>
+
+            </div>
       );
     }
   }

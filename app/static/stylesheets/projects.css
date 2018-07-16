@@ -1,46 +1,82 @@
-.link{
-  cursor: pointer;
+.link {
+    cursor: pointer;
 }
 
 #projects {
-  display: grid;
-  height: 100vh;
-  grid-template-columns: 100%;
-  grid-template-rows: 60px 90px auto 60px;
-  font-family: "Avenir Next";
-  font-weight: bold;
-  text-align: center;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    /* grid-template-columns: 100%;
+    grid-template-rows: 60px 90px auto 60px; */
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /* font-weight: bold; */
+    text-align: center;
+    overflow: hidden;
+    background-color: #F2F2F2;
 }
 
-#header, #title, #new-project {
-  display: table;
+#header, #title, #new-project, #user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #header div, #title div, #new-project div {
-  display: table-cell;
-  vertical-align: middle;
+    display: flex;
 }
 
 #header {
-  background-color: #b8d4ff;
-  z-index: 2;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #484848;
+    z-index: 2;
+    padding: 7px;
+    font-size: 12px;
+    color:#CCCCCC;
 }
 
 #user-picture {
-  max-height: 75px;
+    max-height: 48px;
+    border-radius: 50%;
+    border: 2px solid #999;
+    margin-left: 5px;
+
 }
 
+#user-name {
+    font-weight: 700;
+}
+
+#logout a {
+    text-decoration: none;
+    color: #AAA;
+    /* align-self: flex-start; */
+}
+#logout {
+    background-color: #666;
+    padding:5px;
+    border-radius: 5px;
+}
+
+
 #title {
-  background-color: #F2F2F2
+    background-color: #d4d4d4;
+    color:#484848;
+    min-height: 50px;
+    font-weight: 700;
 }
 
 #project-container {
-  overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 #new-project {
-  background-color: #54cf86;
-  z-index: 2;
-  color: white;
+    background-color: #2bc758;
+    z-index: 2;
+    color: #FFFFFF;
+    min-height: 50px;
+    margin-left:5px;
+    margin-right:5px;
+    border-radius: 5px;
 }
