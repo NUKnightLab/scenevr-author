@@ -14,6 +14,374 @@
         <link rel="mask-icon" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="theme-color" content="#ffffff">
         <!-- /favicons -->
+
+        <style>
+            @font-face {
+                font-family: 'icons';
+                src:    url('/static/fonts/icons.eot?j0h1sd');
+                src:    url('/static/fonts/icons.eot?j0h1sd#iefix') format('embedded-opentype'),
+                        url('/static/fonts/icons.ttf?j0h1sd') format('truetype'),
+                        url('/static/fonts/icons.woff?j0h1sd') format('woff'),
+                        url('/static/fonts/icons.svg?j0h1sd#icons') format('svg');
+                font-weight: normal;
+                font-style : normal;
+            }
+
+            [class*=" icon-"],
+            [class^="icon-"] {
+                /* use !important to prevent issues with browser extensions that change fonts */
+                font-family            : 'icons' !important;
+                speak                  : none;
+                font-style             : normal;
+                font-weight            : normal;
+                font-variant           : normal;
+                text-transform         : none;
+                line-height            : 1;
+                /* Better Font Rendering =========== */
+                -webkit-font-smoothing : antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            .icon-image:before {
+                content: "\e90d";
+            }
+
+            .icon-images:before {
+                content: "\e90e";
+            }
+
+            .icon-mic:before {
+                content: "\e91e";
+            }
+
+            .icon-folder:before {
+                content: "\e92f";
+            }
+
+            .icon-price-tag:before {
+                content: "\e935";
+            }
+
+            .icon-download:before {
+                content: "\e960";
+            }
+
+            .icon-upload:before {
+                content: "\e961";
+            }
+
+            .icon-bubbles:before {
+                content: "\e96c";
+            }
+
+            .icon-quotes-left:before {
+                content: "\e977";
+            }
+
+            .icon-quotes-right:before {
+                content: "\e978";
+            }
+
+            .icon-equalizer:before {
+                content: "\e992";
+            }
+
+            .icon-equalizer2:before {
+                content: "\e993";
+            }
+
+            .icon-cog:before {
+                content: "\e994";
+            }
+
+            .icon-bin:before {
+                content: "\e9ac";
+            }
+
+            .icon-cloud-download:before {
+                content: "\e9c2";
+            }
+
+            .icon-link:before {
+                content: "\e9cb";
+            }
+
+            .icon-attachment:before {
+                content: "\e9cd";
+            }
+
+            .icon-circle-up:before {
+                content: "\ea41";
+            }
+
+            .icon-circle-right:before {
+                content: "\ea42";
+            }
+
+            .icon-circle-down:before {
+                content: "\ea43";
+            }
+
+            .icon-circle-left:before {
+                content: "\ea44";
+            }
+
+            .icon-sort-alpha-asc:before {
+                content: "\ea48";
+            }
+
+            .icon-sort-alpha-desc:before {
+                content: "\ea49";
+            }
+
+            .icon-text-height:before {
+                content: "\ea5f";
+            }
+
+            .icon-text-width:before {
+                content: "\ea60";
+            }
+
+            .icon-font-size:before {
+                content: "\ea61";
+            }
+
+            .icon-bold:before {
+                content: "\ea62";
+            }
+
+            .icon-underline:before {
+                content: "\ea63";
+            }
+
+            .icon-italic:before {
+                content: "\ea64";
+            }
+
+            .icon-strikethrough:before {
+                content: "\ea65";
+            }
+
+            .icon-paragraph-left:before {
+                content: "\ea77";
+            }
+
+            .icon-paragraph-center:before {
+                content: "\ea78";
+            }
+
+            .icon-paragraph-right:before {
+                content: "\ea79";
+            }
+
+            .icon-paragraph-justify:before {
+                content: "\ea7a";
+            }
+
+            .icon-share:before {
+                content: "\ea7d";
+            }
+
+            .icon-new-tab:before {
+                content: "\ea7e";
+            }
+
+            .icon-embed:before {
+                content: "\ea7f";
+            }
+
+            .icon-embed2:before {
+                content: "\ea80";
+            }
+
+            .icon-terminal:before {
+                content: "\ea81";
+            }
+
+            .icon-share2:before {
+                content: "\ea82";
+            }
+
+            .icon-amazon:before {
+                content: "\ea87";
+            }
+
+            .icon-google-plus:before {
+                content: "\ea8b";
+            }
+
+            .icon-google-drive:before {
+                content: "\ea8f";
+            }
+
+            .icon-facebook:before {
+                content: "\ea90";
+            }
+
+            .icon-facebook2:before {
+                content: "\ea91";
+            }
+
+            .icon-instagram:before {
+                content: "\ea92";
+            }
+
+            .icon-spotify:before {
+                content: "\ea94";
+            }
+
+            .icon-twitter:before {
+                content: "\ea96";
+            }
+
+            .icon-rss2:before {
+                content: "\ea9c";
+            }
+
+            .icon-youtube:before {
+                content: "\ea9d";
+            }
+
+            .icon-youtube2:before {
+                content: "\ea9e";
+            }
+
+            .icon-vimeo:before {
+                content: "\eaa0";
+            }
+
+            .icon-vimeo2:before {
+                content: "\eaa1";
+            }
+
+            .icon-flickr2:before {
+                content: "\eaa4";
+            }
+
+            .icon-github:before {
+                content: "\eab0";
+            }
+
+            .icon-trello:before {
+                content: "\eab3";
+            }
+
+            .icon-wordpress:before {
+                content: "\eab4";
+            }
+
+            .icon-tumblr:before {
+                content: "\eab9";
+            }
+
+            .icon-tumblr2:before {
+                content: "\eaba";
+            }
+
+            .icon-appleinc:before {
+                content: "\eabe";
+            }
+
+            .icon-android:before {
+                content: "\eac0";
+            }
+
+            .icon-windows8:before {
+                content: "\eac2";
+            }
+
+            .icon-skype:before {
+                content: "\eac5";
+            }
+
+            .icon-wikipedia:before {
+                content: "\eac8";
+            }
+
+            .icon-linkedin:before {
+                content: "\eac9";
+            }
+
+            .icon-linkedin2:before {
+                content: "\eaca";
+            }
+
+            .icon-pinterest:before {
+                content: "\ead1";
+            }
+
+            .icon-pinterest2:before {
+                content: "\ead2";
+            }
+
+            .icon-chrome:before {
+                content: "\ead9";
+            }
+
+            .icon-firefox:before {
+                content: "\eada";
+            }
+
+            .icon-IE:before {
+                content: "\eadb";
+            }
+
+            .icon-edge:before {
+                content: "\eadc";
+            }
+
+            .icon-safari:before {
+                content: "\eadd";
+            }
+
+            .icon-html-five:before {
+                content: "\eae4";
+            }
+
+            .icon-html-five2:before {
+                content: "\eae5";
+            }
+
+            .icon-email:before {
+                content: "\e945";
+            }
+
+            .icon-phone:before {
+                content: "\e942";
+            }
+
+            .icon-camera:before {
+                content: "\e90f";
+            }
+
+            .icon-zoom-in:before {
+                content: "\e987";
+            }
+
+            .icon-zoom-out:before {
+                content: "\e988";
+            }
+
+            .icon-enlarge:before {
+                content: "\e989";
+            }
+
+            .icon-shrink:before {
+                content: "\e98a";
+            }
+
+            .icon-dropbox:before {
+                content: "\eaae";
+            }
+
+            .icon-soundcloud:before {
+                content: "\eac3";
+            }
+
+            .icon-menu:before {
+                content: "\e9bd";
+            }
+        </style>
+
         <title>SceneVR Creator</title>
     </head>
     <body>

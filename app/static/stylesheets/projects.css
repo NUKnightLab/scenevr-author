@@ -13,6 +13,7 @@
     text-align: center;
     overflow: hidden;
     background-color: #F2F2F2;
+    text-rendering: optimizeLegibility;
 }
 
 #header, #title, #new-project, #user {
@@ -48,6 +49,35 @@
     font-weight: 700;
 }
 
+#logo {
+    font-family: "Salvo Serif Cond", Georgia, "Times New Roman", Times, serif;
+    font-style: italic;
+    color: #EEE;
+    font-size:16px;
+    line-height: 17.6px;
+}
+#logo span {
+    font-size: 9.6px;
+    line-height: 5.76px;
+    background: none repeat scroll 0 0 #13a4df;
+    color: #f3fbfe;
+    overflow: hidden;
+    padding-bottom:2.88px;
+    padding-left:3.5px;
+    padding-right:4px;
+    padding-top:4px;
+    margin-left:4px;
+    margin-bottom:5px;
+    font-style: normal;
+    position: relative;
+    vertical-align: text-top;
+    display: inline-block;
+    border-radius: 4px;
+    -webkit-clip-path: polygon(0% 0%, 80% 0%, 100% 35%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 80% 0%, 100% 35%, 100% 100%, 0% 100%);
+    text-shadow: 0px 0px 0 #108cbe, -1px 1px 0 #108cbe, -2px 2px 0 #108cbe, -3px 3px 0 #108cbe, -4px 4px 0 #108cbe, -5px 5px 0 #108cbe, -6px 6px 0 #108cbe, -7px 7px 0 #108cbe, -8px 8px 0 #108cbe, -9px 9px 0 #108cbe, -10px 10px 0 #108cbe, -11px 11px 0 #108cbe, -12px 12px 0 #108cbe, -13px 13px 0 #108cbe, -14px 14px 0 #108cbe, -15px 15px 0 #108cbe, -16px 16px 0 #108cbe, -17px 17px 0 #108cbe, -18px 18px 0 #108cbe, -19px 19px 0 #108cbe, -20px 20px 0 #108cbe, -21px 21px 0 #108cbe, -22px 22px 0 #108cbe, -23px 23px 0 #108cbe, -24px 24px 0 #108cbe, -25px 25px 0 #108cbe, -26px 26px 0 #108cbe, -27px 27px 0 #108cbe, -28px 28px 0 #108cbe, -29px 29px 0 #108cbe, -30px 30px 0 #108cbe, -31px 31px 0 #108cbe, -32px 32px 0 #108cbe, -33px 33px 0 #108cbe, -34px 34px 0 #108cbe, -35px 35px 0 #108cbe, -36px 36px 0 #108cbe, -37px 37px 0 #108cbe, -38px 38px 0 #108cbe, -39px 39px 0 #108cbe, -40px 40px 0 #108cbe, -41px 41px 0 #108cbe, -42px 42px 0 #108cbe, -43px 43px 0 #108cbe, -44px 44px 0 #108cbe, -45px 45px 0 #108cbe, -46px 46px 0 #108cbe, -47px 47px 0 #108cbe, -48px 48px 0 #108cbe, -1px 1px 0 #118fc3, -2px 2px 0 #1193c8, -3px 3px 0 #1196cc, -4px 4px 0 #129ad1, -5px 5px 0 #129dd6, -6px 6px 0 #13a1da, -7px 7px 0 #13a4df, -8px 8px 0 #13a7e4, -9px 9px 0 #14abe8, -10px 10px 0 #16aeeb, -11px 11px 0 #1bafec, -12px 12px 0 #20b1ec, -13px 13px 0 #24b2ec, -14px 14px 0 #29b4ed, -15px 15px 0 #2eb6ed, -16px 16px 0 #32b7ee, -17px 17px 0 #37b9ee, -18px 18px 0 #3cbbee, -19px 19px 0 #40bcef, -20px 20px 0 #45beef, -21px 21px 0 #4ac0f0, -22px 22px 0 #4fc1f0, -23px 23px 0 #53c3f0, -24px 24px 0 #58c5f1, -25px 25px 0 #5dc6f1, -26px 26px 0 #61c8f2, -27px 27px 0 #66c9f2, -28px 28px 0 #6bcbf2, -29px 29px 0 #6fcdf3, -30px 30px 0 #74cef3, -31px 31px 0 #79d0f4, -32px 32px 0 #7ed2f4, -33px 33px 0 #82d3f4, -34px 34px 0 #87d5f5, -35px 35px 0 #8cd7f5, -36px 36px 0 #90d8f6, -37px 37px 0 #95daf6, -38px 38px 0 #9adcf6, -39px 39px 0 #9eddf7, -40px 40px 0 #a3dff7, -41px 41px 0 #a8e1f8, -42px 42px 0 #ade2f8, -43px 43px 0 #b1e4f8, -44px 44px 0 #b6e5f9, -45px 45px 0 #bbe7f9, -46px 46px 0 #bfe9fa, -47px 47px 0 #c4eafa, -48px 48px 0 #c9ecfa, 50px 50px 0 rgba(16, 140, 190, 0);
+}
+
 #logout a {
     text-decoration: none;
     color: #AAA;
@@ -76,7 +106,7 @@
     z-index: 2;
     color: #FFFFFF;
     min-height: 50px;
-    margin-left:5px;
-    margin-right:5px;
-    border-radius: 5px;
+    /* margin-left:5px;
+    margin-right:5px; */
+    /* border-radius: 5px; */
 }

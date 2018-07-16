@@ -17,12 +17,19 @@
     margin:0;
 }
 
+#name span.untitled {
+    color: #CCC;
+    font-style: italic;
+}
+
 #desc {
-    font-family: "Turnip RE", Georgia, "Times New Roman", Times, serif;
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: normal;
-    font-size: 14px;
-    color: #666;
+    font-size: 12px;
+    color: #999;
     margin:0;
+    padding-left:10px;
+    padding-right:10px;
 }
 
 #project-info {

@@ -99,7 +99,7 @@ export default class SceneUpload extends React.Component {
     if (scene_thumbnail) {
       imagePreview = (<img src={scene_thumbnail} />);
     } else {
-      imagePreview = (<div id="upload-placeholder"></div>);
+      imagePreview = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
     }
 
     if(redirect){
@@ -115,31 +115,31 @@ export default class SceneUpload extends React.Component {
 
 
     return (
-      <div id="CreateProject">
-        <div id="upload-header1">
+        <div id="CreateProject">
+            <div id="upload-content">
+                <div id="upload-header">
+                    <div id="upload-cancel" onClick={this.cancel}> Cancel </div>
+                    <div id="upload-text">Upload New Scene </div>
+                    <div id="upload-done" onClick={this.upload}> Upload </div>
+                </div>
+                <div id="upload-preview">
+                    <div id="upload-thumbnail">
+                        {imagePreview}
+                    </div>
+
+                    <div id="upload-description">
+                        <textarea id="description-input" rows="5" type="text" placeholder="Add a description" />
+                    </div>
+                </div>
+                <label id="file-upload" htmlFor="file-object">
+                    <span className="icon-upload"></span> <br/>Choose an image
+                </label>
+                <input id="file-object" type="file" onChange={this.fileChangedHandler} />
+
+
+            </div>
+
         </div>
-
-        <div id="upload-content">
-          <div id="upload-header2">
-            <h6 id="upload-cancel" onClick={this.cancel}> Cancel </h6>
-            <h6 id="upload-text"> Upload New Scene </h6>
-            <h6 id="upload-done" onClick={this.upload}> Upload </h6>
-          </div>
-
-          <div id="upload-thumbnail">
-            {imagePreview}
-          </div>
-
-          <div id="upload-description">
-            <input id="description-input" type="text" placeholder="Write a description" />
-          </div>
-
-          <input id="file-object" type="file" onChange={this.fileChangedHandler} />
-
-
-        </div>
-
-      </div>
     );
   }
 }
