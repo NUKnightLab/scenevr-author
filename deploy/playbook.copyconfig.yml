@@ -1,0 +1,14 @@
+- hosts: "{{ env }}-app"
+  vars_files:
+    - "{{ config_dir }}/config.common.yml"
+    - "{{ config_dir }}/config.{{ env }}.yml"
+  gather_facts: false
+  become: yes
+  become_user: "{{ application_user }}"
+  become_method: sudo
+
+  tasks:
+    - name: copy client secret json file
+      template:
+        src="scenevr_client_secret.json"
+        dest={{ deploy_dir }}
