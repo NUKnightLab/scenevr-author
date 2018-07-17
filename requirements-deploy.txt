@@ -4,6 +4,7 @@ Flask-SQLAlchemy==2.3.2
 google-auth-oauthlib==0.2.0
 google-auth-httplib2==0.0.3
 google-api-python-client==1.6.7
+gunicorn==19.9.0
 boto==2.42.0
 moto==0.4.25
 pillow==5.1.0

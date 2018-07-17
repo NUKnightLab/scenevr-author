@@ -385,7 +385,8 @@ def google_authorize():
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES)
 
-    flow.redirect_uri = url_for('google_authorized', _external=True)
+    flow.redirect_uri = url_for('google_authorized', _external=True,
+        _scheme='https')
 
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -414,7 +415,8 @@ def google_authorized():
 
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
-        flow.redirect_uri = url_for('google_authorized', _external=True)
+        flow.redirect_uri = url_for('google_authorized', _external=True,
+            _scheme='https')
 
         # Use the authorization server's response to fetch the OAuth 2.0 tokens
         authorization_response = request.url
