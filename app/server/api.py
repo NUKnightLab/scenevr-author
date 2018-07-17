@@ -415,11 +415,14 @@ def google_authorized():
 
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+        app.logger.warn(url_for('google_authorized', _external=True,
+            _scheme='https'))
         flow.redirect_uri = url_for('google_authorized', _external=True,
             _scheme='https')
+        app.logger.warn(flow.redirect_uri)
 
         # Use the authorization server's response to fetch the OAuth 2.0 tokens
-        authorization_response = request.url
+        authorization_response = request.url.replace('http:', 'https:')
         flow.fetch_token(authorization_response=authorization_response)
 
         # Store credentials in the session.

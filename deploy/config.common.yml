@@ -25,7 +25,7 @@ init_env_common:
 
 
 # Flask specific configs
-static_dir: "{{ deploy_dir }}/app/static"
+static_dir: "{{ deploy_dir }}/app/static/dist"
 static_prep: "npm install && npm run build"
 
 application_dir: "{{ deploy_dir }}/app/server" # application dir could be a subdirectory
