@@ -8,15 +8,14 @@ export default class SceneUpload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: '',
-      scene_thumbnail: '',
+      file: this.props.location.state.file,
+      scene_thumbnail: this.props.location.state.scene_thumbnail,
       sceneId: '',
       projectId: this.props.location.state.projectId,
       order: this.props.location.state.order,
       redirect: false,
+      edit: this.props.location.state.edit
     };
-
-    this.fileChangedHandler = this.fileChangedHandler.bind(this);
     this.upload = this.upload.bind(this);
     this.cancel = this.cancel.bind(this);
 
@@ -29,6 +28,7 @@ export default class SceneUpload extends React.Component {
         .then(
           (result) => {
             if (result.scene_exists == 'True'){
+
               this.setState({
                 scene_thumbnail: result.scene_thumbnail,
                 sceneId: result.scene_id
@@ -43,19 +43,6 @@ export default class SceneUpload extends React.Component {
     }
 
 
-  fileChangedHandler(event){
-    let reader = new FileReader();
-    let file = event.target.files[0];
-    reader.onloadend = () => {
-      this.setState({
-        file: file,
-        scene_thumbnail: reader.result
-      });
-    }
-
-    reader.readAsDataURL(file)
-  }
-
   upload(){
 
     const url = "/upload-image/" + this.state.projectId + "/" + this.state.order;
@@ -65,7 +52,7 @@ export default class SceneUpload extends React.Component {
     var formData = new FormData();
 
     formData.append('order', this.state.order);
-    formData.append('file', fileField.files[0]);
+    formData.append('file', this.state.file);
     formData.append('caption', caption);
     formData.append('sceneId', this.state.sceneId);
 
@@ -93,10 +80,9 @@ export default class SceneUpload extends React.Component {
 
 
   render() {
-    let { scene_thumbnail, redirect} = this.state;
+    let { scene_thumbnail, redirect, edit} = this.state;
     let imagePreview = null;
-
-    if (scene_thumbnail) {
+    if (this.state.scene_thumbnail) {
       imagePreview = (<img src={scene_thumbnail} />);
     } else {
       imagePreview = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
@@ -113,14 +99,19 @@ export default class SceneUpload extends React.Component {
       );
     }
 
-
+    let update_upload = "Upload";
+    let header_title = "New Photo";
+    if (this.state.edit) {
+        update_upload = "Update";
+        header_title = "Photo";
+    }
     return (
         <div id="CreateProject">
             <div id="upload-content">
                 <div id="upload-header">
                     <div id="upload-cancel" onClick={this.cancel}> Cancel </div>
-                    <div id="upload-text">Upload New Scene </div>
-                    <div id="upload-done" onClick={this.upload}> Upload </div>
+                    <div id="upload-text">{header_title}</div>
+                    <div id="upload-done" onClick={this.upload}> {update_upload} </div>
                 </div>
                 <div id="upload-preview">
                     <div id="upload-thumbnail">
@@ -131,11 +122,6 @@ export default class SceneUpload extends React.Component {
                         <textarea id="description-input" rows="5" type="text" placeholder="Add a description" />
                     </div>
                 </div>
-                <label id="file-upload" htmlFor="file-object">
-                    <span className="icon-upload"></span> <br/>Choose an image
-                </label>
-                <input id="file-object" type="file" onChange={this.fileChangedHandler} />
-
 
             </div>
 

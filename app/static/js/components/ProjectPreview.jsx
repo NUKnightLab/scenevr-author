@@ -59,7 +59,8 @@ export default class ProjectPreview extends React.Component {
         			pathname: '/upload',
         			state: {
         				projectId: this.state.projectId,
-        				order: this.state.order
+        				order: this.state.order,
+                        edit: true
         			}
         		}}/>
         	);

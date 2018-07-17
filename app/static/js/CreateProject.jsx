@@ -35,6 +35,8 @@ export default class CreateProject extends React.Component {
       projectId: this.props.location.state.projectId,
       redirectProjects: false,
       redirectUpload: false,
+      file: null,
+      scene_thumbnail: null,
       scenes: [],
       numScenes: 0,
       embedUrl: null,
@@ -44,17 +46,17 @@ export default class CreateProject extends React.Component {
     this.goToProjects = this.goToProjects.bind(this);
     this.updateTitles = this.updateTitles.bind(this);
     this.updateOrder = this.updateOrder.bind(this);
-    this.createScene = this.createScene.bind(this);
     this.publish = this.publish.bind(this);
-    this.fetchScenes = this.fetchScenes.bind(this);
+    this.fetchPhotos = this.fetchPhotos.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.fileChangedHandler = this.fileChangedHandler.bind(this);
   }
 
   componentDidMount() {
-    this.fetchScenes()
+    this.fetchPhotos()
   }
 
-  fetchScenes(){
+  fetchPhotos(){
     const url = "/project-details/" + this.state.projectId;
     fetch(url, {'credentials': 'include'})
       .then(res => res.json())
@@ -89,11 +91,7 @@ export default class CreateProject extends React.Component {
     this.setState({ redirectProjects: true });
   }
 
-  createScene(){
-    this.setState({
-        redirectUpload: true
-    });
-  }
+
 
   updateTitles(){
     const url = "/project-details/" + this.state.projectId;
@@ -115,18 +113,12 @@ export default class CreateProject extends React.Component {
     .then(res => res.json())
     .then(
       (result) => {
-        this.fetchScenes();
+        this.fetchPhotos();
       },
       (error) => {
         this.setState({error});
       }
     )
-  }
-
-  createScene(){
-    this.setState({
-        redirectUpload: true
-    });
   }
 
   publish(){
@@ -187,6 +179,20 @@ export default class CreateProject extends React.Component {
     this.setState({showModal: false})
   }
 
+  fileChangedHandler(event){
+    let reader = new FileReader();
+    let file = event.target.files[0];
+    reader.onloadend = () => {
+
+      this.setState({
+        file: file,
+        scene_thumbnail: reader.result,
+        redirectUpload: true
+      });
+    }
+    reader.readAsDataURL(file);
+
+  }
 
   render() {
     const { redirectProjects, redirectUpload, showModal, scenes } = this.state;
@@ -203,7 +209,9 @@ export default class CreateProject extends React.Component {
           pathname: '/upload',
           state: {
               projectId: this.state.projectId,
-              order: this.state.numScenes
+              order: this.state.numScenes,
+              file: this.state.file,
+              scene_thumbnail: this.state.scene_thumbnail
             }
           }}/>
       );
@@ -214,19 +222,19 @@ export default class CreateProject extends React.Component {
     if (showModal) {
       if (this.state.embedUrl) {
         modal = (
-          <div>
-            <div className="modal-overlay" id="modal-overlay"></div>
-            <div className="modal" id="modal">
-              <button className="close-button" id="close-button" onClick={this.closeModal}>X</button>
-              <div className="modal-guts">
-                <h1>Share</h1>
-                <input type="text" value={this.state.embedUrl} readOnly />
-                <a href={this.state.embedUrl} target="_blank">
-                  <div id="preview-button"> Preview </div>
-                </a>
-              </div>
+            <div>
+                <div className="modal-overlay" id="modal-overlay"></div>
+                <div className="modal" id="modal">
+                    <button className="close-button" id="close-button" onClick={this.closeModal}>X</button>
+                    <div className="modal-guts">
+                        <h3>Share</h3>
+                        <input type="text" value={this.state.embedUrl} readOnly />
+                        <a href={this.state.embedUrl} target="_blank">
+                            <div id="preview-button"> Preview </div>
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
         );
       } else {
         console.warn('showModal is true but this.state.embedUrl is null. This should not be.')
@@ -252,9 +260,13 @@ export default class CreateProject extends React.Component {
                 <textarea rows="3" id="project-description" type="text" onBlur={this.updateTitles} />
                 <div id="scenes-container">
                     <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
-                    <div id="add-scene-button" onClick={this.createScene}>
+
+                    <label id="add-scene-button" htmlFor="file-object">
                         <span className="icon-image"></span> <br/>Add Photo
-                    </div>
+                    </label>
+                    <input id="file-object" type="file" accept=".jpg, .jpeg" onChange={this.fileChangedHandler} />
+
+
                 </div>
             </div>
 

@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    width:100%;
     font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-align: center;
     overflow: hidden;
@@ -75,50 +76,50 @@
     width:100%;
     text-align: center;
 }
-input::placeholder {
+#create-project-content input::placeholder {
     font-style: italic;
     color:#999;
 }
-input::-webkit-input-placeholder {
+#create-project-content input::-webkit-input-placeholder {
     font-style: italic;
     color:#999;
 }
-input::-moz-placeholder {
+#create-project-content input::-moz-placeholder {
     font-style: italic;
     color:#999;
 }
-input:-ms-input-placeholder {
+#create-project-content input:-ms-input-placeholder {
     font-style: italic;
     color:#999;
 }
-input:-moz-placeholder {
+#create-project-content input:-moz-placeholder {
     font-style: italic;
     color:#999;
 }
-textarea {
+#create-project-content textarea {
     text-align: center;
 }
-textarea::placeholder {
-    font-style: italic;
-    color:#999;
-    text-align: center;
-}
-textarea::-webkit-input-placeholder {
+#create-project-content textarea::placeholder {
     font-style: italic;
     color:#999;
     text-align: center;
 }
-textarea::-moz-placeholder {
+#create-project-content textarea::-webkit-input-placeholder {
     font-style: italic;
     color:#999;
     text-align: center;
 }
-textarea:-ms-input-placeholder {
+#create-project-content textarea::-moz-placeholder {
     font-style: italic;
     color:#999;
     text-align: center;
 }
-textarea:-moz-placeholder {
+#create-project-content textarea:-ms-input-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: center;
+}
+#create-project-content textarea:-moz-placeholder {
     font-style: italic;
     color:#999;
     text-align: center;
@@ -162,7 +163,7 @@ textarea:-moz-placeholder {
     font-size: 32px;
 }
 
-input {
+#create-project-content input {
     background-color: transparent;
 }
 
