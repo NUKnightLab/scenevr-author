@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=0,maximum-scale=1.0,minimal-ui">
     <title>Scene VR</title>
-    <link rel="stylesheet" href="/css/scene.css"/>
+    <link rel="stylesheet" href="{{ SCENEVR_DIST_ROOT_URL }}/css/scene.css"/>
 
     <!-- favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/apple-touch-icon.png">
@@ -65,7 +65,7 @@
         }
 
         var config = {
-                source: "{{ STATIC_MEDIA_URL }}/test_panos/data.json",
+                source: "/demo.json",
                 speed: "m"
         }
 

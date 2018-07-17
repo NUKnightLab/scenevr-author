@@ -1,4 +1,4 @@
-from flask import Flask, request, session, jsonify, g
+from flask import Flask, request, session, jsonify, g, Response
 from flask import render_template, send_from_directory, redirect, url_for
 import os
 import sys
@@ -57,7 +57,8 @@ def inject_urls():
 
     return dict(
         STORAGE_URL=settings.AWS_STORAGE_BUCKET_URL,
-        STATIC_MEDIA_URL=settings.STATIC_MEDIA_URL
+        STATIC_MEDIA_URL=settings.STATIC_MEDIA_URL,
+        SCENEVR_DIST_ROOT_URL=settings.SCENEVR_DIST_ROOT_URL
         )
 
 
@@ -145,8 +146,15 @@ def index(path, user=None):
 
 @app.route('/demo.html')
 @require_user
-def demo():
+def demo_html():
     return render_template('demo.html')
+
+
+@app.route('/demo.json')
+@require_user
+def demo_json():
+    return Response(render_template('demo.json'), mimetype='application/json')
+
 
 # support all of the React Router paths with one URL. They don't all
 # require user though, is this going to break?

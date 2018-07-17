@@ -1,4 +1,5 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const webpack = require('webpack');
 const config = {
@@ -12,6 +13,10 @@ const config = {
     },
     plugins: [
       new ExtractTextPlugin('styles.css'),
+      new CopyWebpackPlugin([
+        { from: __dirname + '/app/static/assets', to: __dirname + '/app/static/dist' },
+        { from: __dirname + '/app/static/fonts', to: __dirname + '/app/static/dist/fonts' },
+      ]),
     ],
     module: {
       rules: [

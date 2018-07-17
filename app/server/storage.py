@@ -55,7 +55,8 @@ class StorageBase(object):
             we may want to offload most of the work to lambda or some other
             async process.)
         """
-        self.save("{}/original.jpg".format(name), content_type, content)
+        orig = "{}/original.jpg".format(name)
+        self.save(orig, content_type, content)
         self._resize_scene_images(name, content_type, content)
 
     def _resize_scene_images(name, content_type, content):
@@ -122,13 +123,13 @@ class LocalStorage(StorageBase):
             'm': 2048,
             'l': 4096
         }
-        orig = Image.open('original.jpg')
+        orig = Image.open(scene_image_dir.joinpath('original.jpg'))
         w, h = orig.size
         for tag, new_height in sizes.items():
             new_size = compute_size(w, h, new_height)
             var_path = scene_image_dir.joinpath('image-{}.jpg'.format(tag))
-            copy = orig.resize(new_size, Image.LANCZOS, quality=60)
-            copy.save(var_path)
+            copy = orig.resize(new_size, Image.LANCZOS)
+            copy.save(var_path, quality=60)
 
 
 def compute_size(w, h, nh):
