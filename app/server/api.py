@@ -53,16 +53,12 @@ else:
 def inject_urls():
     """
     Inject urls into the templates.
-    Template variable will always have a trailing slash.
     """
 
-    storage_url = settings.AWS_STORAGE_BUCKET_URL
-
-    if not storage_url.endswith('/'):
-        storage_url += '/'
-
     return dict(
-        STORAGE_URL=storage_url, storage_url=storage_url)
+        STORAGE_URL=settings.AWS_STORAGE_BUCKET_URL,
+        STATIC_MEDIA_URL=settings.STATIC_MEDIA_URL
+        )
 
 
 def _get_uid(user_string):
@@ -143,11 +139,21 @@ def establish_user():
 
 
 @app.route('/', defaults={'path': ''})
-# this could be confusing but maybe all paths really do lead to one template.
-@app.route('/<path:path>')
-@require_user
 def index(path, user=None):
     return render_template('index.html')
+
+
+@app.route('/demo.html')
+@require_user
+def demo():
+    return render_template('demo.html')
+
+# support all of the React Router paths with one URL. They don't all
+# require user though, is this going to break?
+@app.route('/<path:path>')
+@require_user
+def router(path, user=None):
+    return render_template('router.html')
 
 
 @app.route("/projects", methods=['GET'])
@@ -360,10 +366,10 @@ def write_embed_published(project_id):
     return embed_url
 
 
-@app.route("/logout/")
+@app.route("/logout")
 def logout():
     _user_remove()
-    return redirect('https://www.google.com/accounts/Logout')
+    return redirect('/')
 
 
 @app.route('/google/authorize')
@@ -419,7 +425,7 @@ def google_authorized():
         _user_set(issuer=verified_jwt['iss'], subject=verified_jwt['sub'])
         # For now, we will always redirect a freshly authenticated user to
         # 'home' no matter where they were trying to go in the first place.
-        return redirect(url_for('index'))
+        return redirect(url_for('router', path="list-projects"))
     except OAuth2Error as e:
         app.logger.warn("Error with authorization: {} {}".format(type(e), e))
         # should reset redirect url and then bounce to auth again

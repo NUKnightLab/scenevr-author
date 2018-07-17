@@ -16,6 +16,8 @@ from boto.exception import S3ResponseError
 from boto.s3.connection import OrdinaryCallingFormat
 import requests
 import settings
+from io import BytesIO
+from PIL import Image
 
 # Get settings module
 if not settings.TEST_MODE:
@@ -53,7 +55,13 @@ class StorageBase(object):
             we may want to offload most of the work to lambda or some other
             async process.)
         """
-        raise NotImplementedError
+        self.save("{}/original.jpg".format(name), content_type, content)
+        self._resize_scene_images(name, content_type, content)
+
+    def _resize_scene_images(name, content_type, content):
+        """If the storage has responsibility for making variant images
+        implement that here"""
+        pass
 
     def key_id(self):
         "Get id for key"
@@ -103,10 +111,26 @@ class LocalStorage(StorageBase):
             content = content.encode('utf-8')
         fq_path.open('wb').write(content)
 
-    def save_scene_images(self, name, content_type, content):
+    def _resize_scene_images(self, name, content_type, content):
         scene_image_dir = self.storage_root.joinpath(name)
         scene_image_dir.mkdir(parents=True, exist_ok=True)
         # TODO: actually change the images
-        for tag in ['s', 'm', 'l', 'thumbnail']:
+        orig = Image.open(BytesIO(content))
+        sizes = {
+            'thumbnail': 540,
+            's': 1024,
+            'm': 2048,
+            'l': 4096
+        }
+        orig = Image.open('original.jpg')
+        w, h = orig.size
+        for tag, new_height in sizes.items():
+            new_size = compute_size(w, h, new_height)
             var_path = scene_image_dir.joinpath('image-{}.jpg'.format(tag))
-            var_path.open('wb').write(content)
+            copy = orig.resize(new_size, Image.LANCZOS, quality=60)
+            copy.save(var_path)
+
+
+def compute_size(w, h, nh):
+    ratio = w/h
+    return (int(ratio*nh), int(nh))

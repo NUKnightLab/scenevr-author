@@ -193,7 +193,7 @@ export default class CreateProject extends React.Component {
 
     if (redirectProjects){
       return (
-        <Redirect to={{pathname: '/'}}/>
+        <Redirect to={{pathname: '/list-projects', push: true}}/>
       );
     }
 
