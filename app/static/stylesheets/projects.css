@@ -2,10 +2,16 @@
     cursor: pointer;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 #projects {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100vh; */
     /* grid-template-columns: 100%;
     grid-template-rows: 60px 90px auto 60px; */
     font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -20,6 +26,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
 }
 
 #header div, #title div, #new-project div {
@@ -28,6 +35,8 @@
 
 #header {
     display:flex;
+
+    width:100%;
     flex-direction: row;
     justify-content: space-between;
     background-color: #484848;
@@ -35,15 +44,20 @@
     padding: 7px;
     font-size: 12px;
     color:#CCCCCC;
+    height: 60px;
 }
 
 #user-picture {
-    max-height: 48px;
+    max-height: 42px;
     border-radius: 50%;
     border: 2px solid #999;
     margin-left: 5px;
+    margin-top:5px;
+    margin-bottom:5px;
 
 }
+
+
 
 #user-name {
     font-weight: 700;
