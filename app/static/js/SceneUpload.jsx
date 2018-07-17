@@ -119,7 +119,7 @@ export default class SceneUpload extends React.Component {
             <div id="upload-content">
                 <div id="upload-header">
                     <div id="upload-cancel" onClick={this.cancel}> Cancel </div>
-                    <div id="upload-text">Upload New Scene </div>
+                    <div id="upload-text">Upload New Photo </div>
                     <div id="upload-done" onClick={this.upload}> Upload </div>
                 </div>
                 <div id="upload-preview">
@@ -132,7 +132,7 @@ export default class SceneUpload extends React.Component {
                     </div>
                 </div>
                 <label id="file-upload" htmlFor="file-object">
-                    <span className="icon-upload"></span> <br/>Choose an image
+                    <span className="icon-upload"></span> <br/>Choose a photo
                 </label>
                 <input id="file-object" type="file" onChange={this.fileChangedHandler} />
 
