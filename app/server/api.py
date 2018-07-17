@@ -119,6 +119,8 @@ def ajax(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         try:
+            if g.user is None:
+                raise SecurityError("Ajax endpoints require an authenticated user.")
             # AJAX endpoints probably need a different way to 'require user'
             response = f(*args, **kwargs)
             return jsonify(response)
@@ -197,6 +199,7 @@ def project_details(project_id):
     if request.method == 'POST':
         data = request.get_json()
         project = models.Project.query.get(project_id)
+        check_project(g.user, project)
         project.title = data['titleData']
         project.desc = data['descData']
         db.session.add(project)
@@ -214,13 +217,14 @@ def project_details(project_id):
             project.thumbnail = scenes[0].thumbnail
             db.session.add(project)
 
-        write_json_data(project_id)
+        _write_json_data(project_id)
 
         db.session.commit()
         # always the same as what is posted? is there a better response?
         return data
     if request.method == 'GET':
         project = models.Project.query.get(project_id)
+        check_project(g.user, project)
         scenesData = []
         scenes = models.Scene.query.filter_by(
             project_id=project_id).order_by(models.Scene.order)
@@ -239,6 +243,8 @@ def project_details(project_id):
 @ajax
 def delete_scene(project_id):
     data = request.get_json()
+    project = models.Project.query.get(project_id)
+    check_project(g.user, project)
     order = data['sceneOrder']
     scene = models.Scene.query.filter_by(
         project_id=project_id, order=order).first()
@@ -250,6 +256,8 @@ def delete_scene(project_id):
 @app.route("/upload-image/<project_id>/<order>", methods=['GET'])
 @ajax
 def get_scene(project_id, order):
+    project = models.Project.query.get(project_id)
+    check_project(g.user, project)
     scene = models.Scene.query.filter_by(
         project_id=project_id, order=order).first()
     if not scene:
@@ -267,8 +275,7 @@ def create_scene(project_id, order):
         user = g.user
 
         project = models.Project.query.get(project_id)
-        if project.user != user:
-            raise Exception("You don't have permission to change that project")
+        check_project(g.user, project)
         caption = request.form.get('caption', None)
         file = request.files.get('file', None)
         order = int(request.form['order'])
@@ -303,7 +310,7 @@ def create_scene(project_id, order):
 
         db.session.commit()
 
-        write_json_data(project_id)
+        _write_json_data(project_id)
 
         return {'image_dir': image_dir,
                 'caption': caption,
@@ -320,15 +327,20 @@ def create_scene(project_id, order):
 @ajax
 def publish_project(project_id):
     """Save published project"""
-    write_json_data(project_id)
+
+    project = models.Project.query.get(project_id)
+    check_project(g.user, project)
+
+    _write_json_data(project_id)
     embed_url = write_embed_published(project_id)
 
     return {'embed_url': embed_url}
 
 
-def write_json_data(project_id):
+def _write_json_data(project_id):
     user = g.user
     project = models.Project.query.get(project_id)
+    check_project(user, project)
     data = {
         'title': project.title,
         'desc': project.desc
@@ -355,19 +367,22 @@ def write_embed_published(project_id):
        TODO: Consider doing just that.
     """
     user = g.user
-
+    project = models.Project.query.get(project_id)
+    check_project(user,project)
     json_key_name = storage_obj.key_name(
         str(user.id), str(project_id), 'data.json')
     embed_key_name = storage_obj.key_name(
         str(user.id), str(project_id), 'index.html')
 
+    embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
     content = render_template('embed.html',
                               json_url=urljoin(
                                     settings.AWS_STORAGE_BUCKET_URL,
                                     json_key_name
                               ),
-                              scenevr_dist_root_url=settings.SCENEVR_DIST_ROOT_URL)
-    embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
+                              scenevr_dist_root_url=settings.SCENEVR_DIST_ROOT_URL,
+                              project=project,
+                              embed_url=embed_url)
     storage_obj.save(embed_key_name, 'text/html', content)
     return embed_url
 
@@ -444,6 +459,10 @@ def google_authorized():
         return redirect(url_for('index'))
 
 
+def check_project(user,project):
+    if project.user != user:
+        raise SecurityException("You don't have permission for that project.")
+
 def credentials_to_dict(credentials):
     return {'token': credentials.token,
             'refresh_token': credentials.refresh_token,
@@ -452,6 +471,8 @@ def credentials_to_dict(credentials):
             'client_secret': credentials.client_secret,
             'scopes': credentials.scopes}
 
+class SecurityException(Exception):
+    pass
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == 'initdb':
