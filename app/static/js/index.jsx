@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import SceneUpload from "./SceneUpload.jsx";
 import CreateProject from "./CreateProject.jsx";
 import Login from "./Login.jsx";
-import Projects from "./Projects.jsx"
+import Projects from "./projects.jsx"
 
 require('./../stylesheets/login.css');
 require('./../stylesheets/upload.css');
