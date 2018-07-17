@@ -14,7 +14,8 @@ init_env_common:
   FLASK_SETTINGS_MODULE: "core.settings"
   DATABASE_URI: "{{ vault_database_uri }}"
   AWS_STORAGE_BUCKET_URL: "{{ vault_aws_storage_bucket_url }}"
-  AWS_STORAGE_BUCKET_KEY_PREFIX: "{{ vault_aws_storage_bucket_name }}"
+  AWS_STORAGE_BUCKET_NAME: "{{ vault_aws_storage_bucket_name }}"
+  AWS_STORAGE_BUCKET_KEY_PREFIX: "scenevr"
   AWS_ACCESS_KEY_ID: "{{ vault_aws_access_key_id }}"
   AWS_SECRET_ACCESS_KEY: "{{ vault_aws_secret_access_key }}"
 
