@@ -8,6 +8,7 @@ ssl:
 
 init_env_stg:
   STATIC_URL: "//media.knilab.com/{{ project_name }}/"
+  STATIC_MEDIA_URL: "//media.knilab.com/{{ project_name }}/"
   CDN_URL: "//cdn.knightlab.com/libs/scenevr/dev/"
 
 # Note that env vars set in the upstart config will also be set when using the

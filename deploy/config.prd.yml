@@ -10,6 +10,7 @@ ssl:
 
 init_env_prd:
   STATIC_URL: "//media.knightlab.com/{{ project_name }}/"
+  STATIC_MEDIA_URL: "//media.knightlab.com/{{ project_name }}/"
   CDN_URL: "//cdn.knightlab.com/libs/scenevr/latest/"
 
 # Note that env vars set in the upstart config will also be set when using the
