@@ -78,13 +78,21 @@ export default class Projects extends React.Component {
       );
     }
 
+    let projects = null;
+    console.log(projectData)
+     if (projectData) {
+         if (projectData.length == 0) {
+             console.log("NOPE")
+             projects = <div id="welcome"> <span>👇 🏞 😆</span> Create a new project to get started!</div>
+         } else {
+             projects = projectData ? (
+               projectData.map(proj => (
+                 <ListedProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} thumbnail={proj.thumbnail} />
+               ))
+             ) : (null);
+         }
 
-    const projects = projectData ? (
-      projectData.map(proj => (
-        <ListedProject key={proj.id} id={proj.id} title={proj.title} desc={proj.desc} date={proj.date} thumbnail={proj.thumbnail} />
-      ))
-    ) : (null);
-
+     }
     if (error){
       return <div>Error: {error.message}</div>;
     }
@@ -98,7 +106,7 @@ export default class Projects extends React.Component {
                     </div>
                     <div id="logo">Scene <span>VR</span></div>
                     <div id="user">
-                        
+
                         <img id="user-picture" description={this.state.userName} src={this.state.userPicture}/>
                     </div>
 

@@ -9,7 +9,7 @@ ssl:
   ssl_certificate_key: "/etc/nginx/ssl/knightlab/knightlab-com.key"
 
 init_env_prd:
-  STATIC_MEDIA_URL: "https://media.knightlab.com/{{ project_name }}/"
+  STATIC_MEDIA_URL: "https://media.knightlab.com/{{ project_name }}"
   SCENEVR_DIST_ROOT_URL: "https://cdn.knightlab.com/libs/scenevr/latest"
 
 # Note that env vars set in the upstart config will also be set when using the
