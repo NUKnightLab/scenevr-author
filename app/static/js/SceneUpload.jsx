@@ -134,7 +134,7 @@ export default class SceneUpload extends React.Component {
                 <label id="file-upload" htmlFor="file-object">
                     <span className="icon-upload"></span> <br/>Choose a photo
                 </label>
-                <input id="file-object" type="file" onChange={this.fileChangedHandler} />
+                <input id="file-object" type="file" accept=".jpg, .jpeg" onChange={this.fileChangedHandler} />
 
 
             </div>
