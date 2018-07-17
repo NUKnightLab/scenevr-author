@@ -9,9 +9,8 @@ ssl:
   ssl_certificate_key: "/etc/nginx/ssl/knightlab/knightlab-com.key"
 
 init_env_prd:
-  STATIC_URL: "//media.knightlab.com/{{ project_name }}/"
   STATIC_MEDIA_URL: "//media.knightlab.com/{{ project_name }}/"
-  CDN_URL: "//cdn.knightlab.com/libs/scenevr/latest/"
+  SCENEVR_DIST_ROOT_URL: "//cdn.knightlab.com/libs/scenevr/latest/"
 
 # Note that env vars set in the upstart config will also be set when using the
 # modified manage.py file for db migration and custom management commands
