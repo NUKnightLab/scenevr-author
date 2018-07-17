@@ -379,7 +379,7 @@ def logout():
     return redirect("https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue={}".format(return_url))
 
 
-@app.route('/google/authorize')
+@app.route('/authorize')
 def google_authorize():
     """Begin the OAuth process. Assumes Google for now."""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
@@ -401,7 +401,7 @@ def google_authorize():
     return redirect(authorization_url)
 
 
-@app.route('/google/authorized')
+@app.route('/authorized')
 def google_authorized():
     """Post authentication callback. This application URL must also be whitelisted
     with the Google OAuth credentials used to create CLIENT_SECRETS_FILE."""
