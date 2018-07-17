@@ -372,10 +372,11 @@ def write_embed_published(project_id):
     return embed_url
 
 
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     _user_remove()
-    return redirect('/')
+    return_url = urljoin(request.base_url,'/')
+    return redirect("https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue={}".format(return_url))
 
 
 @app.route('/google/authorize')
