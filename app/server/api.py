@@ -145,13 +145,11 @@ def index(path, user=None):
 
 
 @app.route('/demo.html')
-@require_user
 def demo_html():
     return render_template('demo.html')
 
 
 @app.route('/demo.json')
-@require_user
 def demo_json():
     return Response(render_template('demo.json'), mimetype='application/json')
 
