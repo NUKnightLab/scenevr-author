@@ -96,7 +96,7 @@ Set the DATABASE_URI environment variable. Note: you will want to add this to yo
 Init the database as usual:
 
 ```
- $ python app/api.py initdb
+ $ python app/server/api.py initdb
 
 ## Client development
 
