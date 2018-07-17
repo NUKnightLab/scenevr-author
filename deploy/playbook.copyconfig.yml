@@ -12,4 +12,4 @@
     - name: copy client secret json file
       template:
         src="scenevr_client_secret.json"
-        dest={{ deploy_dir }}
+        dest={{ application_dir }}
