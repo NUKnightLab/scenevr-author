@@ -1,85 +1,136 @@
 #CreateProject {
-  font-family: "Avenir Next";
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #CreateProject input {
-  outline: none;
-  border: none;
-}
-
-#upload-header1 {
-  background-color: #333;
-  height: 60px;
-  z-index: 2;
+    outline: none;
+    border: none;
 }
 
 #upload-content {
-  display: grid;
-  grid-template-rows: 50px auto;
-  grid-template-columns: 1fr 2fr;
-  height: calc(100vh - 60px);
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#upload-header {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #484848;
+    z-index: 2;
+    padding: 5px;
+    font-size: 12px;
+    color:#CCCCCC;
 }
 
 #upload-cancel, #upload-done {
-  position: absolute;
-  top: 15px;
-  color: #7ACCFF;
-  cursor: pointer;
-  z-index: 9;
+    font-size: 14px;
+    padding:5px;
+    border-radius: 5px;
+    font-weight: normal;
+    color: #FFF;
 }
-
-#upload-cancel {
-  grid-column: 1;
-  left: 15px;
-}
-
-#upload-done {
-  grid-column: 2;
-  right: 20px;
-}
-
 #upload-text {
-  text-align: center;
-  position: relative;
-  top: 13px;
-  font-weight: bold;
-  font-size: 1.2rem;
+    color: #CCC;
+    font-weight:700;
+    padding:5px;
+    font-size: 16px;
 }
 
-#upload-header2 {
-  grid-column: 1 / 3;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #ddd;
+#upload-preview {
+    display:flex;
+    margin:5px;
+    margin-top:25px;
+
 }
 
 #upload-thumbnail {
-
-  margin: 17px;
-  height: 100px;
-  width: 140px;
-  border-radius: 6px;
-  display: inline-block;
+    margin: 5px;
+    width: 100%;
+    border-radius: 6px;
+    display: inline-block;
 }
 
-#upload-thumbnail img{
-  width: 100%;
+#upload-thumbnail img {
+    width: 100%;
 }
 
 #upload-placeholder {
-  background-color: #B0B0B0;
-  width: 100%;
-  height: 100%;
+    background-color: #B0B0B0;
+    height: 150px;
+
+    display:flex;
+    justify-content:center;
+    align-items: center;
+
+}
+#upload-placeholder span {
+    font-size:48px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#file-upload {
+    border: 1px solid #e6e6e6;
+    padding:10px;
+    background-color: #2bc758;
+    margin-top:25px;
+    border-radius: 5px;
+    margin-left:50px;
+    margin-right:50px;
+    color:#FFF;
+    font-size: 16px;
+}
+#file-upload span {
+    font-size: 32px;
+    margin-bottom:10px;
 }
 
 #upload-description {
-  margin: 17px;
-  height: 100px;
-  color: #444;
-  word-break: break-all;
+    font-weight: normal;
+    color: #999;
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size:12px;
+    background-color: transparent;
+    border:0;
+    width: 100%;
+    margin-left:10px;
 }
 
-#upload-description input {
-  border: none;
-  outline: none;
+#upload-description textarea {
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: none;
+    outline: none;
+    margin:0;
+    width:100%;
+    background-color: transparent;
+    text-align: left;
+}
+textarea::placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea::-webkit-input-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea::-moz-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea:-ms-input-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea:-moz-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
 }

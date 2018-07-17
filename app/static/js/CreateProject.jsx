@@ -68,17 +68,17 @@ export default class CreateProject extends React.Component {
           if (result.title){
             document.getElementById('title-input').value=result.title;
           } else{
-            document.getElementById('title-input').placeholder="New Project Title...";
+            document.getElementById('title-input').placeholder="Untitled";
           };
 
           if (result.desc){
             document.getElementById('project-description').value=result.desc;
           } else{
-            document.getElementById('project-description').placeholder="Write a description";
+            document.getElementById('project-description').placeholder="Add a description";
           };
 
         },
-        
+
         (error) => {
           this.setState({error});
         }
@@ -193,7 +193,7 @@ export default class CreateProject extends React.Component {
 
     if (redirectProjects){
       return (
-        <Redirect to={{pathname: '/'}}/>
+        <Redirect to={{pathname: '/list-projects', push: true}}/>
       );
     }
 
@@ -234,25 +234,37 @@ export default class CreateProject extends React.Component {
     }
 
     return (
-      <div id="CreateProject">
-        {modal}
-        <div id="create-header">
-          <h6 id="nav-title" className="link" onClick={this.goToProjects}> &lt; Your Projects </h6>
-          <h6 id="publish" onClick={this.publish}> Share </h6>
-        </div>
-        <div id="create-project-content">
-          <input id="title-input" type="text" onBlur={this.updateTitles}/>
-          <input id="project-description" type="text" onBlur={this.updateTitles} />
-          <div id="scenes-container">
-            <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
-            <div id="add-scene-button" onClick={this.createScene}>
-              <div> + <h6> ADD NEW PHOTO </h6> </div>
-            </div>
-          </div>
-        </div>
-        <div id="create-footer"> <div> {this.state.numScenes} photos uploaded </div> </div>
+        <div id="CreateProject">
 
-      </div>
+            {modal}
+
+            <div id="create-header">
+                <div id="header-left">
+                    <div id="nav-title" className="link" onClick={this.goToProjects}> &lt; Your Projects </div>
+                </div>
+                <div id="header-right">
+                    <div id="publish" onClick={this.publish}> <span className="icon-share"></span></div>
+                </div>
+            </div>
+
+            <div id="create-project-content">
+                <input id="title-input" type="text" onBlur={this.updateTitles}/>
+                <textarea rows="3" id="project-description" type="text" onBlur={this.updateTitles} />
+                <div id="scenes-container">
+                    <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true}/>
+                    <div id="add-scene-button" onClick={this.createScene}>
+                        <span className="icon-image"></span> <br/>Add Photo
+                    </div>
+                </div>
+            </div>
+
+            <div id="create-footer">
+                <div>
+                    {this.state.numScenes} photos uploaded
+                </div>
+            </div>
+
+        </div>
     );
   }
 }

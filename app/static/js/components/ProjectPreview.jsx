@@ -47,36 +47,39 @@ export default class ProjectPreview extends React.Component {
     )
 	}
 
-  render() {
-		const {redirect} = this.state;
+    render() {
+    	const {redirect} = this.state;
+        let scene_description = this.props.desc;
+        if (scene_description) {
+            scene_description = (<p id="scene-description"> {scene_description} </p>)
+        }
+        if (redirect){
+        	return (
+        		<Redirect to={{
+        			pathname: '/upload',
+        			state: {
+        				projectId: this.state.projectId,
+        				order: this.state.order
+        			}
+        		}}/>
+        	);
+        }
 
-		if (redirect){
-			return (
-				<Redirect to={{
-					pathname: '/upload',
-					state: {
-							projectId: this.state.projectId,
-							order: this.state.order
-						}
-					}}/>
-			);
-		}
+        return (
+            <div className="listed-images" >
 
-    return (
-      <div className="listed-project" >
+                <DragHandle />
 
-        <DragHandle />
+                <div className="project-preview" onClick={this.next}>
+                    <img src={this.props.thumbnail} alt={this.props.desc} />
+                    {scene_description}
+                </div>
 
-        <div className="project-preview" onClick={this.next}>
-          <img src={this.props.thumbnail} alt={this.props.desc} />
-          <h5 id="scene-description"> {this.props.desc} </h5>
-        </div>
+                <div id="delete-scene" onClick={this.deleteScene}>
+                    <span className="icon-bin"></span>
+                </div>
 
-        <div id="delete-scene" onClick={this.deleteScene}>
-          <img src="/static/images/trash.svg"/>
-        </div>
-      
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }

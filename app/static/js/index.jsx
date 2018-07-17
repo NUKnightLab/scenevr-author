@@ -17,7 +17,7 @@ require('./../stylesheets/modal.css');
 ReactDOM.render((
   <BrowserRouter>
     <Switch>
-      <Route exact path='/' component={Projects} />
+      <Route exact path='/list-projects' component={Projects} />
       <Route path='/create' component={CreateProject} />
       <Route path='/login' component={Login} />
       <Route path='/upload' component={SceneUpload} />

@@ -8,7 +8,7 @@ export default class Login extends React.Component {
   }
 
   signin() {
-    console.log("Google sign in activated");
+    window.location.href = '/google/authorize'
   }
 
   render() {
