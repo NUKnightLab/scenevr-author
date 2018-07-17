@@ -32,7 +32,15 @@
 #header div, #title div, #new-project div {
     display: flex;
 }
-
+#welcome {
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    padding:20px;
+}
+#welcome span {
+    display:block;
+    font-size: 48px;
+}
 #header {
     display:flex;
 
