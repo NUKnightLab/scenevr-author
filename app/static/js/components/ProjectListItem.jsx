@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from 'react-router';
 
-export default class ListedProject extends React.Component {
+export default class ProjectListItem extends React.Component {
 
 	constructor(props) {
     super(props);
@@ -17,7 +17,7 @@ export default class ListedProject extends React.Component {
   }
 
   render() {
-		const { redirect } = this.state;
+		const { redirect, thumbnail } = this.state;
 		let imageThumbnail = null;
 
 		if (this.state.thumbnail) {
@@ -30,18 +30,19 @@ export default class ListedProject extends React.Component {
             proj_title = (<span className="untitled">Untitled</span>)
         }
 		if (redirect){
-	      return (
-					<Redirect to={{
-	          pathname: '/create',
-	          state: {
-								projectId: this.props.id,
-							}
-	      		}}/>
-				);
+            return (
+                <Redirect to={{
+                    pathname: '/create',
+                    state: {
+                        projectId: this.props.id,
+                        thumbnail: this.state.thumbnail
+                    }
+                }}/>
+            );
 		}
 		else {
     	    return (
-                <div id="listed-project">
+                <div className="project-list-item">
                     <div id="project-thumbnail" onClick={this.editProject}>
                         {imageThumbnail}
                     </div>

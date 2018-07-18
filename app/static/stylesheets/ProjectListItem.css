@@ -1,4 +1,4 @@
-#listed-project {
+.project-list-item {
     display: flex;
     flex-direction: column;
     font-family: "Salvo Serif Cond", Georgia, "Times New Roman", Times, serif;

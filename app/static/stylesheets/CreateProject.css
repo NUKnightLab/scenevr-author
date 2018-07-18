@@ -11,6 +11,11 @@
     text-rendering: optimizeLegibility;
 }
 
+#CreateProject input {
+    border:none;
+    outline:none;
+}
+
 #scenes-container {
     display:flex;
     flex-direction: column;
@@ -63,6 +68,7 @@
 #create-project-content {
     overflow-y: scroll;
     text-align: center;
+    margin-top:10px;
 }
 
 #title-input {
@@ -173,7 +179,7 @@
 
 #drag-handle {
     float: left;
-    margin-left: 5px;
+
     font-size: 1.5rem;
     color: #D8D8D8;
     cursor: move;

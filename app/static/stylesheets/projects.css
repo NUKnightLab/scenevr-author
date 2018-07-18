@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background-color: #F2F2F2;
+}
+
 #projects {
     /* display: flex;
     flex-direction: column;
@@ -128,6 +132,9 @@
     z-index: 2;
     color: #FFFFFF;
     min-height: 50px;
+    position:fixed;
+    bottom:0;
+    width:100%;
     /* margin-left:5px;
     margin-right:5px; */
     /* border-radius: 5px; */
