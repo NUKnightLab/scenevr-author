@@ -100,7 +100,7 @@
     padding:15px;
     width:100%;
     border-bottom: 1px solid #ABABAB;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.85);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
@@ -125,6 +125,7 @@
 }
 
 .modal-header-button {
+    cursor: pointer;
     font-size: 16px;
     font-weight: 700;
 }
