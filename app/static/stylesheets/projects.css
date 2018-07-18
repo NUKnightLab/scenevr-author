@@ -13,6 +13,8 @@ body {
 }
 
 #projects {
+    display:flex;
+    flex-direction: column;
     /* display: flex;
     flex-direction: column;
     height: 100vh; */
@@ -125,6 +127,9 @@ body {
 
 #project-container {
     overflow-y: scroll;
+    max-width: 600px;
+    align-self: center;
+    margin-bottom:60px;
 }
 
 #new-project {

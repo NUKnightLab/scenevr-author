@@ -2,6 +2,7 @@
 #CreateProject {
     display: flex;
     flex-direction: column;
+
     height: 100vh;
     width:100%;
     font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -69,6 +70,8 @@
     overflow-y: scroll;
     text-align: center;
     margin-top:10px;
+    max-width:700px;
+    align-self:center;
 }
 
 #title-input {
