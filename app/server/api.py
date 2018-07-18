@@ -263,10 +263,44 @@ def get_scene(project_id, order):
     if not scene:
         data = {'scene_exists': 'False'}
     else:
-        data = {'scene_exists': 'True', 'scene_id': scene.id,
-                'scene_thumbnail': scene.thumbnail, 'desc': scene.caption}
+        data = {
+            'scene_exists': 'True',
+            'scene_id': scene.id,
+            'scene_thumbnail': scene.thumbnail,
+            'desc': scene.caption
+        }
     return data
 
+
+@app.route("/update-image/<project_id>/<order>", methods=['POST'])
+@ajax
+def update_image(project_id, order):
+    try:
+        user = g.user
+
+        project = models.Project.query.get(project_id)
+        check_project(g.user, project)
+        caption = request.form.get('caption', None)
+
+        scene = models.Scene.query.filter_by(
+            project_id=project_id, order=order).first()
+
+        if scene:
+            scene.caption = caption
+
+
+        else:
+            return {'error': "Can not find image",'caption': caption,'sceneId': scene_id}
+
+
+        db.session.add(scene)
+        db.session.commit()
+
+        return {'caption': caption,'scene_id': scene.id, 'scene_order':order}
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'error': str(e)}
 
 @app.route("/upload-image/<project_id>/<order>", methods=['POST'])
 @ajax

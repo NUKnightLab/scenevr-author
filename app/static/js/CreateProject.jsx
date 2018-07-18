@@ -245,7 +245,8 @@ export default class CreateProject extends React.Component {
     }
 
     updatePhoto() {
-        const url = `/upload-image/${this.state.projectId}/${this.state.current_photo}`;
+
+        const url = `/update-image/${this.state.projectId}/${this.state.current_photo}`;
         let caption = document.getElementById('photo-description-input'),
             formData = new FormData();
 
@@ -269,7 +270,7 @@ export default class CreateProject extends React.Component {
                 console.log(`Error Uploading ${error}`)
             }
         )
-        console.log("Update Photo NEEDS API PATH")
+
     }
 
     revealModal() {
