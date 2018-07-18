@@ -1,94 +1,276 @@
-.modal {
-  /* This way it could be display flex or grid or whatever also. */
-  display: block;
-
-  /* Probably need media queries here */
-  width: 600px;
-  max-width: 100%;
-
-  height: 250px;
-  max-height: 100%;
-
-  position: fixed;
-
-  z-index: 100;
-
-  left: 50%;
-  top: 50%;
-
-  /* Use this for centering if unknown width/height */
-  transform: translate(-50%, -50%);
-
-  /* If known, negative margins are probably better (less chance of blurry text). */
-  /* margin: -200px 0 0 -200px; */
-
-  background: white;
-  box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.9);
-  color: #646464
+.modal, .modal-overlay {
+    transition: all 0.3s ease-in-out;
 }
+
+.modal {
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    display: flex;
+    opacity: 1;
+    width: 100%;
+    height: 100vh;
+    max-height: 100%;
+
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    bottom: -100vh;
+    justify-content: center;
+    align-items:center;
+    color: #646464;
+    padding:10px;
+}
+
 .closed {
-  display: none;
+    display: none;
 }
 
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 50;
-
-  background: rgba(0, 0, 0, 0.6);
-}
-.modal-guts {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  padding: 20px 20px 20px 20px;
+    opacity:0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 75;
+    background: rgba(0, 0, 0, 0.7);
 }
 
-.modal-guts input{
-  width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: default;
+.modal-content {
+    width:100%;
+    max-width: 600px;
+    /* position: absolute;
+    top: 0;
+    left: 0; */
+    /* height: 100%; */
+    /* margin-left:10px;
+    margin-right:10px; */
+    overflow: auto;
+
+    padding: 0px 10px 0px 10px;
+    border-radius: 8px;
+
+}
+.modal-content.modal-content-incl {
+    position: absolute;
+    bottom: 100px;
+    left:0;
 }
 
-#preview-button{
-  cursor: pointer;
-  padding: 10px;
-  font-size: 1.3rem;
-  margin: 10px auto;
-  background-color: #54cf86;
-  color: white;
-  width: 60%;
+.modal-body {
+    padding:20px;
+    width:100%;
+    background: rgba(255,255,255,0.8);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
-.modal a:hover{
-  text-decoration: none;
+.modal-close {
+    display:block;
+    position:absolute;
+    bottom:10px;
+    left: 0;
+    height:72px;
+    width:100%;
+    max-width: 600px;
+    padding-left:10px;
+    padding-right:10px;
 }
-
 
 .modal .close-button {
-  cursor: pointer;
-  width: 45px;
-  height: 45px;
-  position: absolute;
 
-  /* don't need to go crazy with z-index here, just sits over .modal-guts */
-  z-index: 1;
+    cursor: pointer;
+    width: 100%;
+    height: 72px;
 
-  top: 20px;
+    z-index: 1;
+    border: 1px solid #e6e6e6;
+    background: rgba(255,255,255,0.95);
+    color:red;
 
-  /* needs to look OK with or without scrollbar */
-  right: 20px;
+    font-size: 1.3rem;
+    border-radius: 8px;
+}
 
-  border: 0;
-  background: #555;
-  color: white;
-  font-size: 1.3rem;
+.modal-header {
+    display:flex;
+    justify-content: space-between;
+    /* align-items:stretch; */
+    padding-top:15px;
+    padding-bottom:15px;
+    padding:15px;
+    width:100%;
+    border-bottom: 1px solid #ABABAB;
+    background: rgba(255,255,255,0.8);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.modal-header-item {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width:33%;
+    color:green;
+}
+
+.modal-header-item:last-child {
+    text-align:right;
+    justify-content: flex-end;
+
+}
+
+.modal-header-item:first-child {
+    text-align:left;
+    justify-content: flex-start;
+}
+
+.modal-header-button {
+    font-size: 16px;
+    font-weight: 700;
+}
+.modal-header-item:first-child .modal-header-button {
+    font-weight: normal;
+}
+
+.modal-content h3 {
+    margin:0;
+    font-weight: normal;
+    color: #222;
+}
+
+.modal-content img {
+    width:100%;
+    border-radius: 5px;
+    border: 1px solid #e6e6e6;
+}
+.modal-content textarea {
+    width: 100%;
+    padding: 5px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid #e6e6e6;
+}
+
+#preview-button {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 1.3rem;
+    margin: 10px auto;
+    background-color: #54cf86;
+    color: white;
+    width: 60%;
+}
+
+.modal a:hover {
+    text-decoration: none;
+}
+
+
+#file-upload {
+    border: 1px solid #e6e6e6;
+    padding:10px;
+    background-color: #2bc758;
+    margin-top:25px;
+    border-radius: 5px;
+    margin-left:50px;
+    margin-right:50px;
+    color:#FFF;
+    font-size: 16px;
+}
+#file-upload span {
+    font-size: 32px;
+    margin-bottom:10px;
+}
+
+#upload-description {
+    font-weight: normal;
+    color: #999;
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size:12px;
+    background-color: transparent;
+    border:0;
+    width: 100%;
+    margin-left:10px;
+}
+
+#upload-description textarea {
+    font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: none;
+    outline: none;
+    margin:0;
+    width:100%;
+    font-size: 14px;
+    background-color: transparent;
+    text-align: left;
+    margin-top:15px;
+}
+textarea::placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea::-webkit-input-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea::-moz-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea:-ms-input-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+textarea:-moz-placeholder {
+    font-style: italic;
+    color:#999;
+    text-align: left;
+}
+
+
+
+
+#upload-text {
+    color: #CCC;
+    font-weight:700;
+    padding:5px;
+    font-size: 16px;
+}
+
+#upload-preview {
+    display:block;
+    padding:5px;
+    margin-top:25px;
+
+}
+
+#upload-thumbnail {
+    padding: 5px;
+    width: 100%;
+}
+
+#upload-thumbnail img {
+    width: 100%;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+}
+
+#upload-placeholder {
+    background-color: #B0B0B0;
+    height: 150px;
+
+    display:flex;
+    justify-content:center;
+    align-items: center;
+
+}
+#upload-placeholder span {
+    font-size:48px;
+}
+
+input[type="file"] {
+    display: none;
 }
