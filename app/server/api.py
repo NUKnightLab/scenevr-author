@@ -407,7 +407,7 @@ def write_embed_published(project_id):
     json_key_name = storage_obj.key_name(
         str(user.id), str(project_id), 'data.json')
     embed_key_name = storage_obj.key_name(
-        str(user.id), str(project_id), 'index.html')
+        storage_obj.prefix, str(user.id), str(project_id), 'index.html')
 
     embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
     content = render_template('embed.html',
