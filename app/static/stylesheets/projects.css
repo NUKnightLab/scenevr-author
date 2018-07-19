@@ -130,6 +130,7 @@ body {
     max-width: 600px;
     align-self: center;
     margin-bottom:60px;
+    width:100%;
 }
 
 #new-project {

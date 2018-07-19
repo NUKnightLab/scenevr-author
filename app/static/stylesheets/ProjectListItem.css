@@ -51,9 +51,13 @@
     grid-column: 2;
     margin-right: 10px; */
 }
-
+#project-thumbnail div {
+    width: 100%;
+    min-width:100%;
+}
 #project-thumbnail img {
     width: 100%;
+    min-width:100%;
     cursor: pointer;
     border-radius: 5px;
     border: 1px solid #e6e6e6;
