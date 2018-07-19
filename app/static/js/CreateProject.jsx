@@ -372,7 +372,8 @@ export default class CreateProject extends React.Component {
             modal_title = "",
             modal_header = ["", "", ""],
             modal_type = "modal-content",
-            modal_footer = "";
+            modal_footer = "",
+            modal_loading = "";
 
 
 
@@ -409,7 +410,7 @@ export default class CreateProject extends React.Component {
 
                     modal_body = (
                         <div className="modal-body">
-                            <img src={this.state.thumbnail} />
+                            <img src={this.state.thumbnail} alt="Preview thumbnail"/>
                             <h4>{this.state.project_title}</h4>
                             <p>{this.state.project_description}</p>
                             <div className="modal-list">
@@ -417,7 +418,7 @@ export default class CreateProject extends React.Component {
                                     <span className="icon-link"></span>
                                 </div>
                                 <div className="modal-list-item">
-                                    <input id="share-link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={this.state.embedUrl} readOnly />
+                                    <input id="share-link" aria-label="Shareable link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={this.state.embedUrl} readOnly />
                                 </div>
                             </div>
                             <div className="modal-list">
@@ -425,23 +426,23 @@ export default class CreateProject extends React.Component {
                                     <span className="icon-embed2"></span>
                                 </div>
                                 <div className="modal-list-item">
-                                    <textarea id="share-embed" className="share-url" rows="4" type="text" onClick={() => {this.selectText("share-embed")}} value={share.embed} readOnly />
+                                    <textarea aria-label="Embed code" id="share-embed" className="share-url" rows="4" type="text" onClick={() => {this.selectText("share-embed")}} value={share.embed} readOnly />
                                 </div>
                             </div>
                             <div className="modal-link-list">
-                                <a className="modal-action-button" href={share.url} target="_blank">
+                                <a className="modal-action-button" aria-label="Open sharable link in new tab" href={share.url} target="_blank">
                                     <div className="modal-action-button-content">
                                         <span className="icon-new-tab"></span>
                                     </div>
                                     Preview
                                 </a>
-                                <a className="modal-action-button" href={share.twitter} target="_blank">
+                                <a className="modal-action-button" aria-label="Share on Twitter" href={share.twitter} target="_blank">
                                     <div className="modal-action-button-content">
                                         <span className="icon-twitter"></span>
                                     </div>
                                     Twitter
                                 </a>
-                                <a className="modal-action-button" href={share.facebook} target="_blank">
+                                <a className="modal-action-button" aria-label="Share on Facebook" href={share.facebook} target="_blank">
                                     <div className="modal-action-button-content">
                                         <span className="icon-facebook2"></span>
                                     </div>
@@ -455,44 +456,34 @@ export default class CreateProject extends React.Component {
                     console.warn('showShare is true but this.state.embedUrl is null. This should not be.')
                 }
             }
-
-            if (showUpload) {
+            if (showUpload || showUpdate) {
                 modal_header[0] = (<div className="modal-header-button" onClick={this.closeModal}> Cancel </div>);
                 modal_header[1] = "Upload";
                 modal_header[2] = (<div className="modal-header-button" onClick={this.uploadPhoto}> Upload </div>);
+                modal_loading = (<div id="modal-loading"><div id="modal-uploading-message">Uploading</div></div>)
                 modal_body = (
                     <div className="modal-body">
                         <div id="upload-thumbnail">
                             {image_preview}
                         </div>
                         <div id="upload-description">
-                            <textarea id="photo-description-input" rows="5" type="text" placeholder="Add a description" />
+                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" />
                         </div>
                     </div>
                 );
             }
 
             if (showUpdate) {
-                modal_header[0] = (<div className="modal-header-button" onClick={this.closeModal}> Cancel </div>);
                 modal_header[1] = "Update";
                 modal_header[2] = (<div className="modal-header-button" onClick={this.updatePhoto}> Update </div>);
-                modal_body = (
-                    <div className="modal-body">
-                        <div id="upload-thumbnail">
-                            {image_preview}
-                        </div>
-                        <div id="upload-description">
-                            <textarea id="photo-description-input" rows="7" type="text" placeholder="Add a description" defaultValue={this.state.photo_caption} />
-                        </div>
-                    </div>
-                );
             }
 
             modal = (
                 <div>
                     <div className="modal-overlay" id="modal-overlay"></div>
                     <div className="modal" id="modal">
-                        <div className="modal-content modal-content-incl">
+                        <div className={modal_type}>
+                            {modal_loading}
                             <div className="modal-header">
                                 <div className="modal-header-item">
                                     {modal_header[0]}
