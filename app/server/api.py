@@ -30,7 +30,7 @@ CLIENT_SECRETS_FILE = "scenevr_client_secret.json"
 
 # This OAuth 2.0 access scope allows us to request some basic information
 # which, at this point, we don't.
-SCOPES = ['profile']
+SCOPES = ['https://www.googleapis.com/auth/userinfo.profile']
 
 # Initialize Flask app. Some say we should use a factory, but then I
 # don't know how to do the decorators.
