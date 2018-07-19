@@ -359,13 +359,20 @@ export default class CreateProject extends React.Component {
         }
 
         let modal = null,
-            modal_content = null,
+            modal_body = null,
+            share = {
+                description: "",
+                embed: null,
+                url: this.state.embedUrl,
+                url_encoded: null,
+                facebook: null,
+                twitter: null
+            },
             image_preview = null,
-            embed_iframe = null,
-            tweet_link = null,
-            share_description = null,
-            urlencoded_link = null,
-            facebook_link = null;
+            modal_title = "",
+            modal_header = ["", "", ""],
+            modal_type = "modal-content",
+            modal_footer = "";
 
 
 
@@ -374,158 +381,136 @@ export default class CreateProject extends React.Component {
         } else {
             image_preview = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
         }
+        if (showModal) {
 
-        if (showShare) {
-            if (this.state.embedUrl) {
-                urlencoded_link = encodeURIComponent(this.state.embedUrl);
-                embed_iframe = `<iframe width="100%" height="600" src=${this.state.embedUrl} frameborder="0" allowfullscreen />`;
-                share_description = "";
-                if (this.state.project_description) {
-                    share_description = `: ${this.state.project_description}`;
+            if (showShare) {
+                if (this.state.embedUrl) {
+                    share.url_encoded = encodeURIComponent(share.url);
+                    share.embed = `<iframe width="100%" height="600" src=${share.url} frameborder="0" allowfullscreen />`;
+
+                    if (this.state.project_description) {
+                        share.description = `: ${this.state.project_description}`;
+                    }
+                    share.twitter = `http://twitter.com/share?text=${this.state.project_title}${share.description}&url=${share.url}&hashtags=SceneVR,knightlab,VR&via=knightlab`;
+
+                    share.facebook = `https://www.facebook.com/dialog/feed?app_id=1986212374732747&display=page&picture=${encodeURIComponent(this.state.thumbnail)}&caption=${encodeURIComponent("SceneVR")}&name=${encodeURIComponent(this.state.project_title)}&description=${encodeURIComponent(share.description)}&link=${share.url_encoded}&redirect_uri=${share.url_encoded}`;
+
+                    modal_title = "Share";
+
+                    modal_type = "modal-content modal-content-incl";
+
+                    modal_header[1] = "Share";
+
+                    modal_footer = (
+                        <div className="modal-close">
+                            <button className="close-button" id="close-button" onClick={this.closeModal}>Cancel</button>
+                        </div>
+                    );
+
+                    modal_body = (
+                        <div className="modal-body">
+                            <img src={this.state.thumbnail} />
+                            <h4>{this.state.project_title}</h4>
+                            <p>{this.state.project_description}</p>
+                            <div className="modal-list">
+                                <div className="modal-list-item">
+                                    <span className="icon-link"></span>
+                                </div>
+                                <div className="modal-list-item">
+                                    <input id="share-link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={this.state.embedUrl} readOnly />
+                                </div>
+                            </div>
+                            <div className="modal-list">
+                                <div className="modal-list-item">
+                                    <span className="icon-embed2"></span>
+                                </div>
+                                <div className="modal-list-item">
+                                    <textarea id="share-embed" className="share-url" rows="4" type="text" onClick={() => {this.selectText("share-embed")}} value={share.embed} readOnly />
+                                </div>
+                            </div>
+                            <div className="modal-link-list">
+                                <a className="modal-action-button" href={share.url} target="_blank">
+                                    <div className="modal-action-button-content">
+                                        <span className="icon-new-tab"></span>
+                                    </div>
+                                    Preview
+                                </a>
+                                <a className="modal-action-button" href={share.twitter} target="_blank">
+                                    <div className="modal-action-button-content">
+                                        <span className="icon-twitter"></span>
+                                    </div>
+                                    Twitter
+                                </a>
+                                <a className="modal-action-button" href={share.facebook} target="_blank">
+                                    <div className="modal-action-button-content">
+                                        <span className="icon-facebook2"></span>
+                                    </div>
+                                    Facebook
+                                </a>
+                            </div>
+                        </div>
+                    );
+
+                } else {
+                    console.warn('showShare is true but this.state.embedUrl is null. This should not be.')
                 }
-                tweet_link = `http://twitter.com/share?text=${this.state.project_title}${share_description}&url=${this.state.embedUrl}&hashtags=SceneVR,knightlab,VR&via=knightlab`;
+            }
 
-                facebook_link = `https://www.facebook.com/dialog/feed?app_id=1986212374732747&display=page&picture=${encodeURIComponent(this.state.thumbnail)}&caption=${encodeURIComponent("SceneVR")}&name=${encodeURIComponent(this.state.project_title)}&description=${encodeURIComponent(share_description)}&link=${urlencoded_link}&redirect_uri=${urlencoded_link}`;
-                // facebook_link = `https://www.facebook.com/dialog/share?app_id=1986212374732747&href=${urlencoded_link}&display=popup`;
-                modal_content = (
+            if (showUpload) {
+                modal_header[0] = (<div className="modal-header-button" onClick={this.closeModal}> Cancel </div>);
+                modal_header[1] = "Upload";
+                modal_header[2] = (<div className="modal-header-button" onClick={this.uploadPhoto}> Upload </div>);
+                modal_body = (
+                    <div className="modal-body">
+                        <div id="upload-thumbnail">
+                            {image_preview}
+                        </div>
+                        <div id="upload-description">
+                            <textarea id="photo-description-input" rows="5" type="text" placeholder="Add a description" />
+                        </div>
+                    </div>
+                );
+            }
+
+            if (showUpdate) {
+                modal_header[0] = (<div className="modal-header-button" onClick={this.closeModal}> Cancel </div>);
+                modal_header[1] = "Update";
+                modal_header[2] = (<div className="modal-header-button" onClick={this.updatePhoto}> Update </div>);
+                modal_body = (
+                    <div className="modal-body">
+                        <div id="upload-thumbnail">
+                            {image_preview}
+                        </div>
+                        <div id="upload-description">
+                            <textarea id="photo-description-input" rows="7" type="text" placeholder="Add a description" defaultValue={this.state.photo_caption} />
+                        </div>
+                    </div>
+                );
+            }
+
+            modal = (
+                <div>
+                    <div className="modal-overlay" id="modal-overlay"></div>
                     <div className="modal" id="modal">
                         <div className="modal-content modal-content-incl">
                             <div className="modal-header">
                                 <div className="modal-header-item">
-
+                                    {modal_header[0]}
                                 </div>
                                 <div className="modal-header-item">
-                                    <h3>Share</h3>
+                                    <h3>{modal_header[1]}</h3>
                                 </div>
                                 <div className="modal-header-item">
-
+                                    {modal_header[2]}
                                 </div>
-
                             </div>
-
-                            <div className="modal-body">
-                                <img src={this.state.thumbnail} />
-                                <h4>{this.state.project_title}</h4>
-                                <p>{this.state.project_description}</p>
-                                <div className="modal-list">
-                                    <div className="modal-list-item">
-                                        <span className="icon-link"></span>
-                                    </div>
-                                    <div className="modal-list-item">
-                                        <input id="share-link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={this.state.embedUrl} readOnly />
-                                    </div>
-                                </div>
-                                <div className="modal-list">
-                                    <div className="modal-list-item">
-                                        <span className="icon-embed2"></span>
-                                    </div>
-                                    <div className="modal-list-item">
-                                        <textarea id="share-embed" className="share-url" rows="4" type="text" onClick={() => {this.selectText("share-embed")}} value={embed_iframe} readOnly />
-                                    </div>
-                                </div>
-                                <div className="modal-link-list">
-                                    <a className="modal-action-button" href={this.state.embedUrl} target="_blank">
-                                        <div className="modal-action-button-content">
-                                            <span className="icon-new-tab"></span>
-                                        </div>
-                                        Preview
-                                    </a>
-                                    <a className="modal-action-button" href={tweet_link} target="_blank">
-                                        <div className="modal-action-button-content">
-                                            <span className="icon-twitter"></span>
-                                        </div>
-                                        Twitter
-                                    </a>
-                                    <a className="modal-action-button" href={facebook_link} target="_blank">
-                                        <div className="modal-action-button-content">
-                                            <span className="icon-facebook2"></span>
-                                        </div>
-                                        Facebook
-                                    </a>
-
-                                </div>
-
-                            </div>
+                            {modal_body}
                         </div>
-                        <div className="modal-close">
-                            <button className="close-button" id="close-button" onClick={this.closeModal}>Cancel</button>
-                        </div>
-                    </div>
-                );
-            } else {
-                console.warn('showShare is true but this.state.embedUrl is null. This should not be.')
-            }
-        }
-
-        if (showUpload) {
-            modal_content = (
-                <div className="modal" id="modal">
-                    <div className="modal-content">
-                        <div id="modal-loading"><div id="modal-uploading-message">Uploading</div></div>
-                        <div className="modal-header">
-                            <div className="modal-header-item">
-                                <div className="modal-header-button" onClick={this.closeModal}> Cancel </div>
-                            </div>
-                            <div className="modal-header-item">
-                                <h3>Upload</h3>
-                            </div>
-                            <div className="modal-header-item">
-                                <div className="modal-header-button" onClick={this.uploadPhoto}> Upload </div>
-                            </div>
-
-                        </div>
-                        <div className="modal-body">
-                            <div id="upload-thumbnail">
-                                {image_preview}
-                            </div>
-
-                            <div id="upload-description">
-                                <textarea id="photo-description-input" rows="5" type="text" placeholder="Add a description" />
-                            </div>
-                        </div>
+                        {modal_footer}
                     </div>
                 </div>
             );
-        }
 
-        if (showUpdate) {
-            console.log("SHOW UPDATE")
-            modal_content = (
-                <div className="modal" id="modal">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <div className="modal-header-item">
-                                <div className="modal-header-button" onClick={this.closeModal}> Cancel </div>
-                            </div>
-                            <div className="modal-header-item">
-                                <h3>Update</h3>
-                            </div>
-                            <div className="modal-header-item">
-                                <div className="modal-header-button" onClick={this.updatePhoto}> Update </div>
-                            </div>
-
-                        </div>
-                        <div className="modal-body">
-                            <div id="upload-thumbnail">
-                                {image_preview}
-                            </div>
-
-                            <div id="upload-description">
-                                <textarea id="photo-description-input" rows="7" type="text" placeholder="Add a description" defaultValue={this.state.photo_caption} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        if (showModal) {
-            modal = (
-                <div>
-                    <div className="modal-overlay" id="modal-overlay"></div>
-                    {modal_content}
-                </div>
-            );
         }
 
 
