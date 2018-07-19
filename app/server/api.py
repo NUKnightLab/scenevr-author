@@ -320,7 +320,8 @@ def create_scene(project_id, order):
         key_name = storage_obj.key_name(
             str(user.id), str(project_id), filename)
         storage_obj.save_scene_images(key_name, content_type, content)
-        image_dir = urljoin(settings.AWS_STORAGE_BUCKET_URL, key_name)
+        image_dir = urljoin(settings.AWS_STORAGE_BUCKET_URL,
+            storage_obj.prefix, key_name)
         if not image_dir.endswith('/'):
             image_dir = "{}/".format(image_dir)
 
