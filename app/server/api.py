@@ -41,7 +41,7 @@ app.logger.debug('config: {}'.format(settings_module))
 db.app = app
 db.init_app(app)
 
-if settings.TEST_MODE:   # might be more elegant to bootstrap in settings/app:
+if settings.USE_LOCAL_STORAGE:   # might be more elegant to bootstrap in settings/app:
     storage_obj = storage.LocalStorage(app)
 else:
     storage_obj = storage.S3Storage(bucket=settings.AWS_STORAGE_BUCKET_NAME,
