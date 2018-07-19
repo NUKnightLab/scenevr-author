@@ -42,8 +42,8 @@ export default class ProjectListItem extends React.Component {
     	}
     	else {
     	    return (
-                <div className="project-list-item">
-                    <div id="project-thumbnail" onClick={this.editProject}>
+                <div className="project-list-item" onClick={this.editProject}>
+                    <div id="project-thumbnail">
                         {imageThumbnail}
                     </div>
                     <div id="project-info">
