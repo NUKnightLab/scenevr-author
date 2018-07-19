@@ -406,9 +406,13 @@ def write_embed_published(project_id):
     check_project(user,project)
     json_key_name = storage_obj.key_name(
         str(user.id), str(project_id), 'data.json')
-    embed_key_name = storage_obj.key_name(
-        storage_obj.prefix, str(user.id), str(project_id), 'index.html')
 
+    if settings.USE_LOCAL_STORAGE:
+        embed_key_name = storage_obj.key_name(
+            str(user.id), str(project_id), 'index.html')
+    else:
+        embed_key_name = storage_obj.key_name(
+            storage_obj.prefix, str(user.id), str(project_id), 'index.html')
     embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
     content = render_template('embed.html',
                               json_url=urljoin(
