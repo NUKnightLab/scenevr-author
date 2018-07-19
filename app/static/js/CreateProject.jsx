@@ -31,6 +31,8 @@ export default class CreateProject extends React.Component {
             photo_thumbnail: null,
             scenes: [],
             numScenes: 0,
+            project_title: "",
+            project_description: "",
             embedUrl: null,
             showShare: false,
             showModal: false,
@@ -64,16 +66,21 @@ export default class CreateProject extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
-                this.setState({
-                    scenes: result.scenesData,
-                    numScenes: result.scenesData.length
-                });
 
+                let project_title = result.title;
                 if (result.title) {
                     document.getElementById('title-input').value = result.title;
                 } else {
                     document.getElementById('title-input').placeholder = "Untitled";
+                    project_title = "Untitled"
                 };
+
+                this.setState({
+                    scenes: result.scenesData,
+                    project_title: project_title,
+                    project_description: result.desc,
+                    numScenes: result.scenesData.length
+                });
 
                 if (result.desc) {
                     document.getElementById('project-description').value = result.desc;
@@ -245,7 +252,8 @@ export default class CreateProject extends React.Component {
     }
 
     updatePhoto() {
-        const url = `/upload-image/${this.state.projectId}/${this.state.current_photo}`;
+
+        const url = `/update-image/${this.state.projectId}/${this.state.current_photo}`;
         let caption = document.getElementById('photo-description-input'),
             formData = new FormData();
 
@@ -269,7 +277,7 @@ export default class CreateProject extends React.Component {
                 console.log(`Error Uploading ${error}`)
             }
         )
-        console.log("Update Photo NEEDS API PATH")
+
     }
 
     revealModal() {
@@ -334,7 +342,7 @@ export default class CreateProject extends React.Component {
     }
 
     render() {
-        const {redirectProjects, showShare, showModal, showUpload, showUpdate, scenes, photo_thumbnail, photo_caption, photoId} = this.state;
+        const {redirectProjects, showShare, showModal, showUpload, showUpdate, scenes, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
 
         if (redirectProjects) {
             return ( <Redirect to = {{pathname: '/list-projects', push: true}}/>);
@@ -342,7 +350,10 @@ export default class CreateProject extends React.Component {
 
         let modal = null,
             modal_content = null,
-            image_preview = null;
+            image_preview = null,
+            embed_iframe = null;
+
+
 
         if (this.state.photo_thumbnail) {
             image_preview = (<img src={photo_thumbnail} />);
@@ -352,6 +363,7 @@ export default class CreateProject extends React.Component {
 
         if (showShare) {
             if (this.state.embedUrl) {
+                embed_iframe = `<iframe width="100%" height="600" src=${this.state.embedUrl} frameborder="0" allowfullscreen />`;
                 modal_content = (
                     <div className="modal" id="modal">
                         <div className="modal-content modal-content-incl">
@@ -367,15 +379,49 @@ export default class CreateProject extends React.Component {
                                 </div>
 
                             </div>
+
                             <div className="modal-body">
                                 <img src={this.state.thumbnail} />
-                                <label className="share-label" htmlFor="share-link">
-                                    <span className="icon-link"></span> Link
-                                </label>
-                                <textarea id="share-link" rows="2" type="text" value={this.state.embedUrl} readOnly />
-                                <a href={this.state.embedUrl} target="_blank">
-                                    <div id="preview-button"> Preview </div>
-                                </a>
+                                <h4>{this.state.project_title}</h4>
+                                <p>{this.state.project_description}</p>
+                                <div className="modal-list">
+                                    <div className="modal-list-item">
+                                        <span className="icon-link"></span>
+                                    </div>
+                                    <div className="modal-list-item">
+                                        <input className="share-url" type="text" value={this.state.embedUrl} readOnly />
+                                    </div>
+                                </div>
+                                <div className="modal-list">
+                                    <div className="modal-list-item">
+                                        <span className="icon-embed2"></span>
+                                    </div>
+                                    <div className="modal-list-item">
+                                        <textarea className="share-url" rows="4" type="text" value={embed_iframe} readOnly />
+                                    </div>
+                                </div>
+                                <div className="modal-link-list">
+                                    <a className="modal-action-button" href={this.state.embedUrl} target="_blank">
+                                        <div className="modal-action-button-content">
+                                            <span className="icon-new-tab"></span>
+                                        </div>
+                                        Preview
+                                    </a>
+                                    <a className="modal-action-button" href={this.state.embedUrl} target="_blank">
+                                        <div className="modal-action-button-content">
+                                            <span className="icon-twitter"></span>
+                                        </div>
+                                        Twitter
+                                    </a>
+                                    <a className="modal-action-button" href={this.state.embedUrl} target="_blank">
+                                        <div className="modal-action-button-content">
+                                            <span className="icon-facebook2"></span>
+                                        </div>
+                                        Facebook
+                                    </a>
+
+                                </div>
+
                             </div>
                         </div>
                         <div className="modal-close">
@@ -441,7 +487,7 @@ export default class CreateProject extends React.Component {
                             </div>
 
                             <div id="upload-description">
-                                <textarea id="photo-description-input" rows="5" type="text" placeholder="Add a description" defaultValue={this.state.photo_caption} />
+                                <textarea id="photo-description-input" rows="7" type="text" placeholder="Add a description" defaultValue={this.state.photo_caption} />
                             </div>
                         </div>
                     </div>

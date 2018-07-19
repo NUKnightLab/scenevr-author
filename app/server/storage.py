@@ -19,15 +19,6 @@ import settings
 from io import BytesIO
 from PIL import Image
 
-# Get settings module
-if not settings.TEST_MODE:
-    _conn = boto.connect_s3(
-        settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY,
-        calling_format=OrdinaryCallingFormat())
-    _bucket = _conn.get_bucket(settings.AWS_STORAGE_BUCKET_NAME)
-
-
 class StorageException(Exception):
     """
     Adds 'detail' attribute to contain response body
@@ -81,24 +72,45 @@ class S3Storage(StorageBase):
             settings.AWS_ACCESS_KEY_ID,
             settings.AWS_SECRET_ACCESS_KEY,
             calling_format=OrdinaryCallingFormat())
-        self._bucket = _conn.get_bucket(bucket)
+        self._bucket = self._conn.get_bucket(bucket)
         self.url_root = url_root
         self.prefix = prefix
 
-    def save(self, name, content_type, content):
+    def save(self, key_name, content_type, content):
         """
         Save content with content-type to key_names
         TODO: probably can't use save_contents_from_string for images
         """
+        if self.prefix:
+            key_name = '{}/{}'.format(self.prefix, key_name)
         try:
             key = self._bucket.get_key(key_name)
             if not key:
                 key = self._bucket.new_key(key_name)
                 key.content_type = content_type
+                # set_contents_from_string works for JPG too weird
             key.set_contents_from_string(content, policy='public-read')
         except S3ResponseError as e:
             print(traceback.format_exc())
             raise StorageException(e.message, e.body)
+
+    def _resize_scene_images(self, name, content_type, content):
+        sizes = {
+            'thumbnail': 540,
+            's': 1024,
+            'm': 2048,
+            'l': 4096
+        }
+        orig = Image.open(BytesIO(content))
+        w, h = orig.size
+        for tag, new_height in sizes.items():
+            new_size = compute_size(w, h, new_height)
+            variant_name = "{}/image-{}.jpg".format(name, tag)
+            copy = orig.resize(new_size, Image.LANCZOS)
+            variant_content = BytesIO()
+            copy.save(variant_content, format='JPEG', quality=60)
+            variant_content.seek(0)
+            self.save(variant_name, content_type, variant_content.getvalue())
 
 
 class LocalStorage(StorageBase):

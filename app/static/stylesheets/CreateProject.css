@@ -12,10 +12,7 @@
     text-rendering: optimizeLegibility;
 }
 
-#CreateProject input {
-    border:none;
-    outline:none;
-}
+
 
 #scenes-container {
     display:flex;
@@ -147,7 +144,8 @@
 }
 
 #title-input, #project-description {
-
+    border:none;
+    outline:none;
 }
 
 #add-scene-button {
