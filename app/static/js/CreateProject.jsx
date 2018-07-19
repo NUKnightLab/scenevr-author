@@ -42,6 +42,7 @@ export default class CreateProject extends React.Component {
             current_photo: null,
             photoId: null
         };
+        this.selectText = this.selectText.bind(this);
         this.updatePhoto = this.updatePhoto.bind(this);
         this.editPhoto = this.editPhoto.bind(this);
         this.uploadPhoto = this.uploadPhoto.bind(this);
@@ -297,6 +298,14 @@ export default class CreateProject extends React.Component {
         document.getElementById("file-object").value = "";
     }
 
+    selectText(t) {
+        let el = document.getElementById(t);
+        if (el) {
+            el.focus();
+            el.select();
+        }
+    }
+
     fileChangedHandler(event) {
         const url = "/upload-image/" + this.state.projectId + "/" + this.state.numScenes;
         let reader = new FileReader(),
@@ -403,7 +412,7 @@ export default class CreateProject extends React.Component {
                                         <span className="icon-link"></span>
                                     </div>
                                     <div className="modal-list-item">
-                                        <input className="share-url" type="text" value={this.state.embedUrl} readOnly />
+                                        <input id="share-link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={this.state.embedUrl} readOnly />
                                     </div>
                                 </div>
                                 <div className="modal-list">
@@ -411,7 +420,7 @@ export default class CreateProject extends React.Component {
                                         <span className="icon-embed2"></span>
                                     </div>
                                     <div className="modal-list-item">
-                                        <textarea className="share-url" rows="4" type="text" value={embed_iframe} readOnly />
+                                        <textarea id="share-embed" className="share-url" rows="4" type="text" onClick={() => {this.selectText("share-embed")}} value={embed_iframe} readOnly />
                                     </div>
                                 </div>
                                 <div className="modal-link-list">
