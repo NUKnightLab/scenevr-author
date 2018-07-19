@@ -1,47 +1,30 @@
 server {
   listen 80;
-  server_name {{ cnames }};
-  return 301 https://{{ domains }}$request_uri;
-}
-
-server {
-  listen 80;
-  server_name {{ domains }};
+  server_name scene.knilab.com;
   return 301 https://$server_name$request_uri;
 }
 
 server {
-  listen 443 ssl;
-  server_name {{ cnames }};
-  return 301 https://{{ domains }}$request_uri;
+    listen 443 ssl;
 
-  ssl_certificate {{ ssl.ssl_certificate }};
-  ssl_certificate_key {{ ssl.ssl_certificate_key }};
+  server_name scene.knilab.com;
+
+    ssl_certificate /etc/nginx/ssl/knilab/knilab-bundle.crt;
+  ssl_certificate_key /etc/nginx/ssl/knilab/knilab-com.key;
   ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
 
-}
+  access_log  /var/log/nginx/scenevr.log;
 
-server {
-  listen 443 ssl;
+  client_max_body_size 100M;
 
-  server_name {{ domains }};
-
-  ssl_certificate {{ ssl.ssl_certificate }};
-  ssl_certificate_key {{ ssl.ssl_certificate_key }};
-  ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
-
-  access_log  /var/log/nginx/{{ project_name }}.log;
-
-  client_max_body_size 5M;
-
-  root /usr/share/nginx/{{ project_name }};
+  root /usr/share/nginx/scenevr;
 
   location / {
-    try_files $uri @proxy_to_{{ project_name }};
+    try_files $uri @proxy_to_scenevr;
   }
 
-  location @proxy_to_{{ project_name }} {
-      proxy_pass http://127.0.0.1:{{ port }};
+  location @proxy_to_scenevr {
+      proxy_pass http://127.0.0.1:9023;
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
