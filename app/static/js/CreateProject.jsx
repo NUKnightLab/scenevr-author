@@ -364,7 +364,7 @@ export default class CreateProject extends React.Component {
             share = {
                 description: "",
                 embed: null,
-                url: this.state.embedUrl,
+                url: `https:${this.state.embedUrl}`,
                 url_encoded: null,
                 facebook: null,
                 twitter: null
@@ -395,7 +395,7 @@ export default class CreateProject extends React.Component {
                     }
                     share.twitter = `http://twitter.com/share?text=${this.state.project_title}${share.description}&url=${share.url}&hashtags=SceneVR,knightlab,VR&via=knightlab`;
 
-                    share.facebook = `https://www.facebook.com/dialog/feed?app_id=1986212374732747&display=page&picture=${encodeURIComponent(this.state.thumbnail)}&caption=${encodeURIComponent("SceneVR")}&name=${encodeURIComponent(this.state.project_title)}&description=${encodeURIComponent(share.description)}&link=${share.url_encoded}&redirect_uri=${share.url_encoded}`;
+                    share.facebook = `https://www.facebook.com/dialog/feed?app_id=1986212374732747&display=page&picture=${encodeURIComponent(this.state.thumbnail)}&caption=${encodeURIComponent("SceneVR")}&name=${encodeURIComponent(this.state.project_title)}&description=${encodeURIComponent(share.description)}&link=${share.url_encoded}`;
 
                     modal_title = "Share";
 
