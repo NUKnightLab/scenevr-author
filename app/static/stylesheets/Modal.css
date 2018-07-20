@@ -26,7 +26,6 @@
     width: 100%;
     height: 100vh;
     max-height: 100%;
-
     position: fixed;
     z-index: 100;
     left: 0;
@@ -55,14 +54,7 @@
 .modal-content {
     width:100%;
     max-width: 600px;
-    /* position: absolute;
-    top: 0;
-    left: 0; */
-    /* height: 100%; */
-    /* margin-left:10px;
-    margin-right:10px; */
     overflow: auto;
-
     padding: 0px 10px 0px 10px;
     border-radius: 8px;
 
@@ -94,16 +86,13 @@
 }
 
 .modal .close-button {
-
     cursor: pointer;
     width: 100%;
     height: 72px;
-
     z-index: 1;
     border: 1px solid #e6e6e6;
     background: rgba(255,255,255,0.95);
     color:red;
-
     font-size: 1.3rem;
     border-radius: 8px;
 }
@@ -111,7 +100,6 @@
 .modal-header {
     display:flex;
     justify-content: space-between;
-    /* align-items:stretch; */
     padding-top:15px;
     padding-bottom:15px;
     padding:15px;
@@ -133,7 +121,6 @@
 .modal-header-item:last-child {
     text-align:right;
     justify-content: flex-end;
-
 }
 
 .modal-header-item:first-child {
@@ -159,7 +146,7 @@
 .modal-content img {
     width:100%;
     border-radius: 5px;
-    border: 1px solid #e6e6e6;
+    border: 1px solid #ABABAB;
 }
 .modal-content textarea {
     width: 100%;
@@ -178,12 +165,32 @@
     background: rgba(255,255,255,0.3);
     border-radius: 5px;
 }
+.modal-preview-container {
+    display:flex;
+    text-align: left;
+    border-radius: 8px;
+    padding:5px;
+}
+
+.modal-preview-item {
+    padding:5px;
+}
+
+.modal-preview-item:first-child {
+    width:33%;
+}
+
+.modal-preview-item:last-child {
+    width:66%;
+}
 
 .modal-content h4 {
     font-family: "Salvo Serif Cond", Georgia, "Times New Roman", Times, serif;
-    font-size:24px;
+    font-size:18px;
+    line-height: 20px;
     font-weight: 700;
     margin:0;
+    margin-bottom:5px;
 }
 .modal-content p {
     font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -207,15 +214,12 @@ a.modal-action-button {
     font-family: "Apres RE", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
     font-weight: normal;
-    height:50px;
     text-decoration: none;
-    margin:10px;
-    padding:5px;
+    margin:0 15px 0 15px;
     color: #666;
 }
 .modal-action-button-content {
     padding:15px;
-
     border-radius: 8px;
     background-color: #FFF;
     color: #666;
@@ -225,9 +229,8 @@ a.modal-action-button {
     justify-content: center;
     font-size:24px;
     margin-bottom:5px;
-    margin-top:15px;
+    margin-top:5px;
 }
-
 
 .modal-list {
     display:flex;
@@ -247,7 +250,6 @@ a.modal-action-button {
 .modal-list-item:last-child {
     width:100%;
 }
-
 
 #preview-button {
     cursor: pointer;
@@ -288,7 +290,6 @@ a.modal-action-button {
     background-color: transparent;
     border:0;
     width: 100%;
-    margin-left:10px;
 }
 
 #upload-description textarea {
@@ -326,34 +327,6 @@ textarea:-moz-placeholder {
     font-style: italic;
     color:#999;
     text-align: left;
-}
-
-
-
-
-#upload-text {
-    color: #CCC;
-    font-weight:700;
-    padding:5px;
-    font-size: 16px;
-}
-
-#upload-preview {
-    display:block;
-    padding:5px;
-    margin-top:25px;
-
-}
-
-#upload-thumbnail {
-    padding: 5px;
-    width: 100%;
-}
-
-#upload-thumbnail img {
-    width: 100%;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
 }
 
 #upload-placeholder {

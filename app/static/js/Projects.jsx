@@ -117,8 +117,8 @@ export default class Projects extends React.Component {
                         {projects}
                     </div>
 
-                    <div id="new-project" className="link" onClick={this.newProject}>
-                        <div> <span className="icon-folder"></span> New Project </div>
+                    <div id="new-project" className="button-bottom-container" onClick={this.newProject}>
+                        <div className="button-bottom"> <span className="icon-folder"></span> New Project </div>
                     </div>
 
                 </div>
