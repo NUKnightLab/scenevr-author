@@ -410,17 +410,18 @@ def write_embed_published(project_id):
             str(user.id), str(project_id), 'index.html')
     if settings.USE_LOCAL_STORAGE:
         embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
+        json_url=urljoin(settings.AWS_STORAGE_BUCKET_URL, json_key_name)
     else:
         embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL,
             '%s/%s' % (storage_obj.prefix, embed_key_name))
-    content = render_template('embed.html',
-                              json_url=urljoin(
-                                    settings.AWS_STORAGE_BUCKET_URL,
-                                    json_key_name
-                              ),
-                              scenevr_dist_root_url=settings.SCENEVR_DIST_ROOT_URL,
-                              project=project,
-                              embed_url=embed_url)
+        json_url=urljoin(settings.AWS_STORAGE_BUCKET_URL,
+            '%s/%s' % (storage_obj.prefix, json_key_name))
+    content = render_template(
+        'embed.html',
+        json_url=json_url,
+        scenevr_dist_root_url=settings.SCENEVR_DIST_ROOT_URL,
+        project=project,
+        embed_url=embed_url)
     storage_obj.save(embed_key_name, 'text/html', content)
     return embed_url
 
