@@ -303,6 +303,7 @@ export default class CreateProject extends React.Component {
         if (el) {
             el.focus();
             el.select();
+            el.setSelectionRange(0, 9999);
         }
     }
 
@@ -410,9 +411,15 @@ export default class CreateProject extends React.Component {
 
                     modal_body = (
                         <div className="modal-body">
-                            <img src={this.state.thumbnail} alt="Preview thumbnail"/>
-                            <h4>{this.state.project_title}</h4>
-                            <p>{this.state.project_description}</p>
+                            <div className="modal-preview-container">
+                                <div className="modal-preview-item">
+                                    <img src={this.state.thumbnail} alt="Preview thumbnail"/>
+                                </div>
+                                <div className="modal-preview-item">
+                                    <h4>{this.state.project_title}</h4>
+                                    <p>{this.state.project_description}</p>
+                                </div>
+                            </div>
                             <div className="modal-list">
                                 <div className="modal-list-item">
                                     <span className="icon-link"></span>
@@ -426,7 +433,7 @@ export default class CreateProject extends React.Component {
                                     <span className="icon-embed2"></span>
                                 </div>
                                 <div className="modal-list-item">
-                                    <textarea aria-label="Embed code" id="share-embed" className="share-url" rows="4" type="text" onClick={() => {this.selectText("share-embed")}} value={share.embed} readOnly />
+                                    <input aria-label="Embed code" id="share-embed" className="share-url" type="text" onClick={() => {this.selectText("share-embed")}} value={share.embed} readOnly />
                                 </div>
                             </div>
                             <div className="modal-link-list">
@@ -525,10 +532,13 @@ export default class CreateProject extends React.Component {
                     <div id="scenes-container">
                         <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true} editCallback={this.editPhoto}/>
 
-                        <label id="add-scene-button" htmlFor="file-object">
-                            <span className="icon-image"></span> <br/>Add Photo
-                        </label>
-                        <input id="file-object" type="file" accept=".jpg, .jpeg" onChange={this.fileChangedHandler} />
+                        <div id="new-photo" className="button-bottom-container">
+                            <label id="new-photo" className="button-bottom" htmlFor="file-object">
+                                <span className="icon-image"></span> Add Photo
+                            </label>
+                            <input id="file-object" type="file" accept=".jpg, .jpeg" onChange={this.fileChangedHandler} />
+                        </div>
+
 
 
                     </div>
