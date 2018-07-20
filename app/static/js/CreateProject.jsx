@@ -215,6 +215,7 @@ export default class CreateProject extends React.Component {
         .then(
             (result) => {
                 document.getElementById('modal-loading').style.display = "none";
+                document.getElementById('file-object').value = "";
                 this.setState({showUpload: false, showModal: false}, () => {
                     this.fetchPhotos();
                 });
