@@ -408,17 +408,25 @@ export default class CreateProject extends React.Component {
                             <button className="close-button" id="close-button" onClick={this.closeModal}>Cancel</button>
                         </div>
                     );
-
+                    let preview_text = "";
+                    console.log(this.state.project_title)
+                    console.log(this.state.project_description)
+                    if (this.state.project_title != "Untitled" || this.state.project_description) {
+                        console.log("SHOW TEXT")
+                        preview_text = (
+                            <div className="modal-preview-item">
+                                <h4>{this.state.project_title}</h4>
+                                <p>{this.state.project_description}</p>
+                            </div>
+                        )
+                    }
                     modal_body = (
                         <div className="modal-body">
                             <div className="modal-preview-container">
                                 <div className="modal-preview-item">
                                     <img src={this.state.thumbnail} alt="Preview thumbnail"/>
                                 </div>
-                                <div className="modal-preview-item">
-                                    <h4>{this.state.project_title}</h4>
-                                    <p>{this.state.project_description}</p>
-                                </div>
+                                {preview_text}
                             </div>
                             <div className="modal-list">
                                 <div className="modal-list-item">
