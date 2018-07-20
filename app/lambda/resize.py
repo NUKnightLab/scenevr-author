@@ -1,9 +1,12 @@
 from PIL import Image
 from io import BytesIO
-import sys, re
+import sys
+import re
 
-def scale_jpeg_to_height(content, new_height, quality=60, resample_method=Image.LANCZOS):
-    """Given `content` (image bytes), resize to the given `new_height` and 
+
+def scale_jpeg_to_height(content, new_height, quality=60,
+                         resample_method=Image.LANCZOS):
+    """Given `content` (image bytes), resize to the given `new_height` and
        return the bytes of a JPEG resized to that height."""
     image = Image.open(BytesIO(content))
     w, h = image.size

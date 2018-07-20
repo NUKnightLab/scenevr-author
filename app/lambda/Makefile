@@ -1,14 +1,14 @@
-ACCOUNT_ID = 111111111111
-ROLE_NAME = lambda_role
-FUNCTION_NAME = ResizeImage
-REGION = us-west-1
+ACCOUNT_ID = 387429770668
+ROLE_NAME =  lambda-s3-image-ops 
+FUNCTION_NAME = SceneVRResizeImage
+REGION = us-east-1
 TIMEOUT = 15
 MEMORY_SIZE = 512
 ZIPFILE_NAME = image_resize.zip
 HANDLER = handler.handle_resize
 
 clean_pyc :
-	find . | grep .pyc$ | xargs rm
+	find . -name "*.pyc" -exec rm '{}' \;
 
 install_deps :
 	pip install -r requirements.txt -t .
