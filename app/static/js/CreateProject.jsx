@@ -388,7 +388,7 @@ export default class CreateProject extends React.Component {
             if (showShare) {
                 if (this.state.embedUrl) {
                     share.url_encoded = encodeURIComponent(share.url);
-                    share.embed = `<iframe width="100%" height="600" src=${share.url} frameborder="0" allowfullscreen />`;
+                    share.embed = `<iframe width="100%" height="600" src=${this.state.embedUrl} frameborder="0" allowfullscreen />`;
 
                     if (this.state.project_description) {
                         share.description = `: ${this.state.project_description}`;
