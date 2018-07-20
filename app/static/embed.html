@@ -1,50 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>SceneVR: {{ project.title }}</title>
-    <link rel = "stylesheet" type = "text/css" href = "{{ scenevr_dist_root_url }}/css/scene.css" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@knightlab" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="{{ project.title }}" />
-    <meta property="og:description" content="{{ project.description }}">
-    <meta property="og:url" content="{{ embed_url }}"
-    />
-    <meta property="og:image" content="{{ project.thumbnail }}"
-    />
-    <meta property="og:site_name" content="StoryMapJS" />  </head>
-
-  <body>
-    <section id="svr-loading">
-      <div class="svr-loading-cube">
-        <div class="svr-loading-face svr-loading-face-side"></div>
-        <div class="svr-loading-face svr-loading-face-side"></div>
-        <div class="svr-loading-face svr-loading-face-side"></div>
-        <div class="svr-loading-face svr-loading-face-side"></div>
-        <div class="svr-loading-face svr-loading-face-top"></div>
-        <div class="svr-loading-face svr-loading-face-bottom">44</div>
-      </div>
-      <p id="svr-loading-message">loading
-        <span class="svr-loading-message-dots">...</span>
-      </p>
-    </section>
-    <script src="{{ scenevr_dist_root_url }}/js/sceneloader.js"></script>
-    <script>
-      function ready(fn) {
-        if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
-          fn();
-        } else { document.addEventListener('DOMContentLoaded', fn); }
-      }
-
-      var config = {
-        source: '{{ json_url }}',
-        speed: "m"
-      }
-
-      ready(function () {
-        var loader = new SceneLoader('{{ scenevr_dist_root_url }}/js/scenevr.js', config);
-        loader.load_scenevr();
-      })
-    </script>  
-  </body>
+    <head>
+        <title>SceneVR: {{ project.title }}</title>
+        <!-- Meta -->
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=0,maximum-scale=1.0,minimal-ui">
+        <meta name="keywords" content="Panorama, 360, VR, Slideshow, virtual reality, google cardboard">
+        <meta name="description" content="{{ project.description }}">
+        <!-- /Meta -->
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="{{ project.title }}" />
+        <meta property="og:description" content="{{ project.description }}">
+        <meta property="og:image" content="{{ project.thumbnail }}" />
+        <meta property="og:url" content="{{ embed_url }}"/>
+        <meta property="og:site_name" content="SceneVR" />
+        <!-- /Open Graph -->
+        <!-- Twitter Card -->
+        <meta name="twitter:title" content="{{ project.title }}">
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="{{ project.description }}">
+        <meta name="twitter:image" content="{{ project.thumbnail }}">
+        <meta name="twitter:site" content="@knightlab">
+        <!-- /Twitter Card -->
+        <link rel = "stylesheet" type = "text/css" href = "{{ scenevr_dist_root_url }}/css/scene.css" />
+        <!-- FAVICONS -->
+        <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/manifest.json">
+        <link rel="mask-icon" href="https://cdn.knightlab.com/libs/orangeline/latest/assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="theme-color" content="#ffffff">
+        <!-- /FAVICONS -->
+    </head>
+    <body>
+        <section id="svr-loading">
+            <div class="svr-loading-cube">
+                <div class="svr-loading-face svr-loading-face-side"></div>
+                <div class="svr-loading-face svr-loading-face-side"></div>
+                <div class="svr-loading-face svr-loading-face-side"></div>
+                <div class="svr-loading-face svr-loading-face-side"></div>
+                <div class="svr-loading-face svr-loading-face-top"></div>
+                <div class="svr-loading-face svr-loading-face-bottom">00</div>
+            </div>
+            <p id="svr-loading-message">
+                loading
+                <span class="svr-loading-message-dots">...</span>
+            </p>
+        </section>
+        <script src="{{ scenevr_dist_root_url }}/js/sceneloader.js"></script>
+        <script>
+            function ready(fn) {
+                if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+                    fn();
+                } else {
+                    document.addEventListener('DOMContentLoaded', fn);
+                }
+            }
+            var config = {
+                source: '{{ json_url }}',
+                speed: "m"
+            }
+            ready(function () {
+                var loader = new SceneLoader('{{ scenevr_dist_root_url }}/js/scenevr.js', config);
+                loader.load_scenevr();
+            })
+        </script>
+    </body>
 </html>
