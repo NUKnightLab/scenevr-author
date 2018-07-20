@@ -101,11 +101,11 @@ export default class Projects extends React.Component {
 
                     <div id="header">
                         <div id="logout">
-                            <a href="/logout">Log out</a>
+                            <a href="/logout">Sign out</a>
                         </div>
                         <div id="logo">Scene <span>VR</span></div>
                         <div id="user">
-                            <img id="user-picture" description={this.state.userName} src={this.state.userPicture}/>
+                            <img id="user-picture" alt={this.state.userName} src={this.state.userPicture}/>
                         </div>
                     </div>
 
@@ -117,8 +117,8 @@ export default class Projects extends React.Component {
                         {projects}
                     </div>
 
-                    <div id="new-project" className="link" onClick={this.newProject}>
-                        <div> New Project </div>
+                    <div id="new-project" className="button-bottom-container" onClick={this.newProject}>
+                        <div className="button-bottom"> <span className="icon-folder"></span> New Project </div>
                     </div>
 
                 </div>
