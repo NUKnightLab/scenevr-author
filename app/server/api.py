@@ -41,7 +41,8 @@ app.logger.debug('config: {}'.format(settings_module))
 db.app = app
 db.init_app(app)
 
-if settings.USE_LOCAL_STORAGE:   # might be more elegant to bootstrap in settings/app:
+if settings.USE_LOCAL_STORAGE:
+    # might be more elegant to bootstrap in settings/app:
     storage_obj = storage.LocalStorage(app)
 else:
     storage_obj = storage.S3Storage(bucket=settings.AWS_STORAGE_BUCKET_NAME,
@@ -120,7 +121,8 @@ def ajax(f):
     def decorated_function(*args, **kwargs):
         try:
             if g.user is None:
-                raise SecurityError("Ajax endpoints require an authenticated user.")
+                raise SecurityError(
+                    "Ajax endpoints require authenticated user.")
             # AJAX endpoints probably need a different way to 'require user'
             response = f(*args, **kwargs)
             return jsonify(response)
@@ -232,6 +234,7 @@ def project_details(project_id):
             sceneData = {'order': scene.order,
                          'image_dir': scene.image_dir,
                          'thumbnail': scene.thumbnail,
+                         'uuid': scene.uuid,
                          'desc': scene.caption}
             scenesData.append(sceneData)
         return {'title': project.title,
@@ -245,9 +248,9 @@ def delete_scene(project_id):
     data = request.get_json()
     project = models.Project.query.get(project_id)
     check_project(g.user, project)
-    order = data['sceneOrder']
+    uuid = data['sceneUUID']
     scene = models.Scene.query.filter_by(
-        project_id=project_id, order=order).first()
+        project_id=project_id, uuid=uuid).first()
     db.session.delete(scene)
     db.session.commit()
     return {'order': order}
@@ -287,20 +290,22 @@ def update_image(project_id, order):
 
         if scene:
             scene.caption = caption
-
-
         else:
-            return {'error': "Can not find image",'caption': caption,'sceneId': scene_id}
-
+            return {'error': "Can not find image",
+                    'caption': caption,
+                    'sceneId': scene_id}
 
         db.session.add(scene)
         db.session.commit()
 
-        return {'caption': caption,'scene_id': scene.id, 'scene_order':order}
+        return {'caption': caption,
+                'scene_id': scene.id,
+                'scene_order': order}
 
     except Exception as e:
         traceback.print_exc()
         return {'error': str(e)}
+
 
 @app.route("/upload-image/<project_id>/<order>", methods=['POST'])
 @ajax
@@ -314,27 +319,30 @@ def create_scene(project_id, order):
         file = request.files.get('file', None)
         order = int(request.form['order'])
 
-        filename = file.filename
-        content_type = file.content_type
-        content = file.read()
-        key_name = storage_obj.key_name(
-            str(user.id), str(project_id), filename)
-        storage_obj.save_scene_images(key_name, content_type, content)
-        image_dir = urljoin(settings.AWS_STORAGE_BUCKET_URL, key_name)
-        if not image_dir.endswith('/'):
-            image_dir = "{}/".format(image_dir)
-
         scene = models.Scene.query.filter_by(
             project_id=project_id, order=order).first()
         if scene:
-            scene.image_dir = image_dir
             scene.caption = caption
         else:
             scene = models.Scene(
                 project=project,
                 caption=caption,
-                image_dir=image_dir,
                 order=order)
+            db.session.add(scene)
+            db.session.flush() # force uuid assignment for file saving
+
+        filename = file.filename
+        content_type = file.content_type
+        content = file.read()
+        qualified_key_name = storage_obj.key_name(scene.filepath)
+        storage_obj.save_scene_images(qualified_key_name,
+                                      content_type,
+                                      content)
+        image_dir = urljoin(
+            settings.AWS_STORAGE_BUCKET_URL, qualified_key_name)
+        if not image_dir.endswith('/'):
+            image_dir = "{}/".format(image_dir)
+        scene.image_dir = image_dir
 
         db.session.add(scene)
 
@@ -388,7 +396,7 @@ def _write_json_data(project_id):
     data['scenes'] = sceneArray
 
     key_name = storage_obj.key_name(
-        str(user.id), str(project_id), 'data.json')
+        project.filepath, 'data.json')
 
     storage_obj.save_as_json(key_name, data)
 
@@ -402,11 +410,9 @@ def write_embed_published(project_id):
     """
     user = g.user
     project = models.Project.query.get(project_id)
-    check_project(user,project)
-    json_key_name = storage_obj.key_name(
-        str(user.id), str(project_id), 'data.json')
-    embed_key_name = storage_obj.key_name(
-            str(user.id), str(project_id), 'index.html')
+    check_project(user, project)
+    json_key_name = storage_obj.key_name(project.filepath, 'data.json')
+    embed_key_name = storage_obj.key_name(project.filepath, 'index.html')
     embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
     json_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, json_key_name)
     content = render_template(
@@ -422,8 +428,10 @@ def write_embed_published(project_id):
 @app.route("/logout/")
 def logout():
     _user_remove()
-    return_url = urljoin(request.base_url,'/')
-    return redirect("https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue={}".format(return_url))
+    return_url = urljoin(request.base_url, '/')
+    redirect_url = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue={}".format(
+        return_url)
+    return redirect(redirect_url)
 
 
 @app.route('/google/authorize')
@@ -432,8 +440,9 @@ def google_authorize():
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES)
 
-    flow.redirect_uri = url_for('google_authorized', _external=True,
-        _scheme='https')
+    flow.redirect_uri = url_for('google_authorized',
+                                _external=True,
+                                _scheme='https')
 
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -462,8 +471,9 @@ def google_authorized():
 
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
-        flow.redirect_uri = url_for('google_authorized', _external=True,
-            _scheme='https')
+        flow.redirect_uri = url_for('google_authorized',
+                                    _external=True,
+                                    _scheme='https')
 
         # Use the authorization server's response to fetch the OAuth 2.0 tokens
         authorization_response = request.url
@@ -488,9 +498,10 @@ def google_authorized():
         return redirect(url_for('index'))
 
 
-def check_project(user,project):
+def check_project(user, project):
     if project.user != user:
         raise SecurityException("You don't have permission for that project.")
+
 
 def credentials_to_dict(credentials):
     return {'token': credentials.token,
@@ -499,6 +510,7 @@ def credentials_to_dict(credentials):
             'client_id': credentials.client_id,
             'client_secret': credentials.client_secret,
             'scopes': credentials.scopes}
+
 
 class SecurityException(Exception):
     pass
