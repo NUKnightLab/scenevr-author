@@ -320,8 +320,7 @@ def create_scene(project_id, order):
         key_name = storage_obj.key_name(
             str(user.id), str(project_id), filename)
         storage_obj.save_scene_images(key_name, content_type, content)
-        image_dir = urljoin(settings.AWS_STORAGE_BUCKET_URL,
-            '%s/%s' % (storage_obj.prefix, key_name))
+        image_dir = urljoin(settings.AWS_STORAGE_BUCKET_URL, key_name)
         if not image_dir.endswith('/'):
             image_dir = "{}/".format(image_dir)
 
@@ -408,14 +407,8 @@ def write_embed_published(project_id):
         str(user.id), str(project_id), 'data.json')
     embed_key_name = storage_obj.key_name(
             str(user.id), str(project_id), 'index.html')
-    if settings.USE_LOCAL_STORAGE:
-        embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
-        json_url=urljoin(settings.AWS_STORAGE_BUCKET_URL, json_key_name)
-    else:
-        embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL,
-            '%s/%s' % (storage_obj.prefix, embed_key_name))
-        json_url=urljoin(settings.AWS_STORAGE_BUCKET_URL,
-            '%s/%s' % (storage_obj.prefix, json_key_name))
+    embed_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, embed_key_name)
+    json_url = urljoin(settings.AWS_STORAGE_BUCKET_URL, json_key_name)
     content = render_template(
         'embed.html',
         json_url=json_url,
