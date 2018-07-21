@@ -1,6 +1,8 @@
 # local modifications to Github default
 
 env.sh
+env.sh.boto
+env.sh.localstorage
 local_only.key
 local_only.crt
 scenevr_client_secret.json
