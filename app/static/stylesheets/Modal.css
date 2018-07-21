@@ -175,14 +175,15 @@
 
 .modal-preview-item {
     padding:5px;
+    flex:1;
 }
 
 .modal-preview-item:first-child {
-    width:33%;
+
 }
 
 .modal-preview-item:last-child {
-    width:66%;
+    
 }
 
 .modal-content h4 {

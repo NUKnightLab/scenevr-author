@@ -2,8 +2,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from urllib.parse import urljoin
+import uuid
+
 
 db = SQLAlchemy()
+
+
+def generate_uuid():
+    return str(uuid.uuid4())
 
 
 class User(db.Model):
@@ -19,9 +25,18 @@ class User(db.Model):
     oauth_issuer = db.Column(db.String(200))
     oauth_subject = db.Column(db.String(200))
 
+    uuid = db.Column(db.String,
+                     name="uuid",
+                     primary_key=False,
+                     default=generate_uuid)
     visits = db.Column(db.Integer, default=0)
 
     projects = relationship("Project", back_populates="user")
+
+    @property
+    def filepath(self):
+        assert self.uuid is not None
+        return self.uuid
 
 
 class Project(db.Model):
@@ -32,11 +47,17 @@ class Project(db.Model):
     desc = db.Column(db.String(200))
     date = db.Column(db.String(200))
     thumbnail = db.Column(db.String(200))
+    uuid = db.Column(db.String, name="uuid",
+                     primary_key=False, default=generate_uuid)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = relationship("User", back_populates="projects")
     scenes = relationship("Scene", back_populates="project")
 
+    @property
+    def filepath(self):
+        assert self.uuid is not None
+        return '/'.join([self.user.filepath, self.uuid])
 
 class Scene(db.Model):
     __tablename__ = 'scenes'
@@ -45,6 +66,8 @@ class Scene(db.Model):
     image_dir = db.Column(db.String(200))
     caption = db.Column(db.String(200))
     order = db.Column(db.Integer)
+    uuid = db.Column(db.String, name="uuid",
+                     primary_key=False, default=generate_uuid)
 
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = relationship("Project", back_populates="scenes")
@@ -52,3 +75,8 @@ class Scene(db.Model):
     @property
     def thumbnail(self):
         return urljoin(self.image_dir, 'image-thumbnail.jpg')
+
+    @property
+    def filepath(self):
+        assert self.uuid is not None
+        return '/'.join([self.project.filepath, self.uuid])

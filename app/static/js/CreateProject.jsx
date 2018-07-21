@@ -215,6 +215,7 @@ export default class CreateProject extends React.Component {
         .then(
             (result) => {
                 document.getElementById('modal-loading').style.display = "none";
+                document.getElementById('file-object').value = "";
                 this.setState({showUpload: false, showModal: false}, () => {
                     this.fetchPhotos();
                 });
@@ -364,7 +365,7 @@ export default class CreateProject extends React.Component {
             share = {
                 description: "",
                 embed: null,
-                url: this.state.embedUrl,
+                url: `https:${this.state.embedUrl}`,
                 url_encoded: null,
                 facebook: null,
                 twitter: null
@@ -388,14 +389,14 @@ export default class CreateProject extends React.Component {
             if (showShare) {
                 if (this.state.embedUrl) {
                     share.url_encoded = encodeURIComponent(share.url);
-                    share.embed = `<iframe width="100%" height="600" src=${share.url} frameborder="0" allowfullscreen />`;
+                    share.embed = `<iframe width="100%" height="600" src=${this.state.embedUrl} frameborder="0" allowfullscreen />`;
 
                     if (this.state.project_description) {
                         share.description = `: ${this.state.project_description}`;
                     }
                     share.twitter = `http://twitter.com/share?text=${this.state.project_title}${share.description}&url=${share.url}&hashtags=SceneVR,knightlab,VR&via=knightlab`;
 
-                    share.facebook = `https://www.facebook.com/dialog/feed?app_id=1986212374732747&display=page&picture=${encodeURIComponent(this.state.thumbnail)}&caption=${encodeURIComponent("SceneVR")}&name=${encodeURIComponent(this.state.project_title)}&description=${encodeURIComponent(share.description)}&link=${share.url_encoded}&redirect_uri=${share.url_encoded}`;
+                    share.facebook = `https://www.facebook.com/dialog/feed?app_id=1986212374732747&display=page&picture=${encodeURIComponent(this.state.thumbnail)}&caption=${encodeURIComponent("SceneVR")}&name=${encodeURIComponent(this.state.project_title)}&description=${encodeURIComponent(share.description)}&link=${share.url_encoded}`;
 
                     modal_title = "Share";
 
@@ -408,17 +409,25 @@ export default class CreateProject extends React.Component {
                             <button className="close-button" id="close-button" onClick={this.closeModal}>Cancel</button>
                         </div>
                     );
-
+                    let preview_text = "";
+                    console.log(this.state.project_title)
+                    console.log(this.state.project_description)
+                    if (this.state.project_title != "Untitled" || this.state.project_description) {
+                        console.log("SHOW TEXT")
+                        preview_text = (
+                            <div className="modal-preview-item">
+                                <h4>{this.state.project_title}</h4>
+                                <p>{this.state.project_description}</p>
+                            </div>
+                        )
+                    }
                     modal_body = (
                         <div className="modal-body">
                             <div className="modal-preview-container">
                                 <div className="modal-preview-item">
                                     <img src={this.state.thumbnail} alt="Preview thumbnail"/>
                                 </div>
-                                <div className="modal-preview-item">
-                                    <h4>{this.state.project_title}</h4>
-                                    <p>{this.state.project_description}</p>
-                                </div>
+                                {preview_text}
                             </div>
                             <div className="modal-list">
                                 <div className="modal-list-item">
