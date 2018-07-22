@@ -434,7 +434,7 @@ export default class CreateProject extends React.Component {
                                     <span className="icon-link"></span>
                                 </div>
                                 <div className="modal-list-item">
-                                    <input id="share-link" aria-label="Shareable link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={this.state.embedUrl} readOnly />
+                                    <input id="share-link" aria-label="Shareable link" className="share-url" type="text" onClick={()=>{this.selectText("share-link")}} value={share.url} readOnly />
                                 </div>
                             </div>
                             <div className="modal-list">
