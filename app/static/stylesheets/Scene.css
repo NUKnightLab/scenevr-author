@@ -3,7 +3,7 @@
     padding:5px;
 }
 
-.project-preview {
+.scene-preview {
     background-color: #FFF;
     border-radius: 5px;
     margin: 5px;
@@ -14,7 +14,7 @@
     cursor: pointer;
 }
 
-.project-preview img {
+.scene-preview img {
     width:100%;
     border-radius: 5px;
     border: 1px solid #e6e6e6;
@@ -29,7 +29,7 @@
     width: 90%;
 }
 
-#scene-description {
+#scene-caption {
     text-align: center;
 }
 

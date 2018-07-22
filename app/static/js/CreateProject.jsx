@@ -1,19 +1,29 @@
 import React from "react";
 import {Redirect} from 'react-router';
 import {SortableContainer, SortableElement, SortableHandle, arrayMove,} from 'react-sortable-hoc';
-import Project from './components/Project.jsx';
+import Scene from './components/Scene.jsx';
 
-const SortableItem = SortableElement(({scene, projectId, updateOrder, editCallback}) =>
+const SortableItem = SortableElement(({ scene, projectId, updateOrder, editCallback, updateProjectState }) =>
     <div >
-        <Project key={scene.index} desc={scene.desc} thumbnail={scene.thumbnail} order={scene.order} projectId={projectId} updateOrder={updateOrder} editCallback={editCallback} />
+        <Scene key={scene.index} caption={scene.caption} 
+               thumbnail={scene.thumbnail} uuid={scene.uuid} 
+               order={scene.order} projectId={projectId} 
+               updateOrder={updateOrder} editCallback={editCallback} 
+               updateProjectState={updateProjectState} />
     </div>
 );
 
-const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCallback}) => {
+const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCallback, updateProjectState }) => {
     return (
         <div>
             {scenes.map((scene, index) => (
-                <SortableItem key = {`item-${index}`} index={index} scene={scene} projectId={projectId} updateOrder={updateOrder} editCallback={editCallback}/>
+                <SortableItem key = {`item-${index}`} 
+                              index={index} 
+                              scene={scene} 
+                              projectId={projectId} 
+                              updateOrder={updateOrder} 
+                              editCallback={editCallback}
+                              updateProjectState={updateProjectState} />
             ))}
         </div>
     );
@@ -23,10 +33,20 @@ export default class CreateProject extends React.Component {
 
     constructor(props) {
         super(props);
+        // direct load (e.g. from a cached URL) is and error condition, 
+        // because we expect to have created a project ID upon clicking of 
+        // the 'new project' button so that incremental edits of a new project 
+        // can be saved -- so if state wasn't initialized, redirectProjects should be true
+        let projectId = null, thumbnail = null, redirectProjects = true;
+        if (this.props.location.state) {
+            redirectProjects = false;
+            projectId = this.props.location.state.projectId;
+            thumbnail = this.props.location.state.thumbnail;
+        }
         this.state = {
-            projectId: this.props.location.state.projectId,
-            redirectProjects: false,
-            thumbnail: this.props.location.state.thumbnail,
+            projectId: projectId,
+            redirectProjects: redirectProjects, 
+            thumbnail: thumbnail,
             file: null,
             photo_thumbnail: null,
             scenes: [],
@@ -45,6 +65,7 @@ export default class CreateProject extends React.Component {
         this.selectText = this.selectText.bind(this);
         this.updatePhoto = this.updatePhoto.bind(this);
         this.editPhoto = this.editPhoto.bind(this);
+        this.updateProjectState = this.updateProjectState.bind(this);
         this.uploadPhoto = this.uploadPhoto.bind(this);
         this.goToProjects = this.goToProjects.bind(this);
         this.updateTitles = this.updateTitles.bind(this);
@@ -185,16 +206,17 @@ export default class CreateProject extends React.Component {
 
     updateOrder() {
         const {scenes} = this.state;
-        var tempScenes = this.state.scenes;
+        var tempScenes = [];
         for (let i = 0; i < scenes.length; i++) {
-            tempScenes[i].order = i;
+            tempScenes.push(scenes[i])
+            tempScenes[i].order = tempScenes.length - 1;
         }
         this.setState({scenes: tempScenes});
         this.updateTitles();
     }
 
     uploadPhoto() {
-        const url = `/upload-image/${this.state.projectId}/${this.state.numScenes}`;
+        const url = `/upload-image/${this.state.projectId}`;
 
         let caption = document.getElementById('photo-description-input'),
             fileField = document.getElementById('file-object'),
@@ -226,30 +248,41 @@ export default class CreateProject extends React.Component {
         )
     }
 
-    editPhoto(order) {
+    updateProjectState(state) { 
+        // seems like maybe we can't bind setState to child components?
+        // but also for now we need to mutate the API result a bit
+        // probably cleaner to just return it that way from the API 
+        if (state.scenesData) {
+            state.scenes = state.scenesData; 
+        }
+        
+        this.setState(state);
+    }
+
+    editPhoto(order) { // TODO: this URL will no longer work. kill order
         console.log("EDIT PHOTO");
-        const url = `/upload-image/${this.state.projectId}/${order}`;
-        console.log(order);
+        const url = `/scene-details/${this.state.projectId}/${order}`;
         fetch(url, {'credentials': 'include'})
         .then(res => res.json())
         .then(
             (result) => {
                 if (result.scene_exists == 'True'){
-
                     this.setState({
                         photo_thumbnail: result.scene_thumbnail,
                         photoId: result.scene_id,
-                        photo_caption: result.desc,
+                        photo_caption: result.caption || '',
                         showUpdate: true,
-                        current_photo: order,
+                        current_photo: result.uuid,
                         showModal: true
                     }, () => {
                         this.revealModal();
                     });
+                } else {
+                    console.log("asked to edit photo which doesn't exist")
                 }
             },
             (error) => {
-                console.log("ERROR fetching info from server")
+                console.error("ERROR fetching info from server", error)
             }
         )
     }
@@ -277,7 +310,7 @@ export default class CreateProject extends React.Component {
                 });
             },
             (error) => {
-                console.log(`Error Uploading ${error}`)
+                console.error(`Error Uploading ${error}`)
             }
         )
 
@@ -308,8 +341,8 @@ export default class CreateProject extends React.Component {
         }
     }
 
-    fileChangedHandler(event) {
-        const url = "/upload-image/" + this.state.projectId + "/" + this.state.numScenes;
+    fileChangedHandler(event) { // TODO: this fetch can probably be removed...
+        const url = "/scene-details/" + this.state.projectId + "/" + this.state.numScenes;
         let reader = new FileReader(),
             file = event.target.files[0],
             caption = null;
@@ -323,12 +356,12 @@ export default class CreateProject extends React.Component {
                     this.setState({
                         photo_thumbnail: result.scene_thumbnail,
                         photoId: result.scene_id,
-                        photo_caption: result.desc
+                        photo_caption: result.caption
                     });
                 }
             },
             (error) => {
-                console.log("ERROR fetching info from server")
+                console.error("ERROR fetching info from server", error)
             }
         )
 
@@ -410,10 +443,7 @@ export default class CreateProject extends React.Component {
                         </div>
                     );
                     let preview_text = "";
-                    console.log(this.state.project_title)
-                    console.log(this.state.project_description)
                     if (this.state.project_title != "Untitled" || this.state.project_description) {
-                        console.log("SHOW TEXT")
                         preview_text = (
                             <div className="modal-preview-item">
                                 <h4>{this.state.project_title}</h4>
@@ -483,7 +513,7 @@ export default class CreateProject extends React.Component {
                             {image_preview}
                         </div>
                         <div id="upload-description">
-                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" />
+                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" defaultValue={photo_caption}/>
                         </div>
                     </div>
                 );
@@ -539,7 +569,13 @@ export default class CreateProject extends React.Component {
                     <input id="title-input" type="text" onBlur={this.updateTitles}/>
                     <textarea rows="3" id="project-description" type="text" onBlur={this.updateTitles} />
                     <div id="scenes-container">
-                        <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true} editCallback={this.editPhoto}/>
+                        <SortableList scenes={scenes} 
+                                      updateOrder={this.updateOrder} 
+                                      updateProjectState={this.updateProjectState} 
+                                      projectId={this.state.projectId} 
+                                      onSortEnd={this.onSortEnd.bind(this)} 
+                                      useDragHandle={true} 
+                                      editCallback={this.editPhoto}/>
 
                         <div id="new-photo" className="button-bottom-container">
                             <label id="new-photo" className="button-bottom" htmlFor="file-object">

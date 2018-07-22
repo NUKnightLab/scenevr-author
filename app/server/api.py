@@ -11,6 +11,7 @@ import settings
 import re
 import hashlib
 from urllib.parse import urljoin
+import traceback
 
 import google_auth_oauthlib.flow
 import google.oauth2.credentials
@@ -37,7 +38,6 @@ SCOPES = ['https://www.googleapis.com/auth/userinfo.profile']
 app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 app.config.from_object(settings_module)
-app.logger.debug('config: {}'.format(settings_module))
 db.app = app
 db.init_app(app)
 
@@ -121,13 +121,14 @@ def ajax(f):
     def decorated_function(*args, **kwargs):
         try:
             if g.user is None:
-                raise SecurityError(
+                raise SecurityException(
                     "Ajax endpoints require authenticated user.")
             # AJAX endpoints probably need a different way to 'require user'
             response = f(*args, **kwargs)
             return jsonify(response)
         except Exception as e:
             app.logger.warn("Ajax Error: {} {}".format(type(e), e))
+            app.logger.warn("Ajax traceback: {}".format(traceback.format_exc()))
             return jsonify({"error": "Ajax Error: {} {}".format(type(e), e)})
     return decorated_function
 
@@ -200,46 +201,72 @@ def create_project():
 def project_details(project_id):
     if request.method == 'POST':
         data = request.get_json()
-        project = models.Project.query.get(project_id)
+        try:
+            project = models.Project.query.get(project_id)
+        except Exception:
+            return {'error': 'Invalid project ID: {}'.format(project_id)}
         check_project(g.user, project)
         project.title = data['titleData']
         project.desc = data['descData']
         db.session.add(project)
-        db.session.commit()
-        scenesData = data['sceneData']
-        scenes = models.Scene.query.filter_by(
-            project_id=project_id).order_by(models.Scene.order)
-        for index, scene in enumerate(scenes):
-            scene.caption = scenesData[index]['desc']
-            scene.image_dir = scenesData[index]['image_dir']
-            db.session.add(scene)
-        # update thumbnail of project to be first scene
-        if scenesData:
-            project = models.Project.query.get(project_id)
-            project.thumbnail = scenes[0].thumbnail
-            db.session.add(project)
 
+        posted_scenes = dict((x['uuid'], x) for x in data['sceneData'])
+        existing_scenes = models.Scene.query.filter_by(project_id=project_id)
+        existing_scenes = dict((s.uuid, s) for s in existing_scenes)
+        lowest_order = None
+        for uuid, updated in posted_scenes.items():
+            try:
+                existing = existing_scenes.pop(uuid)
+            except KeyError:
+                db.session.rollback()
+                raise LookupError("Attempt to modify a scene which doesn't exist or isn't associated with this project")
+            existing.caption = updated['caption']
+            existing.order = updated['order']
+            # add other new properties here,
+            # but don't mess with uuid and image_dir as those
+            # shouldn't be carelessly edited
+            if lowest_order is None or updated['order'] < lowest_order:
+                # thumbnail is not a DB property but comes in post
+                project.thumbnail = updated['thumbnail']
+                lowest_order = updated['order']
+            db.session.add(existing)
+
+        for scene in existing_scenes.values():
+            db.session.delete(scene)
+            app.logger.info("Deleting scene {} because it was omitted from post".format(scene.uuid))
+        db.session.commit()
         _write_json_data(project_id)
 
-        db.session.commit()
         # always the same as what is posted? is there a better response?
         return data
     if request.method == 'GET':
         project = models.Project.query.get(project_id)
         check_project(g.user, project)
-        scenesData = []
-        scenes = models.Scene.query.filter_by(
-            project_id=project_id).order_by(models.Scene.order)
-        for scene in scenes:
-            sceneData = {'order': scene.order,
-                         'image_dir': scene.image_dir,
-                         'thumbnail': scene.thumbnail,
-                         'uuid': scene.uuid,
-                         'desc': scene.caption}
-            scenesData.append(sceneData)
-        return {'title': project.title,
-                'desc': project.desc,
-                'scenesData': scenesData}
+        return _project_to_dict(project)
+
+
+def _project_to_dict(project, **kwargs):
+    """Given a project, return a consistent dict representation which could be
+       returned from any function which changes a project. Additional values
+       can be added to the dict using kwargs. Don't be a goofball and use
+       kwargs that shadow the important keys, currently
+       * title
+       * desc
+       * scenesData
+    """
+    scenesData = []
+    for scene in project.scenes:
+        sceneData = {'order': scene.order,
+                     'image_dir': scene.image_dir,
+                     'thumbnail': scene.thumbnail,
+                     'uuid': scene.uuid,
+                     'caption': scene.caption}
+        scenesData.append(sceneData)
+    result = {'title': project.title,
+            'desc': project.desc,
+            'scenesData': scenesData}
+    result.update(kwargs) 
+    return result
 
 
 @app.route('/delete-scene/<project_id>', methods=['POST'])
@@ -251,12 +278,21 @@ def delete_scene(project_id):
     uuid = data['sceneUUID']
     scene = models.Scene.query.filter_by(
         project_id=project_id, uuid=uuid).first()
-    db.session.delete(scene)
+    if scene is None:
+        raise Exception("invalid scene ID {}".format(uuid))
+#    db.session.delete(scene)
+    project.scenes.remove(scene) 
+    if len(project.scenes) > 0:
+        project.thumbnail = project.scenes[0].thumbnail
+    else:
+        project.thumbnail = None
+    db.session.add(project)
     db.session.commit()
-    return {'order': order}
+    app.logger.info("deleted {}".format(uuid))
+    return _project_to_dict(project, message="Deleted {}".format(scene.caption))
 
 
-@app.route("/upload-image/<project_id>/<order>", methods=['GET'])
+@app.route("/scene-details/<project_id>/<order>", methods=['GET'])
 @ajax
 def get_scene(project_id, order):
     project = models.Project.query.get(project_id)
@@ -270,14 +306,15 @@ def get_scene(project_id, order):
             'scene_exists': 'True',
             'scene_id': scene.id,
             'scene_thumbnail': scene.thumbnail,
-            'desc': scene.caption
+            'uuid': scene.uuid,
+            'caption': scene.caption
         }
     return data
 
 
-@app.route("/update-image/<project_id>/<order>", methods=['POST'])
+@app.route("/update-image/<project_id>/<uuid>", methods=['POST'])
 @ajax
-def update_image(project_id, order):
+def update_image(project_id, uuid):
     try:
         user = g.user
 
@@ -286,7 +323,7 @@ def update_image(project_id, order):
         caption = request.form.get('caption', None)
 
         scene = models.Scene.query.filter_by(
-            project_id=project_id, order=order).first()
+            project_id=project_id, uuid=uuid).first()
 
         if scene:
             scene.caption = caption
@@ -300,16 +337,17 @@ def update_image(project_id, order):
 
         return {'caption': caption,
                 'scene_id': scene.id,
-                'scene_order': order}
+                'uuid': uuid,
+                'scene_order': scene.order}
 
     except Exception as e:
         traceback.print_exc()
         return {'error': str(e)}
 
 
-@app.route("/upload-image/<project_id>/<order>", methods=['POST'])
+@app.route("/upload-image/<project_id>", methods=['POST'])
 @ajax
-def create_scene(project_id, order):
+def create_scene(project_id):
     try:
         user = g.user
 
@@ -317,19 +355,18 @@ def create_scene(project_id, order):
         check_project(g.user, project)
         caption = request.form.get('caption', None)
         file = request.files.get('file', None)
-        order = int(request.form['order'])
 
-        scene = models.Scene.query.filter_by(
-            project_id=project_id, order=order).first()
-        if scene:
-            scene.caption = caption
-        else:
-            scene = models.Scene(
-                project=project,
-                caption=caption,
-                order=order)
-            db.session.add(scene)
-            db.session.flush() # force uuid assignment for file saving
+        upload_img_order = 0
+        if (len(project.scenes) > 0):
+            max_order = max(scene.order for scene in project.scenes)
+            upload_img_order = max_order + 1
+
+        scene = models.Scene(
+            project=project,
+            caption=caption,
+            order=upload_img_order)
+        db.session.add(scene)
+        db.session.flush()  # force uuid assignment for file saving
 
         filename = file.filename
         content_type = file.content_type
@@ -473,7 +510,6 @@ def google_authorized():
             CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
         flow.redirect_uri = url_for('google_authorized', _external=True,
                                     _scheme='https')
-        app.logger.warn(flow.redirect_uri)
 
         # Use the authorization server's response to fetch the OAuth 2.0 tokens
         authorization_response = request.url.replace('http:', 'https:')
