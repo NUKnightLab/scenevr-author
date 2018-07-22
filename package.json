@@ -11,7 +11,8 @@
 		"server": "python app/server/api.py",
 		"makecert": "openssl req -x509 -nodes -days 10000 -newkey rsa:2048 -out local_only.crt -config self_signed.cfg",
 		"initdb": "python app/server/api.py initdb",
-		"devinit": "npm run makecert && npm run initdb && npm run build"
+		"devinit": "npm run makecert && npm run initdb && npm run build",
+		"clean": "rm -r app/static/dist/*"
 	},
 	"repository": {
 		"type": "git",
