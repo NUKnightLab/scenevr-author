@@ -37,9 +37,13 @@ export default class Project extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
+                if (result.error) {
+                    console.log(`Error deleting image: ${result.error}`)
+                }
                 this.props.updateOrder();
             },
             (error) => {
+                console.log(`Error deleting image: ${error}`)
                 this.setState({error});
             }
         )

@@ -42,6 +42,7 @@ export default class CreateProject extends React.Component {
             current_photo: null,
             photoId: null
         };
+        this.cancelMessage = this.cancelMessage.bind(this);
         this.selectText = this.selectText.bind(this);
         this.updatePhoto = this.updatePhoto.bind(this);
         this.editPhoto = this.editPhoto.bind(this);
@@ -221,16 +222,36 @@ export default class CreateProject extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
+                console.log(result);
+
                 document.getElementById('modal-loading').style.display = "none";
                 document.getElementById('file-object').value = "";
-                this.setState({showUpload: false, showModal: false}, () => {
-                    this.fetchPhotos();
-                });
+
+                if (result.error) {
+                    this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading Image: ${result.error}`}, () => {
+                        this.fetchPhotos();
+                    });
+                } else {
+                    this.setState({showUpload: false, showModal: false, showMessage:false}, () => {
+                        this.fetchPhotos();
+                    });
+                }
+
+
             },
             (error) => {
-                console.log(`Error Uploading ${error}`)
+                console.log(`Error Uploading ${error}`);
+                this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading ${error}`}, () => {
+                    this.fetchPhotos();
+                });
             }
         )
+    }
+
+    cancelMessage() {
+        this.setState({showUpload: false, showModal: false, showMessage: false}, () => {
+
+        });
     }
 
     editPhoto(order) {
@@ -256,7 +277,10 @@ export default class CreateProject extends React.Component {
                 }
             },
             (error) => {
-                console.log("ERROR fetching info from server")
+                console.log("ERROR fetching info from server");
+                this.setState({showUpload: false, showModal: true, showMessage: true, message: "ERROR fetching info from server"}, () => {
+                    this.fetchPhotos();
+                });
             }
         )
     }
@@ -285,6 +309,9 @@ export default class CreateProject extends React.Component {
             },
             (error) => {
                 console.log(`Error Uploading ${error}`)
+                this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading ${error}`}, () => {
+                    this.fetchPhotos();
+                });
             }
         )
 
@@ -361,7 +388,7 @@ export default class CreateProject extends React.Component {
     }
 
     render() {
-        const {redirectProjects, showShare, showModal, showUpload, showUpdate, scenes, thumbnail, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
+        const {redirectProjects, showShare, showModal, showUpload, showUpdate, showMessage, message, scenes, thumbnail, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
 
         if (redirectProjects) {
             return ( <Redirect to = {{pathname: '/list-projects', push: true}}/>);
@@ -400,6 +427,16 @@ export default class CreateProject extends React.Component {
         }
 
         if (showModal) {
+
+            if (showMessage) {
+                modal_header[1] = "Error";
+                modal_header[2] = (<div className="modal-header-button" onClick={this.cancelMessage}> OK </div>);
+                modal_body = (
+                    <div className="modal-body">
+                        <p className="modal-message">{this.state.message}</p>
+                    </div>
+                );
+            }
 
             if (showShare) {
                 if (this.state.embedUrl) {

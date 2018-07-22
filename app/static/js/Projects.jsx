@@ -79,10 +79,8 @@ export default class Projects extends React.Component {
         }
 
         let projects = null;
-        console.log(projectData)
         if (projectData) {
             if (projectData.length == 0) {
-                console.log("NOPE")
                 projects = <div id="welcome"> <span>👇 🏞 😆</span> Create a new project to get started!</div>
             } else {
                 projects = projectData ? (
