@@ -68,7 +68,9 @@ export default class CreateProject extends React.Component {
         .then(
             (result) => {
 
-                let project_title = result.title;
+                let project_title = result.title,
+                    project_thumbnail = null;
+
                 if (result.title) {
                     document.getElementById('title-input').value = result.title;
                 } else {
@@ -76,10 +78,15 @@ export default class CreateProject extends React.Component {
                     project_title = "Untitled"
                 };
 
+                if (result.scenesData.length > 0) {
+                    project_thumbnail = result.scenesData[0].thumbnail;
+                }
+
                 this.setState({
                     scenes: result.scenesData,
                     project_title: project_title,
                     project_description: result.desc,
+                    thumbnail: project_thumbnail,
                     numScenes: result.scenesData.length
                 });
 
@@ -354,7 +361,7 @@ export default class CreateProject extends React.Component {
     }
 
     render() {
-        const {redirectProjects, showShare, showModal, showUpload, showUpdate, scenes, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
+        const {redirectProjects, showShare, showModal, showUpload, showUpdate, scenes, thumbnail, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
 
         if (redirectProjects) {
             return ( <Redirect to = {{pathname: '/list-projects', push: true}}/>);
@@ -371,6 +378,7 @@ export default class CreateProject extends React.Component {
                 twitter: null
             },
             image_preview = null,
+            project_image = null,
             modal_title = "",
             modal_header = ["", "", ""],
             modal_type = "modal-content",
@@ -380,10 +388,17 @@ export default class CreateProject extends React.Component {
 
 
         if (this.state.photo_thumbnail) {
-            image_preview = (<img src={photo_thumbnail} />);
+            image_preview = (<img src={this.state.photo_thumbnail} />);
         } else {
             image_preview = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
         }
+
+        if (this.state.thumbnail) {
+            project_image = (<img src={this.state.thumbnail} />);
+        } else {
+            project_image = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
+        }
+
         if (showModal) {
 
             if (showShare) {
@@ -425,7 +440,7 @@ export default class CreateProject extends React.Component {
                         <div className="modal-body">
                             <div className="modal-preview-container">
                                 <div className="modal-preview-item">
-                                    <img src={this.state.thumbnail} alt="Preview thumbnail"/>
+                                    {project_image}
                                 </div>
                                 {preview_text}
                             </div>
