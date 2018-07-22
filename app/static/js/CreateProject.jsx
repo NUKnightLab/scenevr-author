@@ -483,7 +483,7 @@ export default class CreateProject extends React.Component {
                             {image_preview}
                         </div>
                         <div id="upload-description">
-                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" />
+                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" defaultValue={photo_caption} />
                         </div>
                     </div>
                 );
@@ -492,6 +492,7 @@ export default class CreateProject extends React.Component {
             if (showUpdate) {
                 modal_header[1] = "Update";
                 modal_header[2] = (<div className="modal-header-button" onClick={this.updatePhoto}> Update </div>);
+
             }
 
             modal = (
