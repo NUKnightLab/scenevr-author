@@ -145,10 +145,12 @@
 }
 
 .modal-content img {
-    width:100%;
+    max-width:100%;
+    max-height:200px;
     border-radius: 5px;
     border: 1px solid #ABABAB;
 }
+
 .modal-content textarea {
     width: 100%;
     padding: 5px;
@@ -176,6 +178,7 @@
 .modal-preview-item {
     padding:5px;
     flex:1;
+    text-align: center;
 }
 
 .modal-preview-item:first-child {
@@ -183,7 +186,7 @@
 }
 
 .modal-preview-item:last-child {
-    
+
 }
 
 .modal-content h4 {
