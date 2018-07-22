@@ -39,12 +39,13 @@ export default class Project extends React.Component {
             (result) => {
                 if (result.error) {
                     console.log(`Error deleting image: ${result.error}`)
+                    this.props.errorCallback(result.error);
                 }
                 this.props.updateOrder();
             },
             (error) => {
                 console.log(`Error deleting image: ${error}`)
-                this.setState({error});
+                this.props.errorCallback(error);
             }
         )
     }

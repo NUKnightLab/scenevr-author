@@ -3,17 +3,17 @@ import {Redirect} from 'react-router';
 import {SortableContainer, SortableElement, SortableHandle, arrayMove,} from 'react-sortable-hoc';
 import Project from './components/Project.jsx';
 
-const SortableItem = SortableElement(({scene, projectId, updateOrder, editCallback}) =>
+const SortableItem = SortableElement(({scene, projectId, updateOrder, editCallback, errorCallback}) =>
     <div >
-        <Project key={scene.index} desc={scene.desc} thumbnail={scene.thumbnail} order={scene.order} projectId={projectId} updateOrder={updateOrder} editCallback={editCallback} />
+        <Project key={scene.index} desc={scene.desc} thumbnail={scene.thumbnail} order={scene.order} projectId={projectId} updateOrder={updateOrder} editCallback={editCallback} errorCallback={errorCallback}/>
     </div>
 );
 
-const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCallback}) => {
+const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCallback, errorCallback}) => {
     return (
         <div>
             {scenes.map((scene, index) => (
-                <SortableItem key = {`item-${index}`} index={index} scene={scene} projectId={projectId} updateOrder={updateOrder} editCallback={editCallback}/>
+                <SortableItem key = {`item-${index}`} index={index} scene={scene} projectId={projectId} updateOrder={updateOrder} editCallback={editCallback} errorCallback={errorCallback}/>
             ))}
         </div>
     );
@@ -42,6 +42,7 @@ export default class CreateProject extends React.Component {
             current_photo: null,
             photoId: null
         };
+        this.errorMessage = this.errorMessage.bind(this);
         this.cancelMessage = this.cancelMessage.bind(this);
         this.selectText = this.selectText.bind(this);
         this.updatePhoto = this.updatePhoto.bind(this);
@@ -248,6 +249,13 @@ export default class CreateProject extends React.Component {
         )
     }
 
+    errorMessage(e) {
+        console.log("errorMessage")
+        this.setState({showUpload: false, showModal: true, showUpdate:false, showMessage: true, message: `Error ${e}`}, () => {
+            this.revealModal();
+        });
+    }
+
     cancelMessage() {
         this.setState({showUpload: false, showModal: false, showMessage: false}, () => {
 
@@ -429,6 +437,7 @@ export default class CreateProject extends React.Component {
         if (showModal) {
 
             if (showMessage) {
+                
                 modal_header[1] = "Error";
                 modal_header[2] = (<div className="modal-header-button" onClick={this.cancelMessage}> OK </div>);
                 modal_body = (
@@ -592,7 +601,7 @@ export default class CreateProject extends React.Component {
                     <input id="title-input" type="text" onBlur={this.updateTitles}/>
                     <textarea rows="3" id="project-description" type="text" onBlur={this.updateTitles} />
                     <div id="scenes-container">
-                        <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true} editCallback={this.editPhoto}/>
+                        <SortableList scenes={scenes} updateOrder={this.updateOrder} projectId={this.state.projectId} onSortEnd={this.onSortEnd.bind(this)} useDragHandle={true} editCallback={this.editPhoto} errorCallback={this.errorMessage}/>
 
                         <div id="new-photo" className="button-bottom-container">
                             <label id="new-photo" className="button-bottom" htmlFor="file-object">
