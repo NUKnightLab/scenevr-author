@@ -365,7 +365,7 @@ export default class CreateProject extends React.Component {
             share = {
                 description: "",
                 embed: null,
-                url: `https:${this.state.embedUrl}`,
+                url: `${this.state.embedUrl}`,
                 url_encoded: null,
                 facebook: null,
                 twitter: null
