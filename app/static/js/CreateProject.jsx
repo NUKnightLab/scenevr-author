@@ -295,9 +295,8 @@ export default class CreateProject extends React.Component {
         this.setState(state);
     }
 
-    editPhoto(order) {
-        console.log("EDIT PHOTO");
-        const url = `/scene-details/${this.state.projectId}/${order}`;
+    editPhoto(uuid) {
+        const url = `/scene-details/${this.state.projectId}/${uuid}`;
         fetch(url, {'credentials': 'include'})
         .then(res => res.json())
         .then(
@@ -384,28 +383,10 @@ export default class CreateProject extends React.Component {
     }
 
     fileChangedHandler(event) { // TODO: this fetch can probably be removed...
-        const url = "/scene-details/" + this.state.projectId + "/" + this.state.numScenes;
+
         let reader = new FileReader(),
             file = event.target.files[0],
             caption = null;
-
-        fetch(url, {'credentials': 'include'})
-        .then(res => res.json())
-        .then(
-            (result) => {
-                if (result.scene_exists == 'True'){
-
-                    this.setState({
-                        photo_thumbnail: result.scene_thumbnail,
-                        photoId: result.scene_id,
-                        photo_caption: result.caption
-                    });
-                }
-            },
-            (error) => {
-                console.error("ERROR fetching info from server", error)
-            }
-        )
 
         reader.onloadend = () => {
             if (reader.result) {

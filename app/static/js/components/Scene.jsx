@@ -83,7 +83,7 @@ export default class Scene extends React.Component {
 
                 <DragHandle />
 
-                <div className="scene-preview" onClick={()=>{this.props.editCallback(this.state.order)}}>
+                <div className="scene-preview" onClick={()=>{this.props.editCallback(this.state.uuid)}}>
                     <img src={this.props.thumbnail} alt={this.props.caption} />
                     {scene_caption}
                 </div>
