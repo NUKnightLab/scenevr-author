@@ -4,13 +4,12 @@ import {SortableHandle,} from 'react-sortable-hoc';
 
 const DragHandle = SortableHandle(() => <div id="drag-handle">&#9776;</div>);
 
-export default class Project extends React.Component {
+export default class Scene extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             redirect: false,
-            projectId: this.props.projectId,
             order: this.props.order
         };
         this.next = this.next.bind(this);
@@ -22,9 +21,11 @@ export default class Project extends React.Component {
     }
 
     deleteScene() {
-        const url = "/delete-scene/" + this.state.projectId;
+        const url = "/delete-scene/" + this.props.projectId;
+        let uuid_to_delete = this.state.uuid;
+        let updateProjectState = this.props.updateProjectState;
         var data = {
-            sceneOrder: this.state.order
+            sceneUUID: this.state.uuid
         };
         fetch(url, {
             method: 'POST',
@@ -37,26 +38,38 @@ export default class Project extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
-                this.props.updateOrder();
+                try {
+                    if (result.error) {
+                        this.props.errorCallback(result.error)
+                    } else {
+                        updateProjectState(result);
+                    }
+                } catch(error) {
+                    console.error('deleteScene error')
+                    console.error(error);
+                    this.props.errorCallback(error);
+
+                }
             },
             (error) => {
-                this.setState({error});
+                console.log(`Error deleting image: ${error}`)
+                this.props.errorCallback(error);
             }
         )
     }
 
     render() {
-    	const {redirect} = this.state;
-        let scene_description = this.props.desc;
-        if (scene_description) {
-            scene_description = (<p id="scene-description"> {scene_description} </p>)
+        const { redirect } = this.state;
+        let scene_caption = this.props.caption;
+        if (scene_caption) {
+            scene_caption = (<p id="scene-caption"> {scene_caption}</p>)
         }
         if (redirect){
         	return (
         		<Redirect to={{
         			pathname: '/upload',
         			state: {
-        				projectId: this.state.projectId,
+        				projectId: this.props.projectId,
         				order: this.state.order,
                         edit: true
         			}
@@ -69,9 +82,9 @@ export default class Project extends React.Component {
 
                 <DragHandle />
 
-                <div className="project-preview" onClick={()=>{this.props.editCallback(this.state.order)}}>
-                    <img src={this.props.thumbnail} alt={this.props.desc} />
-                    {scene_description}
+                <div className="scene-preview" onClick={()=>{this.props.editCallback(this.props.uuid)}}>
+                    <img src={this.props.thumbnail} alt={this.props.caption} />
+                    {scene_caption}
                 </div>
 
                 <div id="delete-scene" onClick={this.deleteScene}>

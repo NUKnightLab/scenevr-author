@@ -9,7 +9,9 @@ db = SQLAlchemy()
 
 
 def generate_uuid():
-    return str(uuid.uuid4())
+    """Not the most universally unique, but should be good when partitioned
+    by user and project"""
+    return str(uuid.uuid4()).split('-')[0]
 
 
 class User(db.Model):
@@ -35,8 +37,7 @@ class User(db.Model):
 
     @property
     def filepath(self):
-        assert self.uuid is not None
-        return self.uuid
+        return str(self.id)
 
 
 class Project(db.Model):
@@ -52,12 +53,16 @@ class Project(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = relationship("User", back_populates="projects")
-    scenes = relationship("Scene", back_populates="project")
+    scenes = relationship("Scene",
+                          back_populates="project",
+                          lazy="joined",
+                          order_by="Scene.order")
 
     @property
     def filepath(self):
         assert self.uuid is not None
         return '/'.join([self.user.filepath, self.uuid])
+
 
 class Scene(db.Model):
     __tablename__ = 'scenes'

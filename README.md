@@ -97,6 +97,7 @@ Init the database as usual:
 
 ```
  $ python app/server/api.py initdb
+```
 
 ## Client development
 
@@ -105,3 +106,28 @@ Of course, you'll also have to be running the server. You can do that with `npm 
 You'll probably want to do this in separate terminal windows so that you can see console output from each separately although we could make an npm script which runs both in parallel.
 
 Once it's running, go to https://localhost:5000/ in your browser. Note that `127.0.0.1` won't work correctly with Google authentication.
+
+# Some Flask interactive tricks
+
+in case you're new to it...
+
+Start a shell:
+```
+$ FLASK_APP="app/server/api.py" flask shell
+```
+
+In the shell, basics to do stuff:
+
+```
+>>> ctx = app.test_request_context()
+>>> ctx.push()
+# do whatcha wanna
+>>> ctx.pop() # I guess when you're done?
+```
+
+but to fool with the DB, you can just do this without the `ctx` stuff:
+```
+>>> import models
+>>> models.Scene.query.all()
+[<Scene 6>, <Scene 5>, <Scene 7>]
+```

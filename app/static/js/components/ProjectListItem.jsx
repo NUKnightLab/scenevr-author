@@ -48,7 +48,7 @@ export default class ProjectListItem extends React.Component {
                     </div>
                     <div id="project-info">
                         <h4 id="name"> {proj_title} </h4>
-                        <p id="desc"> {this.props.desc} </p>
+                        <p id="caption"> {this.props.caption} </p>
                         <p id="date"> {this.props.date} </p>
                     </div>
 

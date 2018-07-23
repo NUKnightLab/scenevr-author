@@ -53,7 +53,6 @@ export default class Projects extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
-                console.log(result);
                 this.setState({
                     redirectCreate: true,
                     newProjectId: result.project_id
@@ -79,10 +78,8 @@ export default class Projects extends React.Component {
         }
 
         let projects = null;
-        console.log(projectData)
         if (projectData) {
             if (projectData.length == 0) {
-                console.log("NOPE")
                 projects = <div id="welcome"> <span>👇 🏞 😆</span> Create a new project to get started!</div>
             } else {
                 projects = projectData ? (

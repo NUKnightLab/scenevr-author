@@ -4,22 +4,23 @@
         <title>SceneVR: {{ project.title }}</title>
         <!-- Meta -->
         <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=0,maximum-scale=1.0,minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="keywords" content="Panorama, 360, VR, Slideshow, virtual reality, google cardboard">
         <meta name="description" content="{{ project.description }}">
         <!-- /Meta -->
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content="{{ project.title }}" />
-        <meta property="og:description" content="{{ project.description }}">
-        <meta property="og:image" content="https:{{ project.thumbnail }}" />
-        <meta property="og:url" content="https:{{ embed_url }}"/>
+        <meta property="og:description" content="{{ project.desc }}">
+        <meta property="og:image" content="{{ project.thumbnail }}" />
+        <meta property="og:url" content="{{ embed_url }}"/>
         <meta property="og:site_name" content="SceneVR" />
         <!-- /Open Graph -->
         <!-- Twitter Card -->
         <meta name="twitter:title" content="{{ project.title }}">
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:description" content="{{ project.description }}">
-        <meta name="twitter:image" content="https:{{ project.thumbnail }}">
+        <meta name="twitter:description" content="{{ project.desc }}">
+        <meta name="twitter:image" content="{{ project.thumbnail }}">
         <meta name="twitter:site" content="@knightlab">
         <!-- /Twitter Card -->
         <link rel = "stylesheet" type = "text/css" href = "{{ scenevr_dist_root_url }}/css/scene.css" />
