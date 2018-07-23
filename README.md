@@ -97,6 +97,7 @@ Init the database as usual:
 
 ```
  $ python app/server/api.py initdb
+```
 
 ## Client development
 
@@ -108,18 +109,23 @@ Once it's running, go to https://localhost:5000/ in your browser. Note that `127
 
 # Some Flask interactive tricks
 
+in case you're new to it...
+
 Start a shell:
-```FLASK_APP="app/server/api.py" flask shell```
+```
+$ FLASK_APP="app/server/api.py" flask shell
+```
 
 In the shell, basics to do stuff:
+
 ```
-ctx = app.test_request_context()
-ctx.push()
-# do your thing
-ctx.pop() # I guess when you're done?
+>>> ctx = app.test_request_context()
+>>> ctx.push()
+# do whatcha wanna
+>>> ctx.pop() # I guess when you're done?
 ```
 
-but to fool with the DB, you can just do this in the python shell:
+but to fool with the DB, you can just do this without the `ctx` stuff:
 ```
 >>> import models
 >>> models.Scene.query.all()
