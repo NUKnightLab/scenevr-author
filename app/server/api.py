@@ -263,9 +263,9 @@ def _project_to_dict(project, **kwargs):
                      'caption': scene.caption}
         scenesData.append(sceneData)
     result = {'title': project.title,
-            'desc': project.desc,
-            'scenesData': scenesData}
-    result.update(kwargs) 
+              'desc': project.desc,
+              'scenesData': scenesData}
+    result.update(kwargs)
     return result
 
 
@@ -281,7 +281,7 @@ def delete_scene(project_id):
     if scene is None:
         raise Exception("invalid scene ID {}".format(uuid))
     db.session.delete(scene)
-    project.scenes.remove(scene) 
+    project.scenes.remove(scene)
     if len(project.scenes) > 0:
         project.thumbnail = project.scenes[0].thumbnail
     else:
@@ -292,13 +292,13 @@ def delete_scene(project_id):
     return _project_to_dict(project, message="Deleted {}".format(scene.caption))
 
 
-@app.route("/scene-details/<project_id>/<order>", methods=['GET'])
+@app.route("/scene-details/<project_id>/<uuid>", methods=['GET'])
 @ajax
-def get_scene(project_id, order):
+def get_scene(project_id, uuid):
     project = models.Project.query.get(project_id)
     check_project(g.user, project)
     scene = models.Scene.query.filter_by(
-        project_id=project_id, order=order).first()
+        project_id=project_id, uuid=uuid).first()
     if not scene:
         data = {'scene_exists': 'False'}
     else:
