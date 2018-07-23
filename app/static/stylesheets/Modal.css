@@ -184,11 +184,7 @@
     text-align: center;
 }
 
-.modal-preview-item:first-child {
-
-}
-
-.modal-preview-item:last-child {
+.modal-preview-item p, .modal-preview-item h4 {
     text-align:left;
 }
 
