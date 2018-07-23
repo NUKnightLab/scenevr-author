@@ -5,9 +5,9 @@ import Scene from './components/Scene.jsx';
 
 const SortableItem = SortableElement(({scene, projectId, updateOrder, editCallback, errorCallback, updateProjectState}) =>
     <div >
-        <Scene key={scene.index} caption={scene.caption} 
-               thumbnail={scene.thumbnail} uuid={scene.uuid} 
-               order={scene.order} projectId={projectId} 
+        <Scene key={scene.index} caption={scene.caption}
+               thumbnail={scene.thumbnail} uuid={scene.uuid}
+               order={scene.order} projectId={projectId}
                updateOrder={updateOrder} editCallback={editCallback}
                errorCallback={errorCallback}
                updateProjectState={updateProjectState} />
@@ -18,11 +18,11 @@ const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCal
     return (
         <div>
             {scenes.map((scene, index) => (
-                <SortableItem key = {`item-${index}`} 
-                              index={index} 
-                              scene={scene} 
-                              projectId={projectId} 
-                              updateOrder={updateOrder} 
+                <SortableItem key = {`item-${index}`}
+                              index={index}
+                              scene={scene}
+                              projectId={projectId}
+                              updateOrder={updateOrder}
                               editCallback={editCallback}
                               errorCallback={errorCallback}
                               updateProjectState={updateProjectState} />
@@ -35,9 +35,9 @@ export default class CreateProject extends React.Component {
 
     constructor(props) {
         super(props);
-        // direct load (e.g. from a cached URL) is and error condition, 
-        // because we expect to have created a project ID upon clicking of 
-        // the 'new project' button so that incremental edits of a new project 
+        // direct load (e.g. from a cached URL) is and error condition,
+        // because we expect to have created a project ID upon clicking of
+        // the 'new project' button so that incremental edits of a new project
         // can be saved -- so if state wasn't initialized, redirectProjects should be true
         let projectId = null, thumbnail = null, redirectProjects = true;
         if (this.props.location.state) {
@@ -47,7 +47,7 @@ export default class CreateProject extends React.Component {
         }
         this.state = {
             projectId: projectId,
-            redirectProjects: redirectProjects, 
+            redirectProjects: redirectProjects,
             thumbnail: thumbnail,
             file: null,
             photo_thumbnail: null,
@@ -162,6 +162,7 @@ export default class CreateProject extends React.Component {
                 this.fetchPhotos();
             },
             (error) => {
+                console.log(error);
                 this.setState({
                     error
                 });
@@ -451,7 +452,7 @@ export default class CreateProject extends React.Component {
         if (showModal) {
 
             if (showMessage) {
-                
+
                 modal_header[1] = "Error";
                 modal_header[2] = (<div className="modal-header-button" onClick={this.cancelMessage}> OK </div>);
                 modal_body = (
@@ -612,11 +613,11 @@ export default class CreateProject extends React.Component {
                     <input id="title-input" type="text" onBlur={this.updateTitles}/>
                     <textarea rows="3" id="project-description" type="text" onBlur={this.updateTitles} />
                     <div id="scenes-container">
-                        <SortableList scenes={scenes} 
-                                      updateOrder={this.updateOrder} 
-                                      updateProjectState={this.updateProjectState} 
-                                      projectId={this.state.projectId} 
-                                      onSortEnd={this.onSortEnd.bind(this)} 
+                        <SortableList scenes={scenes}
+                                      updateOrder={this.updateOrder}
+                                      updateProjectState={this.updateProjectState}
+                                      projectId={this.state.projectId}
+                                      onSortEnd={this.onSortEnd.bind(this)}
                                       useDragHandle={true}
                                       errorCallback={this.errorMessage}
                                       editCallback={this.editPhoto}/>
