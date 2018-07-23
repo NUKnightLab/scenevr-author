@@ -10,8 +10,7 @@ export default class Scene extends React.Component {
         super(props);
         this.state = {
             redirect: false,
-            order: this.props.order,
-            uuid: this.props.uuid
+            order: this.props.order
         };
         this.next = this.next.bind(this);
         this.deleteScene = this.deleteScene.bind(this);
@@ -60,7 +59,7 @@ export default class Scene extends React.Component {
     }
 
     render() {
-    	const {redirect} = this.state;
+        const { redirect } = this.state;
         let scene_caption = this.props.caption;
         if (scene_caption) {
             scene_caption = (<p id="scene-caption"> {scene_caption}</p>)
@@ -83,7 +82,7 @@ export default class Scene extends React.Component {
 
                 <DragHandle />
 
-                <div className="scene-preview" onClick={()=>{this.props.editCallback(this.state.uuid)}}>
+                <div className="scene-preview" onClick={()=>{this.props.editCallback(this.props.uuid)}}>
                     <img src={this.props.thumbnail} alt={this.props.caption} />
                     {scene_caption}
                 </div>

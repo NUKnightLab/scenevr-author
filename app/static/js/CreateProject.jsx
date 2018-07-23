@@ -264,7 +264,6 @@ export default class CreateProject extends React.Component {
 
             },
             (error) => {
-                console.log(`Error Uploading ${error}`);
                 this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading ${error}`}, () => {
                     this.fetchPhotos();
                 });
@@ -273,7 +272,6 @@ export default class CreateProject extends React.Component {
     }
 
     errorMessage(e) {
-        console.log("errorMessage")
         this.setState({showUpload: false, showModal: true, showUpdate:false, showMessage: true, message: `Error ${e}`}, () => {
             this.revealModal();
         });
