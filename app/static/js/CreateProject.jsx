@@ -3,17 +3,18 @@ import {Redirect} from 'react-router';
 import {SortableContainer, SortableElement, SortableHandle, arrayMove,} from 'react-sortable-hoc';
 import Scene from './components/Scene.jsx';
 
-const SortableItem = SortableElement(({ scene, projectId, updateOrder, editCallback, updateProjectState }) =>
+const SortableItem = SortableElement(({scene, projectId, updateOrder, editCallback, errorCallback, updateProjectState}) =>
     <div >
         <Scene key={scene.index} caption={scene.caption} 
                thumbnail={scene.thumbnail} uuid={scene.uuid} 
                order={scene.order} projectId={projectId} 
-               updateOrder={updateOrder} editCallback={editCallback} 
+               updateOrder={updateOrder} editCallback={editCallback}
+               errorCallback={errorCallback}
                updateProjectState={updateProjectState} />
     </div>
 );
 
-const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCallback, updateProjectState }) => {
+const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCallback, errorCallback, updateProjectState}) => {
     return (
         <div>
             {scenes.map((scene, index) => (
@@ -23,6 +24,7 @@ const SortableList = SortableContainer(({scenes, projectId, updateOrder, editCal
                               projectId={projectId} 
                               updateOrder={updateOrder} 
                               editCallback={editCallback}
+                              errorCallback={errorCallback}
                               updateProjectState={updateProjectState} />
             ))}
         </div>
@@ -62,6 +64,8 @@ export default class CreateProject extends React.Component {
             current_photo: null,
             photoId: null
         };
+        this.errorMessage = this.errorMessage.bind(this);
+        this.cancelMessage = this.cancelMessage.bind(this);
         this.selectText = this.selectText.bind(this);
         this.updatePhoto = this.updatePhoto.bind(this);
         this.editPhoto = this.editPhoto.bind(this);
@@ -89,7 +93,9 @@ export default class CreateProject extends React.Component {
         .then(
             (result) => {
 
-                let project_title = result.title;
+                let project_title = result.title,
+                    project_thumbnail = null;
+
                 if (result.title) {
                     document.getElementById('title-input').value = result.title;
                 } else {
@@ -97,10 +103,15 @@ export default class CreateProject extends React.Component {
                     project_title = "Untitled"
                 };
 
+                if (result.scenesData.length > 0) {
+                    project_thumbnail = result.scenesData[0].thumbnail;
+                }
+
                 this.setState({
                     scenes: result.scenesData,
                     project_title: project_title,
                     project_description: result.desc,
+                    thumbnail: project_thumbnail,
                     numScenes: result.scenesData.length
                 });
 
@@ -238,28 +249,53 @@ export default class CreateProject extends React.Component {
             (result) => {
                 document.getElementById('modal-loading').style.display = "none";
                 document.getElementById('file-object').value = "";
-                this.setState({showUpload: false, showModal: false}, () => {
-                    this.fetchPhotos();
-                });
+
+                if (result.error) {
+                    this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading Image: ${result.error}`}, () => {
+                        this.fetchPhotos();
+                    });
+                } else {
+                    this.setState({showUpload: false, showModal: false, showMessage:false}, () => {
+                        this.fetchPhotos();
+                    });
+                }
+
+
             },
             (error) => {
-                console.log(`Error Uploading ${error}`)
+                console.log(`Error Uploading ${error}`);
+                this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading ${error}`}, () => {
+                    this.fetchPhotos();
+                });
             }
         )
     }
 
-    updateProjectState(state) { 
+    errorMessage(e) {
+        console.log("errorMessage")
+        this.setState({showUpload: false, showModal: true, showUpdate:false, showMessage: true, message: `Error ${e}`}, () => {
+            this.revealModal();
+        });
+    }
+
+    cancelMessage() {
+        this.setState({showUpload: false, showModal: false, showMessage: false}, () => {
+
+        });
+    }
+
+    updateProjectState(state) {
         // seems like maybe we can't bind setState to child components?
         // but also for now we need to mutate the API result a bit
-        // probably cleaner to just return it that way from the API 
+        // probably cleaner to just return it that way from the API
         if (state.scenesData) {
-            state.scenes = state.scenesData; 
+            state.scenes = state.scenesData;
         }
-        
+
         this.setState(state);
     }
 
-    editPhoto(order) { // TODO: this URL will no longer work. kill order
+    editPhoto(order) {
         console.log("EDIT PHOTO");
         const url = `/scene-details/${this.state.projectId}/${order}`;
         fetch(url, {'credentials': 'include'})
@@ -282,7 +318,10 @@ export default class CreateProject extends React.Component {
                 }
             },
             (error) => {
-                console.error("ERROR fetching info from server", error)
+                console.log("ERROR fetching info from server");
+                this.setState({showUpload: false, showModal: true, showMessage: true, message: "ERROR fetching info from server"}, () => {
+                    this.fetchPhotos();
+                });
             }
         )
     }
@@ -310,7 +349,10 @@ export default class CreateProject extends React.Component {
                 });
             },
             (error) => {
-                console.error(`Error Uploading ${error}`)
+                console.log(`Error Uploading ${error}`)
+                this.setState({showUpload: false, showModal: true, showMessage: true, message: `Error Uploading ${error}`}, () => {
+                    this.fetchPhotos();
+                });
             }
         )
 
@@ -387,7 +429,7 @@ export default class CreateProject extends React.Component {
     }
 
     render() {
-        const {redirectProjects, showShare, showModal, showUpload, showUpdate, scenes, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
+        const {redirectProjects, showShare, showModal, showUpload, showUpdate, showMessage, message, scenes, thumbnail, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
 
         if (redirectProjects) {
             return ( <Redirect to = {{pathname: '/list-projects', push: true}}/>);
@@ -404,6 +446,7 @@ export default class CreateProject extends React.Component {
                 twitter: null
             },
             image_preview = null,
+            project_image = null,
             modal_title = "",
             modal_header = ["", "", ""],
             modal_type = "modal-content",
@@ -413,11 +456,29 @@ export default class CreateProject extends React.Component {
 
 
         if (this.state.photo_thumbnail) {
-            image_preview = (<img src={photo_thumbnail} />);
+            image_preview = (<img src={this.state.photo_thumbnail} />);
         } else {
             image_preview = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
         }
+
+        if (this.state.thumbnail) {
+            project_image = (<img src={this.state.thumbnail} />);
+        } else {
+            project_image = (<div id="upload-placeholder"><span className="icon-image"></span></div>);
+        }
+
         if (showModal) {
+
+            if (showMessage) {
+                
+                modal_header[1] = "Error";
+                modal_header[2] = (<div className="modal-header-button" onClick={this.cancelMessage}> OK </div>);
+                modal_body = (
+                    <div className="modal-body">
+                        <p className="modal-message">{this.state.message}</p>
+                    </div>
+                );
+            }
 
             if (showShare) {
                 if (this.state.embedUrl) {
@@ -455,7 +516,7 @@ export default class CreateProject extends React.Component {
                         <div className="modal-body">
                             <div className="modal-preview-container">
                                 <div className="modal-preview-item">
-                                    <img src={this.state.thumbnail} alt="Preview thumbnail"/>
+                                    {project_image}
                                 </div>
                                 {preview_text}
                             </div>
@@ -513,7 +574,7 @@ export default class CreateProject extends React.Component {
                             {image_preview}
                         </div>
                         <div id="upload-description">
-                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" defaultValue={photo_caption}/>
+                            <textarea id="photo-description-input" rows="5" type="text" aria-label="Description of photo" placeholder="Add a description" defaultValue={photo_caption} />
                         </div>
                     </div>
                 );
@@ -522,6 +583,7 @@ export default class CreateProject extends React.Component {
             if (showUpdate) {
                 modal_header[1] = "Update";
                 modal_header[2] = (<div className="modal-header-button" onClick={this.updatePhoto}> Update </div>);
+
             }
 
             modal = (
@@ -574,7 +636,8 @@ export default class CreateProject extends React.Component {
                                       updateProjectState={this.updateProjectState} 
                                       projectId={this.state.projectId} 
                                       onSortEnd={this.onSortEnd.bind(this)} 
-                                      useDragHandle={true} 
+                                      useDragHandle={true}
+                                      errorCallback={this.errorMessage}
                                       editCallback={this.editPhoto}/>
 
                         <div id="new-photo" className="button-bottom-container">

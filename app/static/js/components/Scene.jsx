@@ -40,14 +40,21 @@ export default class Scene extends React.Component {
         .then(
             (result) => {
                 try {
-                    updateProjectState(result);
+                    if (result.error) {
+                        this.props.errorCallback(result.error)
+                    } else {
+                        updateProjectState(result);
+                    }
                 } catch(error) {
                     console.error('deleteScene error')
                     console.error(error);
+                    this.props.errorCallback(error);
+
                 }
             },
             (error) => {
-                this.setState({error});
+                console.log(`Error deleting image: ${error}`)
+                this.props.errorCallback(error);
             }
         )
     }
@@ -64,7 +71,7 @@ export default class Scene extends React.Component {
         			pathname: '/upload',
         			state: {
         				projectId: this.props.projectId,
-                        order: this.state.order,
+        				order: this.state.order,
                         edit: true
         			}
         		}}/>

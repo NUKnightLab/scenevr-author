@@ -280,7 +280,7 @@ def delete_scene(project_id):
         project_id=project_id, uuid=uuid).first()
     if scene is None:
         raise Exception("invalid scene ID {}".format(uuid))
-#    db.session.delete(scene)
+    db.session.delete(scene)
     project.scenes.remove(scene) 
     if len(project.scenes) > 0:
         project.thumbnail = project.scenes[0].thumbnail
