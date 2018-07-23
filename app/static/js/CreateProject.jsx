@@ -518,7 +518,7 @@ export default class CreateProject extends React.Component {
                                 </div>
                             </div>
                             <div className="modal-link-list">
-                                <a className="modal-action-button" aria-label="Open sharable link in new tab" href={share.url} target="_blank">
+                                <a className="modal-action-button" aria-label="Open shareable link in new tab" href={share.url} target="_blank">
                                     <div className="modal-action-button-content">
                                         <span className="icon-new-tab"></span>
                                     </div>
