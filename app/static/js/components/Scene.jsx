@@ -22,10 +22,9 @@ export default class Scene extends React.Component {
 
     deleteScene() {
         const url = "/delete-scene/" + this.props.projectId;
-        let uuid_to_delete = this.state.uuid;
         let updateProjectState = this.props.updateProjectState;
         var data = {
-            sceneUUID: this.state.uuid
+            sceneUUID: this.props.uuid
         };
         fetch(url, {
             method: 'POST',
