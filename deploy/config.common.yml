@@ -29,7 +29,7 @@ static_dir: "{{ deploy_dir }}/app/static/dist"
 static_prep: "npm install && npm run build"
 
 application_dir: "{{ deploy_dir }}/app/server" # application dir could be a subdirectory
-service_name: "apps/scenevr"
+service_name: "scenevr"
 
 # Configs below will not usually change
 deploy_dir: "{{ install_root }}/scenevr-author"
