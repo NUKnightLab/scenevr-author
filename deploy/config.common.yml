@@ -1,7 +1,7 @@
 project_name: scenevr
 gitdeploy_version: "1.0.5"
 port: 9023
-python: python3.7
+python: python3.5
 type: flask
 pwd: "{{ lookup('env', 'PWD') }}"
 # these will be merged with deployment-specific env into init_env
