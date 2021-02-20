@@ -18,7 +18,7 @@ These are the key steps. Some of these things are explained below in more detail
  * copy `env.sh.example` to `env.sh`
  * Look through the file to see if you need to edit anything. (read the comments)
  * run `source env.sh`
- * Copy `app/server/scenevr_client_secret.json.example` to `app/server/scenevr_client_secret.json` and fill in the required Google auth account info. This .json file is gitignored and should not be commited to the repository.
+ * Copy `app/server/scenevr_client_secret.json.example` to `app/server/scenevr_client_secret.json` and fill in the required Google auth account info. This .json file is gitignored and should not be committed to the repository.
  * Make a python virtual environment
  * run `pip install -r requirements.txt`
  * run `npm install`
