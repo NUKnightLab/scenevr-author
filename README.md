@@ -14,15 +14,15 @@ All of this should be one-time setup. If you make changes that impact other deve
 
 These are the key steps. Some of these things are explained below in more detail.
 
-* Check out the repository
-* copy `env.sh.example` to `env.sh`
-  * Look through the file to see if you need to edit anything. (read the comments)
-  * run `source env.sh`
-* get a copy of `scenevr_client_secret.json` from another developer and put it in the root of your local repo. This should never be * Make a python virtual environment
-stored in Git.
-* run `pip install -r requirements.txt`
-* run `npm install`
-* run `npm run devinit`
+ * Check out the repository
+ * copy `env.sh.example` to `env.sh`
+ * Look through the file to see if you need to edit anything. (read the comments)
+ * run `source env.sh`
+ * Copy `app/server/scenevr_client_secret.json.example` to `app/server/scenevr_client_secret.json` and fill in the required Google auth account info. This .json file is gitignored and should not be committed to the repository.
+ * Make a python virtual environment
+ * run `pip install -r requirements.txt`
+ * run `npm install`
+ * run `npm run devinit`
 
 The above should all be something you only have to do once.
 

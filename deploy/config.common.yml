@@ -1,7 +1,7 @@
 project_name: scenevr
-gitdeploy_version: "1.0.4"
+gitdeploy_version: "1.0.5"
 port: 9023
-python: python3
+python: python3.5
 type: flask
 pwd: "{{ lookup('env', 'PWD') }}"
 # these will be merged with deployment-specific env into init_env
@@ -29,15 +29,16 @@ static_dir: "{{ deploy_dir }}/app/static/dist"
 static_prep: "npm install && npm run build"
 
 application_dir: "{{ deploy_dir }}/app/server" # application dir could be a subdirectory
-service_name: "apps/scenevr"
+service_name: "scenevr"
 
 # Configs below will not usually change
 deploy_dir: "{{ install_root }}/scenevr-author"
-env_setup_script: "{{ deploy_dir }}/env.sh"
-env_run_script: "{{ deploy_dir }}/env_run.sh"
+env_run_script: "direnv exec {{ deploy_dir }}"
+env_file: "{{ deploy_dir }}/.env"
+envrc_file: "{{ deploy_dir }}/.envrc"
 project_repo: "git@github.com:NUKnightLab/scenevr-author.git"
 requirements_file: "{{ deploy_dir }}/requirements-deploy.txt"
-virtualenv: "{{ virtualenv_root }}/{{ project_name }}"
+virtualenv: "{{ virtualenv_root }}/venv"
 wsgi_application: "wsgi:application"
 static_service: "s3"
 static_dest: "s3://{{ static_bucket }}/{{ project_name }}"
@@ -45,9 +46,10 @@ static_dest: "s3://{{ static_bucket }}/{{ project_name }}"
 # Configs common to all projects
 application_user: apps
 install_root: /home/{{ application_user }}/sites
-virtualenv_root: /home/{{ application_user }}/env
+virtualenv_root: "{{ deploy_dir }}"
 
-nginx_template: "{{ config_dir }}/custom_nginx.j2"
+# nginx_template: "{{ config_dir }}/custom_nginx.j2"
+nginx_conf: "{{ deploy_dir }}/nginx/conf.d/{{ project_name }}.conf"
 
 # environment keys must match deployment branch names. Value is the name
 # of the branch to be merged into this environment during deployment.
