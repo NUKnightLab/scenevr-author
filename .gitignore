@@ -1,5 +1,6 @@
 # local modifications to Github default
 
+.envrc
 env.sh
 env.sh.boto
 env.sh.localstorage
