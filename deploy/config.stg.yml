@@ -1,10 +1,6 @@
 domains: "scene.knilab.com"
-cnames: "scene.knilab.com"
-static_bucket: "media.knilab.com"
-gunicorn_reload: True # generally True on staging only
-ssl:
-  ssl_certificate: "/etc/nginx/ssl/knilab/knilab-bundle.crt"
-  ssl_certificate_key: "/etc/nginx/ssl/knilab/knilab-com.key"
+# static_bucket: "media.knilab.com"
+service_exec: "{{ virtualenv}}/bin/gunicorn -b :{{ service_port }} --reload --workers 3 {{ wsgi_application }}"
 
 init_env_stg:
   STATIC_MEDIA_URL: "https://media.knilab.com/{{ project_name }}"
