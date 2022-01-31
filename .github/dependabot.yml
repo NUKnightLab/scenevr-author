@@ -3,4 +3,11 @@ version: 2
 updates:
   - package-ecosystem: "pip"
     directory: "app/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecoysystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
   
