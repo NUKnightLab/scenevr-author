@@ -40,7 +40,7 @@ env_file: "{{ deploy_dir }}/.env"
 envrc_file: "{{ deploy_dir }}/.envrc"
 virtualenv: "{{ deploy_dir }}/.venv"
 project_repo: "git@github.com:NUKnightLab/scenevr-author.git"
-requirements_file: "{{ deploy_dir }}/requirements-deploy.txt"
+requirements_file: "{{ deploy_dir }}/app/requirements-deploy.txt"
 wsgi_application: "wsgi:application"
 
 # Flask specific configs
