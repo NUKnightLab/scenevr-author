@@ -1,6 +1,6 @@
 Flask==1.0
 Flask-SQLAlchemy==2.5.1
-Werkzeug==2.0.2
+Werkzeug==2.0.3
 google-auth-oauthlib==0.2.0
 google-auth-httplib2==0.0.3
 google-api-python-client==1.6.7
