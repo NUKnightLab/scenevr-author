@@ -14,7 +14,6 @@ import boto
 from pathlib import Path
 from boto.exception import S3ResponseError
 from boto.s3.connection import OrdinaryCallingFormat
-import requests
 import settings
 from io import BytesIO
 from PIL import Image

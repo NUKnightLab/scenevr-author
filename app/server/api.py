@@ -2,7 +2,6 @@ from flask import Flask, request, session, jsonify, g, Response
 from flask import render_template, send_from_directory, redirect, url_for
 import os
 import sys
-import requests
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 import traceback
