@@ -1,5 +1,5 @@
 Flask==1.0
-requests==2.20.0
+requests==2.27.1
 Flask-SQLAlchemy==2.5.1
 Werkzeug==2.0.2
 google-auth-oauthlib==0.2.0
