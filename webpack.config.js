@@ -1,5 +1,7 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const path = require("path")
 
 const webpack = require('webpack');
 const config = {
@@ -12,11 +14,13 @@ const config = {
         extensions: ['.js', '.jsx', '.css']
     },
     plugins: [
-      new ExtractTextPlugin('styles.css'),
-      new CopyWebpackPlugin([
-        { from: __dirname + '/app/static/assets', to: __dirname + '/app/static/dist' },
-        { from: __dirname + '/app/static/fonts', to: __dirname + '/app/static/dist/fonts' },
-      ]),
+      new MiniCssExtractPlugin(),
+      new CopyWebpackPlugin({
+        patterns: [
+            { from: path.resolve(__dirname, "app", "static", "assets"), to: path.resolve(__dirname, "app", "static", "dist") },
+            { from: path.resolve(__dirname, "app", "static", "fonts"), to: path.resolve(__dirname, "app", "static", "dist", "fonts") },
+        ]
+      }),
     ],
     module: {
       rules: [
@@ -26,11 +30,8 @@ const config = {
           use: 'babel-loader'
         },
         {
-          test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-                 fallback: 'style-loader',
-                 use: 'css-loader',
-               })
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, "css-loader"]
         }
       ]
     }
