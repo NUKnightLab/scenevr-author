@@ -14,7 +14,9 @@ const config = {
         extensions: ['.js', '.jsx', '.css']
     },
     plugins: [
-      new MiniCssExtractPlugin(),
+      new MiniCssExtractPlugin({
+        filename: "styles.css"
+      }),
       new CopyWebpackPlugin({
         patterns: [
             { from: path.resolve(__dirname, "app", "static", "assets"), to: path.resolve(__dirname, "app", "static", "dist") },
