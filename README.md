@@ -2,7 +2,7 @@
 
 Once you've done the setup below, this should be all you need to run the app.
 
-`npm run server`
+`npm run start`
 
 It will automatically start in HTTPS mode, so the default local URL is https://localhost:5000
 
@@ -26,7 +26,7 @@ These are the key steps. Some of these things are explained below in more detail
 
 The above should all be something you only have to do once.
 
-* run `npm run server`
+* run `npm run start`
 * open `https://localhost:5000/` in your browser. The first time, you'll have to confirm a security exception for your self-signed certificate.
 
 If you're working on HTML/CSS/JS as well as server side stuff:
@@ -102,7 +102,7 @@ Init the database as usual:
 ## Client development
 
 Run `npm run watch` to have JS and CSS changes automatically updated.
-Of course, you'll also have to be running the server. You can do that with `npm run server`  
+Of course, you'll also have to be running the server. You can do that with `npm run start`  
 You'll probably want to do this in separate terminal windows so that you can see console output from each separately although we could make an npm script which runs both in parallel.
 
 Once it's running, go to https://localhost:5000/ in your browser. Note that `127.0.0.1` won't work correctly with Google authentication.
