@@ -5,9 +5,9 @@ const path = require("path")
 
 const webpack = require('webpack');
 const config = {
-    entry:  __dirname + '/app/static/js/index.jsx',
+    entry:  path.resolve(__dirname, "app", "static", "js", "index.jsx"),
     output: {
-        path: __dirname + '/app/static/dist',
+        path: path.resolve(__dirname, "app", "static", "dist"),
         filename: 'bundle.js',
     },
     resolve: {
@@ -26,12 +26,19 @@ const config = {
       rules: [
         {
           test: /\.jsx?/,
-          exclude: /node_modules/,
-          use: 'babel-loader'
+          exclude: [
+            path.resolve(__dirname, "node_modules")
+          ],
+          use: [
+            'babel-loader'
+          ]
         },
         {
           test: /\.css$/i,
-          use: [MiniCssExtractPlugin.loader, "css-loader"]
+          use: [
+            MiniCssExtractPlugin.loader,
+            "css-loader"
+          ]
         }
       ]
     }
