@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const config = {
     entry:  path.resolve(__dirname, "app", "static", "js", "index.jsx"),
     output: {
-        path: path.resolve(__dirname, "app", "server", "static"),
+        path: path.resolve(__dirname, "app", "static"),
         filename: 'bundle.js',
     },
     resolve: {
@@ -16,13 +16,7 @@ const config = {
     plugins: [
       new MiniCssExtractPlugin({
         filename: "styles.css"
-      }),
-      new CopyWebpackPlugin({
-        patterns: [
-            { from: path.resolve(__dirname, "app", "static", "assets"), to: path.resolve(__dirname, "app", "server", "static") },
-            { from: path.resolve(__dirname, "app", "static", "fonts"), to: path.resolve(__dirname, "app", "server", "static", "fonts") },
-        ]
-      }),
+      })
     ],
     module: {
       rules: [
