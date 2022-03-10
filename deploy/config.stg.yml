@@ -4,7 +4,7 @@ service_exec: "{{ virtualenv}}/bin/gunicorn -b :{{ service_port }} --reload --wo
 
 init_env_stg:
   #STATIC_MEDIA_URL: "https://media.knilab.com/{{ project_name }}"
-  STATIC_MEDIA_URL: "/static/dist"
+  STATIC_MEDIA_URL: "/static"
   SCENEVR_DIST_ROOT_URL: "https://cdn.knightlab.com/libs/scenevr/dev"
 
 # Note that env vars set in the upstart config will also be set when using the

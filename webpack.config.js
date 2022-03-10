@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const config = {
     entry:  path.resolve(__dirname, "app", "static", "js", "index.jsx"),
     output: {
-        path: path.resolve(__dirname, "app", "static", "dist"),
+        path: path.resolve(__dirname, "app", "server", "static"),
         filename: 'bundle.js',
     },
     resolve: {
@@ -19,8 +19,8 @@ const config = {
       }),
       new CopyWebpackPlugin({
         patterns: [
-            { from: path.resolve(__dirname, "app", "static", "assets"), to: path.resolve(__dirname, "app", "static", "dist") },
-            { from: path.resolve(__dirname, "app", "static", "fonts"), to: path.resolve(__dirname, "app", "static", "dist", "fonts") },
+            { from: path.resolve(__dirname, "app", "static", "assets"), to: path.resolve(__dirname, "app", "server", "static") },
+            { from: path.resolve(__dirname, "app", "static", "fonts"), to: path.resolve(__dirname, "app", "server", "static", "fonts") },
         ]
       }),
     ],
