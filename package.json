@@ -30,7 +30,6 @@
 		"@babel/preset-react": "^7.16.7",
 		"babel-core": "7.0.0-bridge.0",
 		"babel-loader": "^8.2.3",
-		"copy-webpack-plugin": "^6.0.4",
 		"mini-css-extract-plugin": "^2.5.3",
 		"react": "^16.4.2",
 		"react-dom": "^16.14.0",
