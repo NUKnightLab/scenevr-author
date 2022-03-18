@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 
 export default class ProjectListItem extends React.Component {
 
@@ -31,7 +31,7 @@ export default class ProjectListItem extends React.Component {
         }
     	if (redirect){
             return (
-                <Redirect to={{
+                <Navigate to={{
                     pathname: '/create',
                     state: {
                         projectId: this.props.id,

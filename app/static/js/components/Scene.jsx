@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import {SortableHandle,} from 'react-sortable-hoc';
 
 const DragHandle = SortableHandle(() => <div id="drag-handle">&#9776;</div>);
@@ -65,7 +65,7 @@ export default class Scene extends React.Component {
         }
         if (redirect){
         	return (
-        		<Redirect to={{
+        		<Navigate to={{
         			pathname: '/upload',
         			state: {
         				projectId: this.props.projectId,

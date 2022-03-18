@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 
 import ProjectListItem from './components/ProjectListItem.jsx';
 
@@ -68,7 +68,7 @@ export default class Projects extends React.Component {
         const { error, projectData, redirectCreate} = this.state;
         if (redirectCreate){
             return (
-                <Redirect to={{
+                <Navigate to={{
                     pathname: '/create',
                     state: {
                         projectId: this.state.newProjectId

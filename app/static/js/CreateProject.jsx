@@ -1,5 +1,5 @@
 import React from "react";
-import {Redirect} from 'react-router';
+import {Navigate} from 'react-router';
 import {SortableContainer, SortableElement, SortableHandle, arrayMove,} from 'react-sortable-hoc';
 import Scene from './components/Scene.jsx';
 
@@ -412,7 +412,7 @@ export default class CreateProject extends React.Component {
         const {redirectProjects, showShare, showModal, showUpload, showUpdate, showMessage, message, scenes, thumbnail, photo_thumbnail, photo_caption, photoId, project_title, project_description} = this.state;
 
         if (redirectProjects) {
-            return ( <Redirect to = {{pathname: '/list-projects', push: true}}/>);
+            return ( <Navigate to = {{pathname: '/list-projects', push: true}}/>);
         }
 
         let modal = null,
