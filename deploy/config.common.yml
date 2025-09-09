@@ -1,7 +1,7 @@
 project_name: scenevr
 service_name: "{{ project_name|lower }}"
 gitdeploy_version: "1.0.6"
-python_version: "3.9.10"
+python_version: "3.9.23"
 python: /home/apps/sites/scenvr-author/.venv/bin/python
 service_port: "{{ scenevr_server_port }}"
 nginx_template: scenevr.conf
