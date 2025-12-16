@@ -1,4 +1,6 @@
 domains: "scene.knilab.com"
+stdout_log: "/var/log/apps/scenevr-stg.log"
+stderr_log: "/var/log/apps/scenevr-stg.err"
 # static_bucket: "media.knilab.com"
 service_exec: "{{ virtualenv}}/bin/gunicorn -b :{{ service_port }} --reload --workers 3 {{ wsgi_application }}"
 
