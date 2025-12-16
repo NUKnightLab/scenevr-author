@@ -1,4 +1,4 @@
-domains: "scene.knightlab.com prd-scene.knightlab.com"
+domains: "scene.knightlab.com"
 #cnames: "scene.knightlab.com"
 service_exec: "{{ virtualenv}}/bin/gunicorn -b :{{ service_port }} --workers 3 {{ wsgi_application }}"
 
