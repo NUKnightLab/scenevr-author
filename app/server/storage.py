@@ -10,10 +10,9 @@ import time
 import traceback
 import json
 from functools import wraps
-import boto
+import boto3
 from pathlib import Path
-from boto.exception import S3ResponseError
-from boto.s3.connection import OrdinaryCallingFormat
+from botocore.exceptions import ClientError
 import settings
 from io import BytesIO
 from PIL import Image
@@ -67,31 +66,37 @@ class S3Storage(StorageBase):
                  bucket=None,
                  url_root=None,
                  prefix=None):
-        self._conn = boto.connect_s3(
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            calling_format=OrdinaryCallingFormat())
-        self._bucket = self._conn.get_bucket(bucket)
+        # Credentials resolve through boto3's default provider chain: the
+        # environment in development, the EC2 instance role via IMDS in
+        # production. Role credentials carry a session token and expire, so
+        # they must not be overridden here.
+        self._conn = boto3.client('s3')
+        self._bucket_name = bucket
+        # Fail at startup rather than on the first save if the bucket is
+        # unreachable, matching the old get_bucket() behaviour.
+        self._conn.head_bucket(Bucket=bucket)
         self.url_root = url_root
         self.prefix = prefix
 
     def save(self, key_name, content_type, content):
         """
-        Save content with content-type to key_names
-        TODO: probably can't use save_contents_from_string for images
+        Save content with content-type to key_name
         """
         if self.prefix:
             key_name = '{}/{}'.format(self.prefix, key_name)
+        if isinstance(content, str):
+            content = content.encode('utf-8')
         try:
-            key = self._bucket.get_key(key_name)
-            if not key:
-                key = self._bucket.new_key(key_name)
-                key.content_type = content_type
-                # set_contents_from_string works for JPG too weird
-            key.set_contents_from_string(content, policy='public-read')
-        except S3ResponseError as e:
+            self._conn.put_object(
+                Bucket=self._bucket_name,
+                Key=key_name,
+                Body=content,
+                ContentType=content_type,
+                ACL='public-read')
+        except ClientError as e:
             print(traceback.format_exc())
-            raise StorageException(e.message, e.body)
+            error = e.response.get('Error', {})
+            raise StorageException(error.get('Message', str(e)), error)
 
     def _resize_scene_images(self, name, content_type, content):
         sizes = {
